@@ -39,6 +39,26 @@ def calc_compound_interest(principal_amount: Decimal, interest_rate: Decimal,
     return round(final_amount, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
 
 
+def calc_balance_at_retirement(a_initial_portfolio_amount: Decimal,
+                               a_pre_retirement_annual_rate_of_return: Decimal,
+                               num_years_until_retirement: int) -> Decimal:
+    a_balance_at_retirement = calc_compound_interest(
+        principal_amount=a_initial_portfolio_amount,
+        interest_rate=a_pre_retirement_annual_rate_of_return,
+        num_time_periods_elapsed=num_years_until_retirement)
+    return a_balance_at_retirement
+
+
+def calc_balance_at_end_of_life_expectancy(
+        a_balance_at_retirement: Decimal, a_post_retirement_annual_rate_of_return: Decimal,
+        num_years_between_retirement_and_end_of_life_expectancy: int) -> Decimal:
+    a_balance_at_end_of_life_expectancy = calc_compound_interest(
+        principal_amount=a_balance_at_retirement,
+        interest_rate=a_post_retirement_annual_rate_of_return,
+        num_time_periods_elapsed=num_years_between_retirement_and_end_of_life_expectancy)
+    return a_balance_at_end_of_life_expectancy
+
+
 years_until_retirement = calc_years_until_retirement(
     a_current_age=current_age, a_retirement_age=retirement_age)
 years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
@@ -46,13 +66,22 @@ years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_l
 simulation_duration = calc_simulation_duration(
     years_until_retirement=years_until_retirement,
     years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
-final_balance = calc_compound_interest(
-    principal_amount=initial_portfolio_amount, interest_rate=pre_retirement_annual_rate_of_return,
-    num_time_periods_elapsed=simulation_duration)
+balance_at_retirement = calc_balance_at_retirement(
+    a_initial_portfolio_amount=initial_portfolio_amount,
+    a_pre_retirement_annual_rate_of_return=pre_retirement_annual_rate_of_return,
+    num_years_until_retirement=simulation_duration)
+balance_at_end_of_life_expectancy = calc_balance_at_end_of_life_expectancy(
+    a_balance_at_retirement=balance_at_retirement,
+    a_post_retirement_annual_rate_of_return=post_retirement_annual_rate_of_return,
+    num_years_between_retirement_and_end_of_life_expectancy=years_from_retirement_until_life_expectancy)
+# final_balance = calc_compound_interest(
+#     principal_amount=initial_portfolio_amount, interest_rate=pre_retirement_annual_rate_of_return,
+#     num_time_periods_elapsed=simulation_duration)
 print(f"Years until retirement = {years_until_retirement}")
 print(
     "Years from retirement until end of life expectancy = "
     f"{years_from_retirement_until_life_expectancy}"
 )
 print(f"Total simulation duration is {simulation_duration}")
-print(f"The final_balance amount is {final_balance}")
+print(f"The balance_at_retirement is {balance_at_retirement}")
+print(f"The balance_at_end_of_life_expectancy is {balance_at_end_of_life_expectancy}")
