@@ -3,7 +3,7 @@ from decimal import Decimal
 DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS = 2
 # Portfolio Parameters
 initial_portfolio_amount = Decimal(10000)
-pre_retirement_annual_contribution = Decimal(25000)
+pre_retirement_annual_contribution = Decimal(11000)
 post_retirement_annual_contribution = Decimal(-92000)  # Typically a negative number
 
 # Lifestyle Parameters
@@ -15,6 +15,10 @@ life_expectancy = 95
 inflation_mean = Decimal(0.035)
 pre_retirement_annual_rate_of_return = Decimal(0.1287)
 post_retirement_annual_rate_of_return = Decimal(0.075)
+
+
+def format_as_currency(currency_amount: Decimal) -> str:
+    return '${:,.2f}'.format(currency_amount)
 
 
 def calc_years_until_retirement(a_current_age: int, a_retirement_age: int) -> int:
@@ -52,6 +56,7 @@ def calc_balance_from_current_age_to_retirement(
     iteration = 1
     half_of_annual_contribution = a_pre_retirement_annual_contribution / 2
     compounded_balance = a_initial_portfolio_amount
+    # Loop over the num_years_until_retirement compounding our annual returns and contributions
     while iteration <= num_years_until_retirement:
       # TODO We currently assume half of the annual contribution is made prior to compounding and halg post compounding. This is a simplification and should really be refactored to use a monthly compounding model
         compounded_balance += half_of_annual_contribution
@@ -72,11 +77,24 @@ def calc_balance_from_retirement_to_eol(
         num_years_between_retirement_and_eol: int,
         a_post_retirement_annual_contribution: Decimal) -> Decimal:
     '''Calculate balance once life expectancy is reached given that the balance at retirement has already been calculated.'''
-    a_balance_at_end_of_life_expectancy = calc_compound_interest(
-        principal_amount=a_balance_at_retirement,
-        interest_rate=a_post_retirement_annual_rate_of_return,
-        num_time_periods_elapsed=num_years_between_retirement_and_eol)
-    return a_balance_at_end_of_life_expectancy
+    iteration = 1
+    half_of_annual_contribution = a_post_retirement_annual_contribution / 2
+    compounded_balance = a_balance_at_retirement
+    # Loop over the num_years_between_retirement_and_eol compounding our annual returns and contributions(withdrawals)
+    while iteration <= num_years_between_retirement_and_eol:
+      # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is a simplification and should really be refactored to use a monthly compounding model
+        compounded_balance += half_of_annual_contribution
+        print(
+            f"Compounded balance at beginning of year {iteration} post-retirement = {compounded_balance}")
+        compounded_balance = calc_compound_interest(
+            principal_amount=compounded_balance,
+            interest_rate=a_post_retirement_annual_rate_of_return,
+            num_time_periods_elapsed=1)
+        print(
+            f"Compounded balance at end of year {iteration} post-retirement = {compounded_balance}")
+        compounded_balance += half_of_annual_contribution
+        iteration += 1
+    return compounded_balance
 
 
 def calculate_retirement_balance(
@@ -126,5 +144,7 @@ print(
     f"{years_from_retirement_until_life_expectancy}"
 )
 print(f"Total simulation duration is {simulation_duration}")
-print(f"The balance_at_retirement is {retirement_balance['Balance at retirement']}")
-print(f"The balance_at_end_of_life_expectancy is {retirement_balance['Balance at eol']}")
+print(
+    f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
+print(
+    f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['Balance at eol'])}")
