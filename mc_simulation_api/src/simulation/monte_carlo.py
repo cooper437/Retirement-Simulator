@@ -3,7 +3,7 @@ from decimal import Decimal
 DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS = 2
 # Portfolio Parameters
 initial_portfolio_amount = Decimal(10000)
-pre_retirement_annual_contribution = Decimal(11000)
+pre_retirement_annual_contribution = Decimal(18000)
 post_retirement_annual_contribution = Decimal(-92000)  # Typically a negative number
 
 # Lifestyle Parameters
@@ -93,6 +93,10 @@ def calc_balance_from_retirement_to_eol(
         print(
             f"Compounded balance at end of year {iteration} post-retirement = {compounded_balance}")
         compounded_balance += half_of_annual_contribution
+        if compounded_balance <= 0:  # We have depleted our entire portfolio balance
+            print(f"Portfolio balance depleted in year {iteration} of retirement")
+            compounded_balance = 0
+            break
         iteration += 1
     return compounded_balance
 
