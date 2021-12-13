@@ -18,21 +18,25 @@ post_retirement_annual_rate_of_return = Decimal(0.075)
 
 
 def calc_years_until_retirement(a_current_age: int, a_retirement_age: int) -> int:
+    '''Calculate the number of years from the current age until the retirement age'''
     return a_retirement_age - a_current_age
 
 
 def calc_years_from_retirement_until_life_expectancy(
         a_retirement_age: int, a_life_expectancy: int) -> int:
+    '''Calculate the number of years from retirement age until the end of life expectancy'''
     return a_life_expectancy - a_retirement_age
 
 
 def calc_simulation_duration(years_until_retirement: int,
                              years_from_retirement_until_life_expectancy: int) -> int:
+    '''Calculate the total duration of the simulation in years'''
     return years_until_retirement + years_from_retirement_until_life_expectancy
 
 
 def calc_compound_interest(principal_amount: Decimal, interest_rate: Decimal,
                            num_time_periods_elapsed: int) -> Decimal:
+    '''Calculate a final balance using the standard compound interest formula'''
     interest_rate_plus_one = interest_rate + Decimal(1)
     compounded_interest_rate = pow(interest_rate_plus_one, num_time_periods_elapsed)
     final_amount = principal_amount * compounded_interest_rate
@@ -42,6 +46,7 @@ def calc_compound_interest(principal_amount: Decimal, interest_rate: Decimal,
 def calc_balance_at_retirement(a_initial_portfolio_amount: Decimal,
                                a_pre_retirement_annual_rate_of_return: Decimal,
                                num_years_until_retirement: int) -> Decimal:
+    '''Calculate balance at retirement age'''
     a_balance_at_retirement = calc_compound_interest(
         principal_amount=a_initial_portfolio_amount,
         interest_rate=a_pre_retirement_annual_rate_of_return,
@@ -52,6 +57,7 @@ def calc_balance_at_retirement(a_initial_portfolio_amount: Decimal,
 def calc_balance_at_end_of_life_expectancy(
         a_balance_at_retirement: Decimal, a_post_retirement_annual_rate_of_return: Decimal,
         num_years_between_retirement_and_end_of_life_expectancy: int) -> Decimal:
+    '''Calculate balance once life expectancy is reached given that the balance at retirement has already been calculated.'''
     a_balance_at_end_of_life_expectancy = calc_compound_interest(
         principal_amount=a_balance_at_retirement,
         interest_rate=a_post_retirement_annual_rate_of_return,
@@ -74,9 +80,6 @@ balance_at_end_of_life_expectancy = calc_balance_at_end_of_life_expectancy(
     a_balance_at_retirement=balance_at_retirement,
     a_post_retirement_annual_rate_of_return=post_retirement_annual_rate_of_return,
     num_years_between_retirement_and_end_of_life_expectancy=years_from_retirement_until_life_expectancy)
-# final_balance = calc_compound_interest(
-#     principal_amount=initial_portfolio_amount, interest_rate=pre_retirement_annual_rate_of_return,
-#     num_time_periods_elapsed=simulation_duration)
 print(f"Years until retirement = {years_until_retirement}")
 print(
     "Years from retirement until end of life expectancy = "
