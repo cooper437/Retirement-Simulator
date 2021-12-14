@@ -4,22 +4,26 @@ DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS = 2
 ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION = True
 ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH = True
 ADJUST_WITHDRAWALS_FOR_INFLATION = True
+ADJUST_WITHDRAWALS_FOR_TAXATION = True
 
 # Portfolio Parameters
-initial_portfolio_amount = Decimal(1000000)
-pre_retirement_annual_contribution = Decimal(45000)
-post_retirement_annual_contribution = Decimal(-92000)  # Typically a negative number
+initial_portfolio_amount = Decimal(20000)
+pre_retirement_annual_contribution = Decimal(30000)
+post_retirement_annual_contribution = Decimal(-100000)  # Must be a negative number
 
 # Lifestyle Parameters
-current_age = 45
+current_age = 22
 retirement_age = 65
-life_expectancy = 95
+life_expectancy = 85
 
 # Market Condition Parameters
-inflation_mean = Decimal(0.035)
-wage_growth_mean = Decimal(0.015)
-pre_retirement_annual_rate_of_return = Decimal(0.1287)
-post_retirement_annual_rate_of_return = Decimal(0.075)
+inflation_mean = Decimal(0.027)
+wage_growth_mean = Decimal(0.03)
+pre_retirement_annual_rate_of_return = Decimal(0.095)
+post_retirement_annual_rate_of_return = Decimal(0.055)
+
+# Taxation
+post_retirement_tax_rate = Decimal(0.35)
 
 
 def format_as_currency(currency_amount: Decimal) -> str:
@@ -84,6 +88,22 @@ def adjust_post_retirement_withdrawal_amount_for_inflation(
     return adjusted_withdrawal_amount
 
 
+def adjust_post_retirement_withdrawal_amount_for_taxes(
+    retirement_withdrawal_amount: Decimal,
+    a_post_retirement_tax_rate: Decimal
+) -> Decimal:
+    '''
+    Adjust the post-retirement withdrawal amount to account for taxes.
+    We assume that additional monies are withdrawn such that the user ends up with the same amount each year
+    after-taxes as s/he would if there were not taxes applied
+    '''
+    post_retirement_tax_multiplier = 1 + a_post_retirement_tax_rate
+    after_taxes_withdrawal_amount = retirement_withdrawal_amount * post_retirement_tax_multiplier
+    additional_amount_to_cover_taxes = after_taxes_withdrawal_amount - retirement_withdrawal_amount
+    withdrawal_amount_adjusted_for_taxes = retirement_withdrawal_amount + additional_amount_to_cover_taxes
+    return withdrawal_amount_adjusted_for_taxes
+
+
 def calc_balance_from_current_age_to_retirement(
         a_initial_portfolio_amount: Decimal,
         a_pre_retirement_annual_rate_of_return: Decimal,
@@ -96,8 +116,8 @@ def calc_balance_from_current_age_to_retirement(
     compounded_balance = a_initial_portfolio_amount
     # Loop over the num_years_until_retirement compounding our annual returns and contributions
     while pre_retirement_simulation_year <= num_years_until_retirement:
-        print(
-            f"Balance at beginning of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+        # print(
+        #     f"Balance at beginning of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         annual_contribution = a_pre_retirement_annual_contribution
         if ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH:
             annual_contribution = adjust_pre_retirement_contribution_amount_for_wage_growth(
@@ -127,7 +147,8 @@ def calc_balance_from_retirement_to_eol(
         num_years_until_retirement: int,
         num_years_between_retirement_and_eol: int,
         a_post_retirement_annual_contribution: Decimal,
-        a_inflation_mean: Decimal) -> Decimal:
+        a_inflation_mean: Decimal,
+        a_post_retirement_tax_rate=Decimal) -> Decimal:
     '''Calculate balance once life expectancy is reached given that the balance at retirement has already been calculated.'''
     if a_post_retirement_annual_contribution >= 0:
         raise ValueError(
@@ -136,23 +157,28 @@ def calc_balance_from_retirement_to_eol(
     compounded_balance = a_balance_at_retirement
     # Loop over the num_years_between_retirement_and_eol compounding our annual returns and contributions(withdrawals)
     while post_retirement_simulation_year <= num_years_between_retirement_and_eol:
-        print(
-            f"Balance at beginning of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
-        annual_contribution = a_post_retirement_annual_contribution
+        # print(
+        #     f"Balance at beginning of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+        annual_withdrawal = a_post_retirement_annual_contribution
         if ADJUST_WITHDRAWALS_FOR_INFLATION:
             years_since_simulation_began = num_years_until_retirement + post_retirement_simulation_year
-            annual_contribution = adjust_post_retirement_withdrawal_amount_for_inflation(
-                retirement_withdrawal_amount=annual_contribution,
+            annual_withdrawal = adjust_post_retirement_withdrawal_amount_for_inflation(
+                retirement_withdrawal_amount=annual_withdrawal,
                 a_inflation_mean=a_inflation_mean,
                 years_since_simulation_began=years_since_simulation_began)
-      # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is a simplification and should really be refactored to use a monthly compounding model
-        half_of_annual_contribution = annual_contribution / 2
-        compounded_balance += half_of_annual_contribution
+        if ADJUST_WITHDRAWALS_FOR_TAXATION:
+            annual_withdrawal = adjust_post_retirement_withdrawal_amount_for_taxes(
+                retirement_withdrawal_amount=annual_withdrawal,
+                a_post_retirement_tax_rate=a_post_retirement_tax_rate
+            )
+        # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is a simplification and should really be refactored to use a monthly compounding model
+        half_of_annual_withdrawal = annual_withdrawal / 2
+        compounded_balance += half_of_annual_withdrawal
         compounded_balance = calc_compound_interest(
             principal_amount=compounded_balance,
             interest_rate=a_post_retirement_annual_rate_of_return,
             num_time_periods_elapsed=1)
-        compounded_balance += half_of_annual_contribution
+        compounded_balance += half_of_annual_withdrawal
         if ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION:
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
@@ -176,7 +202,8 @@ def calculate_retirement_balance(
         a_pre_retirement_annual_contribution: Decimal,
         a_post_retirement_annual_contribution: Decimal,
         a_inflation_mean: Decimal,
-        a_wage_growth_mean: Decimal
+        a_wage_growth_mean: Decimal,
+        a_post_retirement_tax_rate: Decimal
 ) -> dict:
     balance_at_retirement = calc_balance_from_current_age_to_retirement(
         a_initial_portfolio_amount=a_initial_portfolio_amount,
@@ -191,7 +218,8 @@ def calculate_retirement_balance(
         num_years_until_retirement=num_years_until_retirement,
         num_years_between_retirement_and_eol=num_years_between_retirement_and_eol,
         a_post_retirement_annual_contribution=a_post_retirement_annual_contribution,
-        a_inflation_mean=a_inflation_mean)
+        a_inflation_mean=a_inflation_mean,
+        a_post_retirement_tax_rate=a_post_retirement_tax_rate)
     return {
         'Balance at retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
         'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
@@ -214,7 +242,8 @@ retirement_balance = calculate_retirement_balance(
     a_pre_retirement_annual_contribution=pre_retirement_annual_contribution,
     a_post_retirement_annual_contribution=post_retirement_annual_contribution,
     a_inflation_mean=inflation_mean,
-    a_wage_growth_mean=wage_growth_mean
+    a_wage_growth_mean=wage_growth_mean,
+    a_post_retirement_tax_rate=post_retirement_tax_rate
 )
 print(f"Years until retirement = {years_until_retirement}")
 print(
