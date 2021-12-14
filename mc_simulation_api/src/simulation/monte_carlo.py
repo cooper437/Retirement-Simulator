@@ -45,10 +45,10 @@ def calc_years_from_retirement_until_life_expectancy(
     return a_life_expectancy - a_retirement_age
 
 
-def calc_simulation_duration(years_until_retirement: int,
-                             years_from_retirement_until_life_expectancy: int) -> int:
+def calc_simulation_duration(num_years_until_retirement: int,
+                             num_years_from_retirement_until_life_expectancy: int) -> int:
     '''Calculate the total duration of the simulation in years'''
-    return years_until_retirement + years_from_retirement_until_life_expectancy
+    return num_years_until_retirement + num_years_from_retirement_until_life_expectancy
 
 
 def calc_compound_interest(principal_amount: Decimal, interest_rate: Decimal,
@@ -98,8 +98,8 @@ def adjust_post_retirement_withdrawal_amount_for_taxes(
 ) -> Decimal:
     '''
     Adjust the post-retirement withdrawal amount to account for taxes.
-    We assume that additional monies are withdrawn such that the user ends up with the same amount each year
-    after-taxes as s/he would if there were not taxes applied
+    We assume that additional monies are withdrawn such that the user ends up with the same
+    amount each year after-taxes as s/he would if there were not taxes applied
     '''
     post_retirement_tax_multiplier = 1 + a_post_retirement_tax_rate
     after_taxes_withdrawal_amount = retirement_withdrawal_amount * post_retirement_tax_multiplier
@@ -128,7 +128,8 @@ def calc_balance_from_current_age_to_retirement(
                 a_wage_growth_mean=a_wage_growth_mean,
                 retirement_contribution_amount=annual_contribution,
                 years_since_simulation_began=pre_retirement_simulation_year)
-        # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is a simplification and should really be refactored to use a monthly compounding model
+        # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is
+        # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_contribution = annual_contribution / 2
         compounded_balance += half_of_annual_contribution
         compounded_balance = calc_compound_interest(
@@ -175,7 +176,8 @@ def calc_balance_from_retirement_to_eol(
                 retirement_withdrawal_amount=annual_withdrawal,
                 a_post_retirement_tax_rate=a_post_retirement_tax_rate
             )
-        # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is a simplification and should really be refactored to use a monthly compounding model
+        # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is
+        # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
         compounded_balance = calc_compound_interest(
@@ -235,8 +237,8 @@ years_until_retirement = calc_years_until_retirement(
 years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
     a_retirement_age=retirement_age, a_life_expectancy=life_expectancy)
 simulation_duration = calc_simulation_duration(
-    years_until_retirement=years_until_retirement,
-    years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
+    num_years_until_retirement=years_until_retirement,
+    num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
 retirement_balance = calculate_retirement_balance(
     a_initial_portfolio_amount=initial_portfolio_amount,
     a_pre_retirement_annual_rate_of_return=pre_retirement_annual_rate_of_return,
