@@ -153,7 +153,7 @@ def calc_balance_from_retirement_to_eol(
         a_post_retirement_annual_contribution: Decimal,
         a_inflation_mean: Decimal,
         a_post_retirement_tax_rate=Decimal) -> Decimal:
-    '''Calculate balance once life expectancy is reached given that the balance at retirement has already been calculated.'''
+    '''Calculate balance at end of life expectancy given that the balance at retirement has already been calculated.'''
     if a_post_retirement_annual_contribution >= 0:
         raise ValueError(
             "a_post_retirement_annual_contribution was a positive value but it must be a negative value")
