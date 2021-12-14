@@ -6,8 +6,8 @@ ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH = True
 ADJUST_WITHDRAWALS_FOR_INFLATION = True
 
 # Portfolio Parameters
-initial_portfolio_amount = Decimal(10000)
-pre_retirement_annual_contribution = Decimal(18000)
+initial_portfolio_amount = Decimal(1000000)
+pre_retirement_annual_contribution = Decimal(45000)
 post_retirement_annual_contribution = Decimal(-92000)  # Typically a negative number
 
 # Lifestyle Parameters
@@ -97,7 +97,7 @@ def calc_balance_from_current_age_to_retirement(
     # Loop over the num_years_until_retirement compounding our annual returns and contributions
     while pre_retirement_simulation_year <= num_years_until_retirement:
         print(
-            f"Compounded balance at beginning of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+            f"Balance at beginning of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         annual_contribution = a_pre_retirement_annual_contribution
         if ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH:
             annual_contribution = adjust_pre_retirement_contribution_amount_for_wage_growth(
@@ -116,7 +116,7 @@ def calc_balance_from_current_age_to_retirement(
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
         print(
-            f"Compounded balance at end of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+            f"Balance at end of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         pre_retirement_simulation_year += 1
     return compounded_balance
 
@@ -137,7 +137,7 @@ def calc_balance_from_retirement_to_eol(
     # Loop over the num_years_between_retirement_and_eol compounding our annual returns and contributions(withdrawals)
     while post_retirement_simulation_year <= num_years_between_retirement_and_eol:
         print(
-            f"Compounded balance at beginning of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+            f"Balance at beginning of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         annual_contribution = a_post_retirement_annual_contribution
         if ADJUST_WITHDRAWALS_FOR_INFLATION:
             years_since_simulation_began = num_years_until_retirement + post_retirement_simulation_year
@@ -157,7 +157,7 @@ def calc_balance_from_retirement_to_eol(
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
         print(
-            f"Compounded balance at end of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+            f"Balance at end of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         if compounded_balance <= 0:  # We have depleted our entire portfolio balance
             print(
                 f"Portfolio balance depleted in year {post_retirement_simulation_year} of retirement")
