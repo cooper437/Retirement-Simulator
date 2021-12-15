@@ -1,14 +1,10 @@
 from decimal import Decimal
 
-DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS = 2
-# Adjusts the portfolio balance each year both pre and post retirement based on the inflation_mean to reflect value in todays dollars
-ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION = True
-# Accounts for the wage_growth_mean in the annual amount contributed pre-retirement
-ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH = True
-# Accounts for the inflation_mean in the annual amount withdrawn post-retirement
-ADJUST_WITHDRAWALS_FOR_INFLATION = True
-# Accounts for the post_retirement_tax_rate in the annual amount withdrawn post-retirement
-ADJUST_WITHDRAWALS_FOR_TAXATION = True
+from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
+                           ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION,
+                           ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH,
+                           ADJUST_WITHDRAWALS_FOR_INFLATION,
+                           ADJUST_WITHDRAWALS_FOR_TAXATION)
 
 # Portfolio Parameters
 initial_portfolio_amount = Decimal(20000)
