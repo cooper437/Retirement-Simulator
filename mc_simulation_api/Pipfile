@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 numpy = "*"
 python-dotenv = "*"
+tqdm = "*"
 
 [dev-packages]
 autopep8 = "*"

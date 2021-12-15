@@ -40,12 +40,18 @@ INFLATION_MEAN = Decimal(os.getenv('INFLATION_MEAN')) if os.getenv(
     'INFLATION_MEAN') is not None else Decimal(0.027)
 WAGE_GROWTH_MEAN = Decimal(os.getenv('WAGE_GROWTH_MEAN')) if os.getenv(
     'WAGE_GROWTH_MEAN') is not None else Decimal(0.03)
-PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN = Decimal(
-    os.getenv('PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN')) if os.getenv(
-    'PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN') is not None else Decimal(0.095)
-POST_RETIREMENT_ANNUAL_RATE_OF_RETURN = Decimal(
-    os.getenv('POST_RETIREMENT_ANNUAL_RATE_OF_RETURN')) if os.getenv(
-    'POST_RETIREMENT_ANNUAL_RATE_OF_RETURN') is not None else Decimal(0.055)
+PRE_RETIREMENT_MEAN_RATE_OF_RETURN = Decimal(
+    os.getenv('PRE_RETIREMENT_MEAN_RATE_OF_RETURN')) if os.getenv(
+    'PRE_RETIREMENT_MEAN_RATE_OF_RETURN') is not None else Decimal(0.095)
+POST_RETIREMENT_MEAN_RATE_OF_RETURN = Decimal(
+    os.getenv('POST_RETIREMENT_MEAN_RATE_OF_RETURN')) if os.getenv(
+    'POST_RETIREMENT_MEAN_RATE_OF_RETURN') is not None else Decimal(0.055)
+PRE_RETIREMENT_RATE_OF_RETURN_VOLATILITY = Decimal(
+    os.getenv('PRE_RETIREMENT_RATE_OF_RETURN_VOLATILITY')) if os.getenv(
+    'PRE_RETIREMENT_RATE_OF_RETURN_VOLATILITY') is not None else Decimal(0.1429)
+POST_RETIREMENT_RATE_OF_RETURN_VOLATILITY = Decimal(
+    os.getenv('POST_RETIREMENT_RATE_OF_RETURN_VOLATILITY')) if os.getenv(
+    'POST_RETIREMENT_RATE_OF_RETURN_VOLATILITY') is not None else Decimal(0.0477)
 
 # Taxation
 POST_RETIREMENT_TAX_RATE = Decimal(os.getenv('POST_RETIREMENT_TAX_RATE')) if os.getenv(

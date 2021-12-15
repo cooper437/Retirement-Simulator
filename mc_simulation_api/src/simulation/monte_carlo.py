@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from numpy.core.fromnumeric import mean
+
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION,
                            ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH,
@@ -13,9 +15,8 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            LIFE_EXPECTANCY,
                            INFLATION_MEAN,
                            WAGE_GROWTH_MEAN,
-                           PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN,
-                           POST_RETIREMENT_ANNUAL_RATE_OF_RETURN,
                            POST_RETIREMENT_TAX_RATE)
+from src.simulation.distribution_sampling import get_random_sample_pairs
 
 
 def format_as_currency(currency_amount: Decimal) -> str:
@@ -227,25 +228,36 @@ years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_l
 simulation_duration = calc_simulation_duration(
     num_years_until_retirement=years_until_retirement,
     num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
-retirement_balance = calculate_retirement_balance(
-    a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
-    a_pre_retirement_annual_rate_of_return=PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN,
-    a_post_retirement_annual_rate_of_return=POST_RETIREMENT_ANNUAL_RATE_OF_RETURN,
-    num_years_until_retirement=years_until_retirement,
-    num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
-    a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
-    a_post_retirement_annual_contribution=POST_RETIREMENT_ANNUAL_CONTRIBUTION,
-    a_inflation_mean=INFLATION_MEAN,
-    a_wage_growth_mean=WAGE_GROWTH_MEAN,
-    a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
-)
+sample_pairs = get_random_sample_pairs()
 print(f"Years until retirement = {years_until_retirement}")
 print(
     "Years from retirement until end of life expectancy = "
     f"{years_from_retirement_until_life_expectancy}"
 )
 print(f"Total simulation duration is {simulation_duration}")
-print(
-    f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
-print(
-    f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['Balance at eol'])}")
+all_simulation_results = []
+for (pre_retirement_ror, post_retirement_ror) in sample_pairs:
+    retirement_balance = calculate_retirement_balance(
+        a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
+        a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
+        a_post_retirement_annual_rate_of_return=Decimal(post_retirement_ror),
+        num_years_until_retirement=years_until_retirement,
+        num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
+        a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
+        a_post_retirement_annual_contribution=POST_RETIREMENT_ANNUAL_CONTRIBUTION,
+        a_inflation_mean=INFLATION_MEAN,
+        a_wage_growth_mean=WAGE_GROWTH_MEAN,
+        a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
+    )
+    single_simulation_result = {
+        'Pre Retirement Rate Of Return': pre_retirement_ror,
+        'Post Retirement Rate Of Return': post_retirement_ror,
+        'Balance at retirement': retirement_balance['Balance at retirement'],
+        'Balance at eol': retirement_balance['Balance at eol']
+    }
+    all_simulation_results.append(single_simulation_result)
+print(all_simulation_results)
+# print(
+#     f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
+# print(
+#     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['Balance at eol'])}")
