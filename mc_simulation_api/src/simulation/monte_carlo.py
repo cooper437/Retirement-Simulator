@@ -4,26 +4,18 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION,
                            ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH,
                            ADJUST_WITHDRAWALS_FOR_INFLATION,
-                           ADJUST_WITHDRAWALS_FOR_TAXATION)
-
-# Portfolio Parameters
-initial_portfolio_amount = Decimal(20000)
-pre_retirement_annual_contribution = Decimal(30000)
-post_retirement_annual_contribution = Decimal(-100000)  # Must be a negative number
-
-# Lifestyle Parameters
-current_age = 22
-retirement_age = 65
-life_expectancy = 85
-
-# Market Condition Parameters
-inflation_mean = Decimal(0.027)
-wage_growth_mean = Decimal(0.03)
-pre_retirement_annual_rate_of_return = Decimal(0.095)
-post_retirement_annual_rate_of_return = Decimal(0.055)
-
-# Taxation
-post_retirement_tax_rate = Decimal(0.35)
+                           ADJUST_WITHDRAWALS_FOR_TAXATION,
+                           INITIAL_PORTFOLIO_AMOUNT,
+                           PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
+                           POST_RETIREMENT_ANNUAL_CONTRIBUTION,
+                           CURRENT_AGE,
+                           RETIREMENT_AGE,
+                           LIFE_EXPECTANCY,
+                           INFLATION_MEAN,
+                           WAGE_GROWTH_MEAN,
+                           PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN,
+                           POST_RETIREMENT_ANNUAL_RATE_OF_RETURN,
+                           POST_RETIREMENT_TAX_RATE)
 
 
 def format_as_currency(currency_amount: Decimal) -> str:
@@ -229,23 +221,23 @@ def calculate_retirement_balance(
 
 
 years_until_retirement = calc_years_until_retirement(
-    a_current_age=current_age, a_retirement_age=retirement_age)
+    a_current_age=CURRENT_AGE, a_retirement_age=RETIREMENT_AGE)
 years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
-    a_retirement_age=retirement_age, a_life_expectancy=life_expectancy)
+    a_retirement_age=RETIREMENT_AGE, a_life_expectancy=LIFE_EXPECTANCY)
 simulation_duration = calc_simulation_duration(
     num_years_until_retirement=years_until_retirement,
     num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
 retirement_balance = calculate_retirement_balance(
-    a_initial_portfolio_amount=initial_portfolio_amount,
-    a_pre_retirement_annual_rate_of_return=pre_retirement_annual_rate_of_return,
-    a_post_retirement_annual_rate_of_return=post_retirement_annual_rate_of_return,
+    a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
+    a_pre_retirement_annual_rate_of_return=PRE_RETIREMENT_ANNUAL_RATE_OF_RETURN,
+    a_post_retirement_annual_rate_of_return=POST_RETIREMENT_ANNUAL_RATE_OF_RETURN,
     num_years_until_retirement=years_until_retirement,
     num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
-    a_pre_retirement_annual_contribution=pre_retirement_annual_contribution,
-    a_post_retirement_annual_contribution=post_retirement_annual_contribution,
-    a_inflation_mean=inflation_mean,
-    a_wage_growth_mean=wage_growth_mean,
-    a_post_retirement_tax_rate=post_retirement_tax_rate
+    a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
+    a_post_retirement_annual_contribution=POST_RETIREMENT_ANNUAL_CONTRIBUTION,
+    a_inflation_mean=INFLATION_MEAN,
+    a_wage_growth_mean=WAGE_GROWTH_MEAN,
+    a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
 )
 print(f"Years until retirement = {years_until_retirement}")
 print(
