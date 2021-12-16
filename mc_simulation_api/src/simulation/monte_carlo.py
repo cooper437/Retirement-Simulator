@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import List
 from tqdm import tqdm
 from numpy.core.fromnumeric import mean
 
@@ -97,7 +98,7 @@ def adjust_post_retirement_withdrawal_amount_for_taxes(
     return withdrawal_amount_adjusted_for_taxes
 
 
-def calc_balance_from_current_age_to_retirement(
+def calc_balances_from_current_age_to_retirement(
         a_initial_portfolio_amount: Decimal,
         a_pre_retirement_annual_rate_of_return: Decimal,
         num_years_until_retirement: int,
@@ -105,6 +106,7 @@ def calc_balance_from_current_age_to_retirement(
         a_inflation_mean: Decimal,
         a_wage_growth_mean: Decimal) -> Decimal:
     '''Calculate balance at retirement age'''
+    balances_by_year = []
     pre_retirement_simulation_year = 1
     compounded_balance = a_initial_portfolio_amount
     # Loop over the num_years_until_retirement compounding our annual returns and contributions
@@ -131,8 +133,9 @@ def calc_balance_from_current_age_to_retirement(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
         # print(
         #     f"Balance at end of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+        balances_by_year.append(compounded_balance)
         pre_retirement_simulation_year += 1
-    return compounded_balance
+    return compounded_balance, balances_by_year
 
 
 def calc_balance_from_retirement_to_eol(
@@ -147,6 +150,7 @@ def calc_balance_from_retirement_to_eol(
     if a_post_retirement_annual_contribution >= 0:
         raise ValueError(
             "a_post_retirement_annual_contribution was a positive value but it must be a negative value")
+    balances_by_year = []
     post_retirement_simulation_year = 1
     compounded_balance = a_balance_at_retirement
     # Loop over the num_years_between_retirement_and_eol compounding our annual returns and contributions(withdrawals)
@@ -182,10 +186,21 @@ def calc_balance_from_retirement_to_eol(
         if compounded_balance <= 0:  # We have depleted our entire portfolio balance
             # print(
             #     f"Portfolio balance depleted in year {post_retirement_simulation_year} of retirement")
-            compounded_balance = 0
+            compounded_balance = Decimal(0.0)
+            balances_by_year.append(compounded_balance)
             break
+        else:
+            balances_by_year.append(compounded_balance)
         post_retirement_simulation_year += 1
-    return compounded_balance
+    return compounded_balance, balances_by_year
+
+
+def pad_with_zeroes(a_list: List, num_zeroes_to_add: int):
+    '''Pad out the right side of a list with zeroes to account for years where we ran out of money and ensure uniform list sizing'''
+    padded_list = a_list.copy()
+    for _ in range(num_zeroes_to_add):
+        padded_list.append(Decimal(0))
+    return padded_list
 
 
 def calculate_retirement_balance(
@@ -200,14 +215,14 @@ def calculate_retirement_balance(
         a_wage_growth_mean: Decimal,
         a_post_retirement_tax_rate: Decimal
 ) -> dict:
-    balance_at_retirement = calc_balance_from_current_age_to_retirement(
+    balance_at_retirement, balances_by_year_until_retirement = calc_balances_from_current_age_to_retirement(
         a_initial_portfolio_amount=a_initial_portfolio_amount,
         a_pre_retirement_annual_rate_of_return=a_pre_retirement_annual_rate_of_return,
         num_years_until_retirement=num_years_until_retirement,
         a_pre_retirement_annual_contribution=a_pre_retirement_annual_contribution,
         a_inflation_mean=a_inflation_mean,
         a_wage_growth_mean=a_wage_growth_mean)
-    balance_at_end_of_life_expectancy = calc_balance_from_retirement_to_eol(
+    balance_at_end_of_life_expectancy, balances_by_year_after_retirement = calc_balance_from_retirement_to_eol(
         a_balance_at_retirement=balance_at_retirement,
         a_post_retirement_annual_rate_of_return=a_post_retirement_annual_rate_of_return,
         num_years_until_retirement=num_years_until_retirement,
@@ -215,9 +230,19 @@ def calculate_retirement_balance(
         a_post_retirement_annual_contribution=a_post_retirement_annual_contribution,
         a_inflation_mean=a_inflation_mean,
         a_post_retirement_tax_rate=a_post_retirement_tax_rate)
+    ran_out_money_before_eol = False
+    # We check if there are missing years from the list where the balance was zero and pad out if needed
+    if (num_years_between_retirement_and_eol != len(balances_by_year_after_retirement)):
+        ran_out_money_before_eol = True
+        num_years_missing = num_years_between_retirement_and_eol - \
+            len(balances_by_year_after_retirement)
+        balances_by_year_after_retirement = pad_with_zeroes(
+            balances_by_year_after_retirement, num_years_missing)
     return {
+        'Balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
         'Balance at retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
-        'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
+        'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
+        'Ran out of money before eol': ran_out_money_before_eol
     }
 
 
@@ -237,7 +262,7 @@ print(
 print(f"Total simulation duration is {simulation_duration}")
 all_simulation_results = []
 for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Running {len(sample_pairs)} simulations"):
-    retirement_balance = calculate_retirement_balance(
+    simulation_output = calculate_retirement_balance(
         a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
         a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
         a_post_retirement_annual_rate_of_return=Decimal(post_retirement_ror),
@@ -252,8 +277,10 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
     single_simulation_result = {
         'Pre Retirement Rate Of Return': pre_retirement_ror,
         'Post Retirement Rate Of Return': post_retirement_ror,
-        'Balance at retirement': retirement_balance['Balance at retirement'],
-        'Balance at eol': retirement_balance['Balance at eol']
+        'Balance at retirement': simulation_output['Balance at retirement'],
+        'Balance at eol': simulation_output['Balance at eol'],
+        'Balances': simulation_output['Balances'],
+        'Ran out of money before eol': simulation_output['Ran out of money before eol']
     }
     all_simulation_results.append(single_simulation_result)
 print(all_simulation_results)
