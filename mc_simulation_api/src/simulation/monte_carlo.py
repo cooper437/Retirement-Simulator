@@ -231,19 +231,17 @@ def calculate_retirement_balance(
         a_post_retirement_annual_contribution=a_post_retirement_annual_contribution,
         a_inflation_mean=a_inflation_mean,
         a_post_retirement_tax_rate=a_post_retirement_tax_rate)
-    ran_out_money_before_eol = False
     # We check if there are missing years from the list where the balance was zero and pad out if needed
     if (num_years_between_retirement_and_eol != len(balances_by_year_after_retirement)):
-        ran_out_money_before_eol = True
         num_years_missing = num_years_between_retirement_and_eol - \
             len(balances_by_year_after_retirement)
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
     return {
+        'Ran out of money before eol': True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
         'Balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
         'Balance at retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
-        'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
-        'Ran out of money before eol': ran_out_money_before_eol
+        'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
     }
 
 
@@ -251,9 +249,9 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     num_ran_out_of_money = sum(
         map(lambda i: i['Ran out of money before eol'] == True, all_simulations))
     num_survived = sum(map(lambda i: i['Ran out of money before eol'] == False, all_simulations))
-    percentage_survived = num_survived / (num_ran_out_of_money + num_survived)
+    survival_ratio = num_survived / (num_ran_out_of_money + num_survived)
     return {
-        'Survival Rate': percentage_survived,
+        'Survival Rate': survival_ratio,
         'Number Of Simulations': NUMBER_OF_SIMULATIONS
     }
 
@@ -287,16 +285,16 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
         a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
     )
     single_simulation_result = {
+        'Ran out of money before eol': simulation_output['Ran out of money before eol'],
+        'Balance at eol': simulation_output['Balance at eol'],
+        'Balance at retirement': simulation_output['Balance at retirement'],
         'Pre Retirement Rate Of Return': pre_retirement_ror,
         'Post Retirement Rate Of Return': post_retirement_ror,
-        'Balance at retirement': simulation_output['Balance at retirement'],
-        'Balance at eol': simulation_output['Balance at eol'],
-        'Balances': simulation_output['Balances'],
-        'Ran out of money before eol': simulation_output['Ran out of money before eol']
+        'Balances': simulation_output['Balances']
     }
     all_simulation_results.append(single_simulation_result)
 all_simulation_results_sorted = sorted(
-    all_simulation_results, key=lambda i: i['Balance at eol'], reverse=True)
+    all_simulation_results, key=lambda i: (i['Balance at eol'], i['Balance at retirement']))
 meta_simulation_statistics = calc_meta_simulation_stats(all_simulation_results_sorted)
 print(f"Number of simulations run: {meta_simulation_statistics['Number Of Simulations']}")
 print(f"Portfolio survival rate: {meta_simulation_statistics['Survival Rate'] * 100}%")

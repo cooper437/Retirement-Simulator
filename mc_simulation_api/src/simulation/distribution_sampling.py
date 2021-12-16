@@ -17,7 +17,7 @@ def sample_normal_distribution(
     return sample
 
 
-def get_sample_distrbutions():
+def get_sample_distributions():
     pre_retirement_rates_of_return = sample_normal_distribution(
         mean=PRE_RETIREMENT_MEAN_RATE_OF_RETURN,
         standard_deviation=PRE_RETIREMENT_RATE_OF_RETURN_VOLATILITY,
@@ -31,7 +31,7 @@ def get_sample_distrbutions():
 
 def get_random_sample_pairs():
     samples = []
-    pre_retirement_rates_of_return, post_retirement_rates_of_return = get_sample_distrbutions()
+    pre_retirement_rates_of_return, post_retirement_rates_of_return = get_sample_distributions()
     for _ in range(NUMBER_OF_SIMULATIONS):
         pre_retirement_ror_random = np.random.choice(pre_retirement_rates_of_return)
         post_retirement_ror_random = np.random.choice(post_retirement_rates_of_return)
