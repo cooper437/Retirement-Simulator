@@ -263,7 +263,9 @@ years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_l
 simulation_duration = calc_simulation_duration(
     num_years_until_retirement=years_until_retirement,
     num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
-sample_pairs = get_random_sample_pairs()
+sample_pairs = get_random_sample_pairs(
+    years_until_retirement=years_until_retirement,
+    years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
 print(f"Years until retirement = {years_until_retirement}")
 print(
     "Years from retirement until end of life expectancy = "
