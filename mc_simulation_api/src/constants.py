@@ -26,9 +26,9 @@ INITIAL_PORTFOLIO_AMOUNT = Decimal(os.getenv('INITIAL_PORTFOLIO_AMOUNT')) if os.
 PRE_RETIREMENT_ANNUAL_CONTRIBUTION = Decimal(
     os.getenv('PRE_RETIREMENT_ANNUAL_CONTRIBUTION')) if os.getenv(
     'PRE_RETIREMENT_ANNUAL_CONTRIBUTION') is not None else Decimal(30000)
-POST_RETIREMENT_ANNUAL_CONTRIBUTION = Decimal(
-    os.getenv('POST_RETIREMENT_ANNUAL_CONTRIBUTION')) if os.getenv(
-    'POST_RETIREMENT_ANNUAL_CONTRIBUTION') is not None else Decimal(-100000)  # Must be a negative number
+POST_RETIREMENT_ANNUAL_WITHDRAWAL = Decimal(
+    os.getenv('POST_RETIREMENT_ANNUAL_WITHDRAWAL')) if os.getenv(
+    'POST_RETIREMENT_ANNUAL_WITHDRAWAL') is not None else Decimal(-100000)  # Must be a negative number
 
 # Lifestyle Parameters
 CURRENT_AGE = os.getenv('CURRENT_AGE') or 22
@@ -55,6 +55,8 @@ POST_RETIREMENT_RATE_OF_RETURN_VOLATILITY = Decimal(
 
 # Taxation
 POST_RETIREMENT_TAX_RATE = Decimal(os.getenv('POST_RETIREMENT_TAX_RATE')) if os.getenv(
+    'POST_RETIREMENT_TAX_RATE') is not None else Decimal(0.35)
+ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME = Decimal(os.getenv('POST_RETIREMENT_TAX_RATE')) if os.getenv(
     'POST_RETIREMENT_TAX_RATE') is not None else Decimal(0.35)
 
 

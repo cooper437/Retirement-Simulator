@@ -10,7 +10,7 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            ADJUST_WITHDRAWALS_FOR_TAXATION,
                            INITIAL_PORTFOLIO_AMOUNT,
                            PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
-                           POST_RETIREMENT_ANNUAL_CONTRIBUTION,
+                           POST_RETIREMENT_ANNUAL_WITHDRAWAL,
                            CURRENT_AGE,
                            RETIREMENT_AGE,
                            LIFE_EXPECTANCY,
@@ -144,11 +144,11 @@ def calc_balance_from_retirement_to_eol(
         a_post_retirement_annual_rate_of_return: Decimal,
         num_years_until_retirement: int,
         num_years_between_retirement_and_eol: int,
-        a_post_retirement_annual_contribution: Decimal,
+        a_post_retirement_annual_withdrawal: Decimal,
         a_inflation_mean: Decimal,
         a_post_retirement_tax_rate=Decimal) -> Decimal:
     '''Calculate balance at end of life expectancy given that the balance at retirement has already been calculated.'''
-    if a_post_retirement_annual_contribution >= 0:
+    if a_post_retirement_annual_withdrawal >= 0:
         raise ValueError(
             "a_post_retirement_annual_contribution was a positive value but it must be a negative value")
     balances_by_year = []
@@ -158,7 +158,7 @@ def calc_balance_from_retirement_to_eol(
     while post_retirement_simulation_year <= num_years_between_retirement_and_eol:
         # print(
         #     f"Balance at beginning of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
-        annual_withdrawal = a_post_retirement_annual_contribution
+        annual_withdrawal = a_post_retirement_annual_withdrawal
         if ADJUST_WITHDRAWALS_FOR_INFLATION:
             years_since_simulation_began = num_years_until_retirement + post_retirement_simulation_year
             annual_withdrawal = adjust_post_retirement_withdrawal_amount_for_inflation(
@@ -211,7 +211,7 @@ def calculate_retirement_balance(
         num_years_until_retirement: int,
         num_years_between_retirement_and_eol: int,
         a_pre_retirement_annual_contribution: Decimal,
-        a_post_retirement_annual_contribution: Decimal,
+        a_post_retirement_annual_withdrawal: Decimal,
         a_inflation_mean: Decimal,
         a_income_growth_mean: Decimal,
         a_post_retirement_tax_rate: Decimal
@@ -228,7 +228,7 @@ def calculate_retirement_balance(
         a_post_retirement_annual_rate_of_return=a_post_retirement_annual_rate_of_return,
         num_years_until_retirement=num_years_until_retirement,
         num_years_between_retirement_and_eol=num_years_between_retirement_and_eol,
-        a_post_retirement_annual_contribution=a_post_retirement_annual_contribution,
+        a_post_retirement_annual_withdrawal=a_post_retirement_annual_withdrawal,
         a_inflation_mean=a_inflation_mean,
         a_post_retirement_tax_rate=a_post_retirement_tax_rate)
     # We check if there are missing years from the list where the balance was zero and pad out if needed
@@ -281,7 +281,7 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
         num_years_until_retirement=years_until_retirement,
         num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
         a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
-        a_post_retirement_annual_contribution=POST_RETIREMENT_ANNUAL_CONTRIBUTION,
+        a_post_retirement_annual_withdrawal=POST_RETIREMENT_ANNUAL_WITHDRAWAL,
         a_inflation_mean=INFLATION_MEAN,
         a_income_growth_mean=INCOME_GROWTH_MEAN,
         a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
