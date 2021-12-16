@@ -31,9 +31,9 @@ POST_RETIREMENT_ANNUAL_WITHDRAWAL = Decimal(
     'POST_RETIREMENT_ANNUAL_WITHDRAWAL') is not None else Decimal(-100000)  # Must be a negative number
 
 # Lifestyle Parameters
-CURRENT_AGE = os.getenv('CURRENT_AGE') or 22
-RETIREMENT_AGE = os.getenv('RETIREMENT_AGE') or 65
-LIFE_EXPECTANCY = os.getenv('LIFE_EXPECTANCY') or 85
+CURRENT_AGE = int(os.getenv('CURRENT_AGE')) or 22
+RETIREMENT_AGE = int(os.getenv('RETIREMENT_AGE')) or 65
+LIFE_EXPECTANCY = int(os.getenv('LIFE_EXPECTANCY')) or 85
 
 # Market Condition Parameters
 INFLATION_MEAN = Decimal(os.getenv('INFLATION_MEAN')) if os.getenv(
@@ -56,9 +56,9 @@ POST_RETIREMENT_RATE_OF_RETURN_VOLATILITY = Decimal(
 # Taxation
 POST_RETIREMENT_TAX_RATE = Decimal(os.getenv('POST_RETIREMENT_TAX_RATE')) if os.getenv(
     'POST_RETIREMENT_TAX_RATE') is not None else Decimal(0.35)
-ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME = Decimal(os.getenv('POST_RETIREMENT_TAX_RATE')) if os.getenv(
-    'POST_RETIREMENT_TAX_RATE') is not None else Decimal(0.35)
+ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME = Decimal(
+    os.getenv('ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME')) if os.getenv(
+    'ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME') is not None else Decimal(0.0)
 
 
-DISTRIBUTION_SAMPLE_SIZE = os.getenv('DISTRIBUTION_SAMPLE_SIZE') or 5000
-NUMBER_OF_SIMULATIONS = os.getenv('NUMBER_OF_SIMULATIONS') or 1000
+NUMBER_OF_SIMULATIONS = int(os.getenv('NUMBER_OF_SIMULATIONS')) or 1000
