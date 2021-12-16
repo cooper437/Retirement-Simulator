@@ -16,7 +16,8 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            LIFE_EXPECTANCY,
                            INFLATION_MEAN,
                            WAGE_GROWTH_MEAN,
-                           POST_RETIREMENT_TAX_RATE)
+                           POST_RETIREMENT_TAX_RATE,
+                           NUMBER_OF_SIMULATIONS)
 from src.simulation.distribution_sampling import get_random_sample_pairs
 
 
@@ -252,7 +253,8 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     num_survived = sum(map(lambda i: i['Ran out of money before eol'] == False, all_simulations))
     percentage_survived = num_survived / (num_ran_out_of_money + num_survived)
     return {
-        'Survival Rate': percentage_survived
+        'Survival Rate': percentage_survived,
+        'Number Of Simulations': NUMBER_OF_SIMULATIONS
     }
 
 
@@ -271,7 +273,7 @@ print(
 )
 print(f"Total simulation duration is {simulation_duration}")
 all_simulation_results = []
-for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Running {len(sample_pairs)} simulations"):
+for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
     simulation_output = calculate_retirement_balance(
         a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
         a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
@@ -296,6 +298,8 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
 all_simulation_results_sorted = sorted(
     all_simulation_results, key=lambda i: float(i['Balance at eol']))
 meta_simulation_statistics = calc_meta_simulation_stats(all_simulation_results_sorted)
+print(f"Number of Simulations Run: {meta_simulation_statistics['Number Of Simulations']}")
+print(f"Portfolio survival rate: {meta_simulation_statistics['Survival Rate']}")
 # print(
 #     f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
 # print(
