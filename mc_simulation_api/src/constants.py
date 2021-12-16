@@ -11,8 +11,8 @@ DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS = os.getenv('DECIMAL_PRECISION_FOR_DOLLAR_A
 ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION = False if null_safe_lowercase(os.getenv(
     'ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION')) == 'false' else True
 # Accounts for the wage_growth_mean in the annual amount contributed pre-retirement
-ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH = False if null_safe_lowercase(os.getenv(
-    'ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH')) == 'false' else True
+ADJUST_CONTRIBUTIONS_FOR_INCOME_GROWTH = False if null_safe_lowercase(os.getenv(
+    'ADJUST_CONTRIBUTIONS_FOR_INCOME_GROWTH')) == 'false' else True
 # Accounts for the inflation_mean in the annual amount withdrawn post-retirement
 ADJUST_WITHDRAWALS_FOR_INFLATION = False if null_safe_lowercase(os.getenv(
     'ADJUST_WITHDRAWALS_FOR_INFLATION')) == 'false' else True
@@ -38,8 +38,8 @@ LIFE_EXPECTANCY = os.getenv('LIFE_EXPECTANCY') or 85
 # Market Condition Parameters
 INFLATION_MEAN = Decimal(os.getenv('INFLATION_MEAN')) if os.getenv(
     'INFLATION_MEAN') is not None else Decimal(0.027)
-WAGE_GROWTH_MEAN = Decimal(os.getenv('WAGE_GROWTH_MEAN')) if os.getenv(
-    'WAGE_GROWTH_MEAN') is not None else Decimal(0.03)
+INCOME_GROWTH_MEAN = Decimal(os.getenv('INCOME_GROWTH_MEAN')) if os.getenv(
+    'INCOME_GROWTH_MEAN') is not None else Decimal(0.03)
 PRE_RETIREMENT_MEAN_RATE_OF_RETURN = Decimal(
     os.getenv('PRE_RETIREMENT_MEAN_RATE_OF_RETURN')) if os.getenv(
     'PRE_RETIREMENT_MEAN_RATE_OF_RETURN') is not None else Decimal(0.095)

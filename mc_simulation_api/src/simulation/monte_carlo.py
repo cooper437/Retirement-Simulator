@@ -5,7 +5,7 @@ from numpy.core.fromnumeric import mean
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION,
-                           ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH,
+                           ADJUST_CONTRIBUTIONS_FOR_INCOME_GROWTH,
                            ADJUST_WITHDRAWALS_FOR_INFLATION,
                            ADJUST_WITHDRAWALS_FOR_TAXATION,
                            INITIAL_PORTFOLIO_AMOUNT,
@@ -15,7 +15,7 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            RETIREMENT_AGE,
                            LIFE_EXPECTANCY,
                            INFLATION_MEAN,
-                           WAGE_GROWTH_MEAN,
+                           INCOME_GROWTH_MEAN,
                            POST_RETIREMENT_TAX_RATE,
                            NUMBER_OF_SIMULATIONS)
 from src.simulation.distribution_sampling import get_random_sample_pairs
@@ -61,13 +61,13 @@ def adjust_balance_by_mean_inflation(
     return inflation_adjusted_balance
 
 
-def adjust_pre_retirement_contribution_amount_for_wage_growth(
+def adjust_pre_retirement_contribution_amount_for_income_growth(
         retirement_contribution_amount: Decimal,
-        a_wage_growth_mean: Decimal,
+        a_income_growth_mean: Decimal,
         years_since_simulation_began: int) -> Decimal:
-    '''Adjust the pre-retirement contribution amount to account for wage growth'''
+    '''Adjust the pre-retirement contribution amount to account for income growth'''
     adjusted_contribution_amount = calc_compound_interest(
-        principal_amount=retirement_contribution_amount, interest_rate=a_wage_growth_mean,
+        principal_amount=retirement_contribution_amount, interest_rate=a_income_growth_mean,
         num_time_periods_elapsed=years_since_simulation_began)
     return adjusted_contribution_amount
 
@@ -105,7 +105,7 @@ def calc_balances_from_current_age_to_retirement(
         num_years_until_retirement: int,
         a_pre_retirement_annual_contribution: Decimal,
         a_inflation_mean: Decimal,
-        a_wage_growth_mean: Decimal) -> Decimal:
+        a_income_growth_mean: Decimal) -> Decimal:
     '''Calculate balance at retirement age'''
     balances_by_year = []
     pre_retirement_simulation_year = 1
@@ -115,9 +115,9 @@ def calc_balances_from_current_age_to_retirement(
         # print(
         #     f"Balance at beginning of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         annual_contribution = a_pre_retirement_annual_contribution
-        if ADJUST_CONTRIBUTIONS_FOR_WAGE_GROWTH:
-            annual_contribution = adjust_pre_retirement_contribution_amount_for_wage_growth(
-                a_wage_growth_mean=a_wage_growth_mean,
+        if ADJUST_CONTRIBUTIONS_FOR_INCOME_GROWTH:
+            annual_contribution = adjust_pre_retirement_contribution_amount_for_income_growth(
+                a_income_growth_mean=a_income_growth_mean,
                 retirement_contribution_amount=annual_contribution,
                 years_since_simulation_began=pre_retirement_simulation_year)
         # TODO We currently assume half of the annual contribution is made prior to compounding and half post compounding. This is
@@ -213,7 +213,7 @@ def calculate_retirement_balance(
         a_pre_retirement_annual_contribution: Decimal,
         a_post_retirement_annual_contribution: Decimal,
         a_inflation_mean: Decimal,
-        a_wage_growth_mean: Decimal,
+        a_income_growth_mean: Decimal,
         a_post_retirement_tax_rate: Decimal
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = calc_balances_from_current_age_to_retirement(
@@ -222,7 +222,7 @@ def calculate_retirement_balance(
         num_years_until_retirement=num_years_until_retirement,
         a_pre_retirement_annual_contribution=a_pre_retirement_annual_contribution,
         a_inflation_mean=a_inflation_mean,
-        a_wage_growth_mean=a_wage_growth_mean)
+        a_income_growth_mean=a_income_growth_mean)
     balance_at_end_of_life_expectancy, balances_by_year_after_retirement = calc_balance_from_retirement_to_eol(
         a_balance_at_retirement=balance_at_retirement,
         a_post_retirement_annual_rate_of_return=a_post_retirement_annual_rate_of_return,
@@ -283,7 +283,7 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
         a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
         a_post_retirement_annual_contribution=POST_RETIREMENT_ANNUAL_CONTRIBUTION,
         a_inflation_mean=INFLATION_MEAN,
-        a_wage_growth_mean=WAGE_GROWTH_MEAN,
+        a_income_growth_mean=INCOME_GROWTH_MEAN,
         a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
     )
     single_simulation_result = {
@@ -296,10 +296,10 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
     }
     all_simulation_results.append(single_simulation_result)
 all_simulation_results_sorted = sorted(
-    all_simulation_results, key=lambda i: float(i['Balance at eol']))
+    all_simulation_results, key=lambda i: i['Balance at eol'], reverse=True)
 meta_simulation_statistics = calc_meta_simulation_stats(all_simulation_results_sorted)
-print(f"Number of Simulations Run: {meta_simulation_statistics['Number Of Simulations']}")
-print(f"Portfolio survival rate: {meta_simulation_statistics['Survival Rate']}")
+print(f"Number of simulations run: {meta_simulation_statistics['Number Of Simulations']}")
+print(f"Portfolio survival rate: {meta_simulation_statistics['Survival Rate'] * 100}%")
 # print(
 #     f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
 # print(
