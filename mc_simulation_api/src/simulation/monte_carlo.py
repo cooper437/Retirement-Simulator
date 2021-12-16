@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from tqdm import tqdm
 from numpy.core.fromnumeric import mean
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
@@ -129,8 +129,8 @@ def calc_balance_from_current_age_to_retirement(
         if ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION:
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
-        print(
-            f"Balance at end of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+        # print(
+        #     f"Balance at end of pre-retirement year {pre_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         pre_retirement_simulation_year += 1
     return compounded_balance
 
@@ -177,11 +177,11 @@ def calc_balance_from_retirement_to_eol(
         if ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION:
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance, a_mean_inflation_rate=a_inflation_mean)
-        print(
-            f"Balance at end of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
+        # print(
+        #     f"Balance at end of post-retirement year {post_retirement_simulation_year} = {format_as_currency(compounded_balance)}")
         if compounded_balance <= 0:  # We have depleted our entire portfolio balance
-            print(
-                f"Portfolio balance depleted in year {post_retirement_simulation_year} of retirement")
+            # print(
+            #     f"Portfolio balance depleted in year {post_retirement_simulation_year} of retirement")
             compounded_balance = 0
             break
         post_retirement_simulation_year += 1
@@ -236,7 +236,7 @@ print(
 )
 print(f"Total simulation duration is {simulation_duration}")
 all_simulation_results = []
-for (pre_retirement_ror, post_retirement_ror) in sample_pairs:
+for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Running {len(sample_pairs)} simulations"):
     retirement_balance = calculate_retirement_balance(
         a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
         a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
