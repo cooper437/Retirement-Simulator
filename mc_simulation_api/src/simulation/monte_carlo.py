@@ -246,6 +246,16 @@ def calculate_retirement_balance(
     }
 
 
+def calc_meta_simulation_stats(all_simulations: List) -> dict:
+    num_ran_out_of_money = sum(
+        map(lambda i: i['Ran out of money before eol'] == True, all_simulations))
+    num_survived = sum(map(lambda i: i['Ran out of money before eol'] == False, all_simulations))
+    percentage_survived = num_survived / (num_ran_out_of_money + num_survived)
+    return {
+        'Survival Rate': percentage_survived
+    }
+
+
 years_until_retirement = calc_years_until_retirement(
     a_current_age=CURRENT_AGE, a_retirement_age=RETIREMENT_AGE)
 years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
@@ -283,7 +293,9 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
         'Ran out of money before eol': simulation_output['Ran out of money before eol']
     }
     all_simulation_results.append(single_simulation_result)
-print(all_simulation_results)
+all_simulation_results_sorted = sorted(
+    all_simulation_results, key=lambda i: float(i['Balance at eol']))
+meta_simulation_statistics = calc_meta_simulation_stats(all_simulation_results_sorted)
 # print(
 #     f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
 # print(
