@@ -249,14 +249,53 @@ def calculate_retirement_balance(
     }
 
 
+def get_simulation_value_at_value_quantile(all_simulations: List, field_name: str, quantile: float):
+    '''The value of an input or output parameter to the simulation at a quantile of the range of values used for that parameter'''
+    quantile_as_index = (round(NUMBER_OF_SIMULATIONS * quantile) - 1)
+    list_of_values = list(map(lambda x: x[field_name], all_simulations))
+    sorted_list_of_values = sorted(list_of_values)
+    value_at_quantile = sorted_list_of_values[quantile_as_index]
+    return value_at_quantile
+
+
+def get_simulation_value_at_outcome_quantile(
+        all_simulations: List, field_name: str, quantile: float):
+    '''The value of an input or output parameter to the simulation at a quantile of the range of outcomes for all simulations'''
+    quantile_as_index = (round(NUMBER_OF_SIMULATIONS * quantile) - 1)
+    simulation_at_quantile = all_simulations[quantile_as_index]
+    value_at_simulation_quantile = simulation_at_quantile[field_name]
+    return value_at_simulation_quantile
+
+
 def calc_meta_simulation_stats(all_simulations: List) -> dict:
     num_ran_out_of_money = sum(
         map(lambda i: i['Ran out of money before eol'] == True, all_simulations))
     num_survived = sum(map(lambda i: i['Ran out of money before eol'] == False, all_simulations))
     survival_ratio = num_survived / (num_ran_out_of_money + num_survived)
+    key_quantile_values = [0.1, 0.25, 0.5, 0.75, 0.9]
+    quantile_statistics = {}
+    for quantile_value in key_quantile_values:
+        pre_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
+            all_simulations=all_simulations,
+            field_name='Pre Retirement Rate Of Return',
+            quantile=quantile_value)
+        post_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
+            all_simulations=all_simulations,
+            field_name='Post Retirement Rate Of Return',
+            quantile=quantile_value)
+        balance_at_eol_for_quantile = get_simulation_value_at_value_quantile(
+            all_simulations=all_simulations,
+            field_name='Balance at eol',
+            quantile=quantile_value)
+        quantile_statistics[quantile_value] = {
+            'Pre Retirement Rate Of Return': pre_retirement_ror_for_quantile,
+            'Post Retirement Rate Of Return': post_retirement_ror_for_quantile,
+            'Balance at eol': balance_at_eol_for_quantile
+        }
     return {
         'Survival Rate': survival_ratio,
-        'Number Of Simulations': NUMBER_OF_SIMULATIONS
+        'Number Of Simulations': NUMBER_OF_SIMULATIONS,
+        'Quantile Statistics': quantile_statistics
     }
 
 
