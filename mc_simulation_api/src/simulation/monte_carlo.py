@@ -236,16 +236,16 @@ def calculate_retirement_balance(
         a_inflation_mean=a_inflation_mean,
         a_post_retirement_tax_rate=a_post_retirement_tax_rate)
     # We check if there are missing years from the list where the balance was zero and pad out if needed
-    if (num_years_between_retirement_and_eol != len(balances_by_year_after_retirement)):
+    if num_years_between_retirement_and_eol != len(balances_by_year_after_retirement):
         num_years_missing = num_years_between_retirement_and_eol - \
             len(balances_by_year_after_retirement)
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
     return {
-        'Ran out of money before eol': True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
-        'Balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
-        'Balance at retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
-        'Balance at eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
+        'ran_out_of_money_before_eol': True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
+        'balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
+        'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
+        'balance_at_eol': round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
     }
 
 
@@ -269,33 +269,33 @@ def get_simulation_value_at_outcome_quantile(
 
 def calc_meta_simulation_stats(all_simulations: List) -> dict:
     num_ran_out_of_money = sum(
-        map(lambda i: i['Ran out of money before eol'] == True, all_simulations))
-    num_survived = sum(map(lambda i: i['Ran out of money before eol'] == False, all_simulations))
+        map(lambda i: i['ran_out_of_money_before_eol'] == True, all_simulations))
+    num_survived = sum(map(lambda i: i['ran_out_of_money_before_eol'] == False, all_simulations))
     survival_ratio = num_survived / (num_ran_out_of_money + num_survived)
     key_quantile_values = [0.1, 0.25, 0.5, 0.75, 0.9]
     quantile_statistics = {}
     for quantile_value in key_quantile_values:
         pre_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
             all_simulations=all_simulations,
-            field_name='Pre Retirement Rate Of Return',
+            field_name='pre_retirement_rate_of_return',
             quantile=quantile_value)
         post_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
             all_simulations=all_simulations,
-            field_name='Post Retirement Rate Of Return',
+            field_name='post_retirement_rate_of_return',
             quantile=quantile_value)
         balance_at_eol_for_quantile = get_simulation_value_at_value_quantile(
             all_simulations=all_simulations,
-            field_name='Balance at eol',
+            field_name='balance_at_eol',
             quantile=quantile_value)
         quantile_statistics[quantile_value] = {
-            'Pre Retirement Rate Of Return': pre_retirement_ror_for_quantile,
-            'Post Retirement Rate Of Return': post_retirement_ror_for_quantile,
-            'Balance at eol': balance_at_eol_for_quantile
+            'pre_retirement_rate_of_return': pre_retirement_ror_for_quantile,
+            'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
+            'balance_at_eol': balance_at_eol_for_quantile
         }
     return {
-        'Survival Rate': survival_ratio,
-        'Number Of Simulations': NUMBER_OF_SIMULATIONS,
-        'Quantile Statistics': quantile_statistics
+        'survival_rate': survival_ratio,
+        'number_of_simulations': NUMBER_OF_SIMULATIONS,
+        'quantile_statistics': quantile_statistics
     }
 
 
@@ -331,20 +331,20 @@ for (pre_retirement_ror, post_retirement_ror) in tqdm(sample_pairs, desc=f"Runni
         a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE
     )
     single_simulation_result = {
-        'Ran out of money before eol': simulation_output['Ran out of money before eol'],
-        'Balance at eol': simulation_output['Balance at eol'],
-        'Balance at retirement': simulation_output['Balance at retirement'],
-        'Pre Retirement Rate Of Return': pre_retirement_ror,
-        'Post Retirement Rate Of Return': post_retirement_ror,
-        'Balances': simulation_output['Balances']
+        'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
+        'balance_at_eol': simulation_output['balance_at_eol'],
+        'balance_at_retirement': simulation_output['balance_at_retirement'],
+        'pre_retirement_rate_of_return': pre_retirement_ror,
+        'post_retirement_rate_of_return': post_retirement_ror,
+        'balances': simulation_output['balances']
     }
     all_simulation_results.append(single_simulation_result)
 all_simulation_results_sorted = sorted(
-    all_simulation_results, key=lambda i: (i['Balance at eol'], i['Balance at retirement']))
+    all_simulation_results, key=lambda i: (i['balance_at_eol'], i['balance_at_retirement']))
 meta_simulation_statistics = calc_meta_simulation_stats(all_simulation_results_sorted)
-print(f"Number of simulations run: {meta_simulation_statistics['Number Of Simulations']}")
-print(f"Portfolio survival rate: {round(meta_simulation_statistics['Survival Rate'] * 100, 3)}%")
+print(f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
+print(f"Portfolio survival rate: {round(meta_simulation_statistics['survival_rate'] * 100, 3)}%")
 # print(
-#     f"The balance_at_retirement is {format_as_currency(retirement_balance['Balance at retirement'])}")
+#     f"The balance_at_retirement is {format_as_currency(retirement_balance['balance_at_retirement'])}")
 # print(
-#     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['Balance at eol'])}")
+#     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['balance_at_eol'])}")
