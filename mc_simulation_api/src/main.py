@@ -5,6 +5,7 @@ from uvicorn.config import LOGGING_CONFIG
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from src.simulation import schemas
 
 from src.simulation.monte_carlo import run_simulations
 
@@ -20,8 +21,8 @@ async def is_alive():
     return "OK"
 
 
-@app.get("/simulate")
-def simulate():
+@app.post("/simulate", status_code=200)
+def simulate(simulation_params_in: schemas.RunSimulationIn):
     run_simulations()
     return "Done"
 

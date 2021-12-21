@@ -10,6 +10,7 @@ tqdm = "*"
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
+pydantic = "*"
 
 [dev-packages]
 autopep8 = "*"
