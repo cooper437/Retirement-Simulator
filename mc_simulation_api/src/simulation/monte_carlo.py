@@ -2,6 +2,7 @@ from decimal import Decimal
 from typing import List
 from tqdm import tqdm
 from numpy.core.fromnumeric import mean
+from operator import itemgetter
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            ADJUST_PORTFOLIO_BALANCE_FOR_INFLATION,
@@ -19,6 +20,7 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            POST_RETIREMENT_TAX_RATE,
                            NUMBER_OF_SIMULATIONS,
                            ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME)
+from src.simulation import schemas
 from src.simulation.distribution_sampling import get_random_sample_pairs
 
 
@@ -323,17 +325,26 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     }
 
 
-def run_simulations():
+def run_simulations(simulation_params_in: schemas.RunSimulationIn):
     years_until_retirement = calc_years_until_retirement(
-        a_current_age=CURRENT_AGE, a_retirement_age=RETIREMENT_AGE)
+        a_current_age=simulation_params_in.current_age,
+        a_retirement_age=simulation_params_in.retirement_age
+    )
     years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
-        a_retirement_age=RETIREMENT_AGE, a_life_expectancy=LIFE_EXPECTANCY)
+        a_retirement_age=simulation_params_in.retirement_age,
+        a_life_expectancy=simulation_params_in.life_expectancy
+    )
     simulation_duration = calc_simulation_duration(
         num_years_until_retirement=years_until_retirement,
         num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
     sample_pairs = get_random_sample_pairs(
         years_until_retirement=years_until_retirement,
-        years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
+        years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+        pre_retirement_mean_rate_of_return=simulation_params_in.pre_retirement_mean_rate_of_return,
+        pre_retirement_rate_of_return_volatility=simulation_params_in.pre_retirement_rate_of_return_volatility,
+        post_retirement_mean_rate_of_return=simulation_params_in.post_retirement_mean_rate_of_return,
+        post_retirement_rate_of_return_volatility=simulation_params_in.post_retirement_rate_of_return_volatility
+    )
     print(f"Years until retirement: {years_until_retirement}")
     print(
         "Years from retirement until end of life expectancy: "
@@ -344,17 +355,17 @@ def run_simulations():
     for (pre_retirement_ror, post_retirement_ror) in \
             tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
         simulation_output = calculate_retirement_balance(
-            a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
+            a_initial_portfolio_amount=simulation_params_in.initial_portfolio_amount,
             a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
             a_post_retirement_annual_rate_of_return=Decimal(post_retirement_ror),
             num_years_until_retirement=years_until_retirement,
             num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
-            a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
-            a_post_retirement_annual_withdrawal=POST_RETIREMENT_ANNUAL_WITHDRAWAL,
-            a_post_retirement_annual_additional_income=ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME,
-            a_inflation_mean=INFLATION_MEAN,
-            a_income_growth_mean=INCOME_GROWTH_MEAN,
-            a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE)
+            a_pre_retirement_annual_contribution=simulation_params_in.pre_retirement_annual_contribution,
+            a_post_retirement_annual_withdrawal=simulation_params_in.post_retirement_annual_withdrawal,
+            a_post_retirement_annual_additional_income=simulation_params_in.additional_post_retirement_annual_income,
+            a_inflation_mean=simulation_params_in.inflation_mean,
+            a_income_growth_mean=simulation_params_in.income_growth_mean,
+            a_post_retirement_tax_rate=simulation_params_in.post_retirement_tax_rate)
         single_simulation_result = {
             'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
             'balance_at_eol': simulation_output['balance_at_eol'],
