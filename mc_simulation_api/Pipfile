@@ -9,6 +9,7 @@ python-dotenv = "*"
 tqdm = "*"
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+loguru = "*"
 
 [dev-packages]
 autopep8 = "*"

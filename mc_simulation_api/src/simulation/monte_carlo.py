@@ -323,57 +323,58 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     }
 
 
-years_until_retirement = calc_years_until_retirement(
-    a_current_age=CURRENT_AGE, a_retirement_age=RETIREMENT_AGE)
-years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
-    a_retirement_age=RETIREMENT_AGE, a_life_expectancy=LIFE_EXPECTANCY)
-simulation_duration = calc_simulation_duration(
-    num_years_until_retirement=years_until_retirement,
-    num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
-sample_pairs = get_random_sample_pairs(
-    years_until_retirement=years_until_retirement,
-    years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
-print(f"Years until retirement: {years_until_retirement}")
-print(
-    "Years from retirement until end of life expectancy: "
-    f"{years_from_retirement_until_life_expectancy}"
-)
-print(f"Total simulation duration: {simulation_duration} years")
-all_simulation_results = []
-for (pre_retirement_ror, post_retirement_ror) in \
-        tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
-    simulation_output = calculate_retirement_balance(
-        a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
-        a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
-        a_post_retirement_annual_rate_of_return=Decimal(post_retirement_ror),
+def run_simulations():
+    years_until_retirement = calc_years_until_retirement(
+        a_current_age=CURRENT_AGE, a_retirement_age=RETIREMENT_AGE)
+    years_from_retirement_until_life_expectancy = calc_years_from_retirement_until_life_expectancy(
+        a_retirement_age=RETIREMENT_AGE, a_life_expectancy=LIFE_EXPECTANCY)
+    simulation_duration = calc_simulation_duration(
         num_years_until_retirement=years_until_retirement,
-        num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
-        a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
-        a_post_retirement_annual_withdrawal=POST_RETIREMENT_ANNUAL_WITHDRAWAL,
-        a_post_retirement_annual_additional_income=ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME,
-        a_inflation_mean=INFLATION_MEAN,
-        a_income_growth_mean=INCOME_GROWTH_MEAN,
-        a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE)
-    single_simulation_result = {
-        'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
-        'balance_at_eol': simulation_output['balance_at_eol'],
-        'balance_at_retirement': simulation_output['balance_at_retirement'],
-        'pre_retirement_rate_of_return': pre_retirement_ror,
-        'post_retirement_rate_of_return': post_retirement_ror,
-        'balances': simulation_output['balances']
-    }
-    all_simulation_results.append(single_simulation_result)
-all_simulation_results_sorted = sorted(
-    all_simulation_results,
-    key=lambda i: (i['balance_at_eol'],
-                   i['balance_at_retirement']))
-meta_simulation_statistics = calc_meta_simulation_stats(
-    all_simulation_results_sorted)
-print(
-    f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
-print(
-    f"Portfolio survival rate: {round(meta_simulation_statistics['survival_rate'] * 100, 3)}%")
-# print(
-#     f"The balance_at_retirement is {format_as_currency(retirement_balance['balance_at_retirement'])}")
-# print(
-#     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['balance_at_eol'])}")
+        num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
+    sample_pairs = get_random_sample_pairs(
+        years_until_retirement=years_until_retirement,
+        years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
+    print(f"Years until retirement: {years_until_retirement}")
+    print(
+        "Years from retirement until end of life expectancy: "
+        f"{years_from_retirement_until_life_expectancy}"
+    )
+    print(f"Total simulation duration: {simulation_duration} years")
+    all_simulation_results = []
+    for (pre_retirement_ror, post_retirement_ror) in \
+            tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
+        simulation_output = calculate_retirement_balance(
+            a_initial_portfolio_amount=INITIAL_PORTFOLIO_AMOUNT,
+            a_pre_retirement_annual_rate_of_return=Decimal(pre_retirement_ror),
+            a_post_retirement_annual_rate_of_return=Decimal(post_retirement_ror),
+            num_years_until_retirement=years_until_retirement,
+            num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
+            a_pre_retirement_annual_contribution=PRE_RETIREMENT_ANNUAL_CONTRIBUTION,
+            a_post_retirement_annual_withdrawal=POST_RETIREMENT_ANNUAL_WITHDRAWAL,
+            a_post_retirement_annual_additional_income=ADDITIONAL_POST_RETIREMENT_ANNUAL_INCOME,
+            a_inflation_mean=INFLATION_MEAN,
+            a_income_growth_mean=INCOME_GROWTH_MEAN,
+            a_post_retirement_tax_rate=POST_RETIREMENT_TAX_RATE)
+        single_simulation_result = {
+            'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
+            'balance_at_eol': simulation_output['balance_at_eol'],
+            'balance_at_retirement': simulation_output['balance_at_retirement'],
+            'pre_retirement_rate_of_return': pre_retirement_ror,
+            'post_retirement_rate_of_return': post_retirement_ror,
+            'balances': simulation_output['balances']
+        }
+        all_simulation_results.append(single_simulation_result)
+    all_simulation_results_sorted = sorted(
+        all_simulation_results,
+        key=lambda i: (i['balance_at_eol'],
+                       i['balance_at_retirement']))
+    meta_simulation_statistics = calc_meta_simulation_stats(
+        all_simulation_results_sorted)
+    print(
+        f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
+    print(
+        f"Portfolio survival rate: {round(meta_simulation_statistics['survival_rate'] * 100, 3)}%")
+    # print(
+    #     f"The balance_at_retirement is {format_as_currency(retirement_balance['balance_at_retirement'])}")
+    # print(
+    #     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['balance_at_eol'])}")
