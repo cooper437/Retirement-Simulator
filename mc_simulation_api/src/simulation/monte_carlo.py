@@ -389,7 +389,4 @@ def run_simulations(simulation_params_in: schemas.RunSimulationIn):
         f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
     print(
         f"Portfolio survival rate: {round(meta_simulation_statistics['survival_rate'] * 100, 3)}%")
-    # print(
-    #     f"The balance_at_retirement is {format_as_currency(retirement_balance['balance_at_retirement'])}")
-    # print(
-    #     f"The balance_at_end_of_life_expectancy is {format_as_currency(retirement_balance['balance_at_eol'])}")
+    return meta_simulation_statistics

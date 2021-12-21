@@ -23,8 +23,8 @@ async def is_alive():
 
 @app.post("/simulate", status_code=200)
 def simulate(simulation_params_in: schemas.RunSimulationIn):
-    run_simulations(simulation_params_in)
-    return "Done"
+    meta_simulation_statistics = run_simulations(simulation_params_in)
+    return meta_simulation_statistics
 
 
 if __name__ == "__main__":
