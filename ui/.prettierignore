@@ -1,0 +1,5 @@
+# prettier ignore artifacts:
+build
+coverage
+src/cronGenerator/*.js
+src/serviceWorker.js
