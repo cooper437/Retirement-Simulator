@@ -1,8 +1,7 @@
 from decimal import Decimal
 from typing import List
 from tqdm import tqdm
-from numpy.core.fromnumeric import mean
-from operator import itemgetter
+from loguru import logger
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
@@ -345,12 +344,12 @@ def run_simulations(simulation_params_in: schemas.RunSimulationIn):
         post_retirement_mean_rate_of_return=simulation_params_in.post_retirement_mean_rate_of_return,
         post_retirement_rate_of_return_volatility=simulation_params_in.post_retirement_rate_of_return_volatility
     )
-    print(f"Years until retirement: {years_until_retirement}")
-    print(
+    logger.info(f"Years until retirement: {years_until_retirement}")
+    logger.info(
         "Years from retirement until end of life expectancy: "
         f"{years_from_retirement_until_life_expectancy}"
     )
-    print(f"Total simulation duration: {simulation_duration} years")
+    logger.info(f"Total simulation duration: {simulation_duration} years")
     all_simulation_results = []
     for (pre_retirement_ror, post_retirement_ror) in \
             tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
@@ -385,8 +384,8 @@ def run_simulations(simulation_params_in: schemas.RunSimulationIn):
                        i['balance_at_retirement']))
     meta_simulation_statistics = calc_meta_simulation_stats(
         all_simulation_results_sorted)
-    print(
+    logger.info(
         f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
-    print(
+    logger.info(
         f"Portfolio survival rate: {round(meta_simulation_statistics['survival_rate'] * 100, 3)}%")
     return meta_simulation_statistics
