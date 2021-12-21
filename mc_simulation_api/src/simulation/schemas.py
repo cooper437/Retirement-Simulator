@@ -1,3 +1,4 @@
+from typing import Dict
 from pydantic import (BaseModel,
                       PositiveInt,
                       NegativeInt,
@@ -34,3 +35,15 @@ class RunSimulationIn(BaseModel):
     # Taxation
     post_retirement_tax_rate: decimal_positive
     additional_post_retirement_annual_income: decimal_positive
+
+
+class QuantileStatistic(BaseModel):
+    pre_retirement_rate_of_return: decimal_positive
+    post_retirement_rate_of_return: decimal_positive
+    balance_at_eol: decimal_positive
+
+
+class RunSimulationOut(BaseModel):
+    survival_rate: decimal_positive
+    number_of_simulations: PositiveInt
+    quantile_statistics: Dict[str, QuantileStatistic]
