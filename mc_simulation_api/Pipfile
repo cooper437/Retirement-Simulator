@@ -11,6 +11,7 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
 pydantic = "*"
+pyhumps = "*"
 
 [dev-packages]
 autopep8 = "*"

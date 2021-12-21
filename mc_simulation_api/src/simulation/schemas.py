@@ -1,4 +1,5 @@
 from typing import Dict
+from humps import camelize
 from pydantic import (BaseModel,
                       PositiveInt,
                       NegativeInt,
@@ -8,7 +9,14 @@ from pydantic import (BaseModel,
 decimal_positive = condecimal(ge=0)
 
 
-class RunSimulationIn(BaseModel):
+class CamelModel(BaseModel):
+    """Automatically create a camelCased alias for each field"""
+    class Config:
+        alias_generator = camelize
+        allow_population_by_field_name = True
+
+
+class RunSimulationIn(CamelModel):
     # Adjusts the portfolio balance each year both pre and post retirement based on the inflation_mean to reflect value in todays dollars
     adjust_portfolio_balance_for_inflation: bool
     # Accounts for the wage_growth_mean in the annual amount contributed pre-retirement
@@ -37,13 +45,13 @@ class RunSimulationIn(BaseModel):
     additional_post_retirement_annual_income: decimal_positive
 
 
-class QuantileStatistic(BaseModel):
+class QuantileStatistic(CamelModel):
     pre_retirement_rate_of_return: decimal_positive
     post_retirement_rate_of_return: decimal_positive
     balance_at_eol: decimal_positive
 
 
-class RunSimulationOut(BaseModel):
+class RunSimulationOut(CamelModel):
     survival_rate: decimal_positive
     number_of_simulations: PositiveInt
     quantile_statistics: Dict[str, QuantileStatistic]
