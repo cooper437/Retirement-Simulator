@@ -37,6 +37,13 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'prettier/prettier': 'error',
-    'react-hooks/exhaustive-deps': 'off'
+    'react-hooks/exhaustive-deps': 'off',
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: 'function-declaration',
+        unnamedComponents: 'function-expression'
+      }
+    ]
   }
 };
