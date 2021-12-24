@@ -1,6 +1,30 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import LabeledFormSection from './LabeledFormSection';
+import McSimulatorFormSection from './McSimulatorFormSection';
+import LifestyleFormContent from './LifestyleFormContent';
+
+// const withFormSection = (Component, sectionTitle) => (
+//   <McSimulatorFormSection
+//     sectionTitle={sectionTitle}
+//     render={(props) => <Component {...props} />}
+//   />
+// );
+
+function withFormSection(WrappedComponent, sectionTitle) {
+  // eslint-disable-next-line react/prefer-stateless-function
+  return class extends React.Component {
+    render() {
+      return (
+        <McSimulatorFormSection
+          sectionTitle={sectionTitle}
+          render={() => <WrappedComponent {...this.props} />}
+        />
+      );
+    }
+  };
+}
+
+const LifestyleFormSection = withFormSection(LifestyleFormContent, 'Lifestyle');
 
 export default function FormContainer() {
   return (
@@ -13,7 +37,7 @@ export default function FormContainer() {
           market conditions
         </Typography>
       </Box>
-      <LabeledFormSection />
+      <LifestyleFormSection />
     </Box>
   );
 }
