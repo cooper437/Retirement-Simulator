@@ -51,10 +51,19 @@ export default function FormContainer() {
           market conditions
         </Typography>
       </Box>
-      <LifestyleFormSection />
-      <MarketConditionsFormSection />
-      <PortfolioFormSection />
-      <TaxesFormSection />
+      <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { mt: 2, width: '20ch' }
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <LifestyleFormSection />
+        <MarketConditionsFormSection />
+        <PortfolioFormSection />
+        <TaxesFormSection />
+      </Box>
     </Box>
   );
 }
