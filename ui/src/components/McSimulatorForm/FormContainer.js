@@ -1,16 +1,12 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
-import LifestyleFormContent from './LifestyleFormContent';
+import LifestyleFormContent from './FormSections/LifestyleFormContent';
+import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
+import PortfolioFormContent from './FormSections/PortfolioFormContent';
+import TaxesFormContent from './FormSections/TaxesFormContent';
 
-// const withFormSection = (Component, sectionTitle) => (
-//   <McSimulatorFormSection
-//     sectionTitle={sectionTitle}
-//     render={(props) => <Component {...props} />}
-//   />
-// );
-
-function withFormSection(WrappedComponent, sectionTitle) {
+function withFormSection({ WrappedComponent, sectionTitle }) {
   // eslint-disable-next-line react/prefer-stateless-function
   return class extends React.Component {
     render() {
@@ -24,7 +20,25 @@ function withFormSection(WrappedComponent, sectionTitle) {
   };
 }
 
-const LifestyleFormSection = withFormSection(LifestyleFormContent, 'Lifestyle');
+const LifestyleFormSection = withFormSection({
+  WrappedComponent: LifestyleFormContent,
+  sectionTitle: 'Lifestyle'
+});
+
+const MarketConditionsFormSection = withFormSection({
+  WrappedComponent: MarketConditionsFormContent,
+  sectionTitle: 'Market Conditions'
+});
+
+const PortfolioFormSection = withFormSection({
+  WrappedComponent: PortfolioFormContent,
+  sectionTitle: 'Portfolio'
+});
+
+const TaxesFormSection = withFormSection({
+  WrappedComponent: TaxesFormContent,
+  sectionTitle: 'Taxes'
+});
 
 export default function FormContainer() {
   return (
@@ -38,6 +52,9 @@ export default function FormContainer() {
         </Typography>
       </Box>
       <LifestyleFormSection />
+      <MarketConditionsFormSection />
+      <PortfolioFormSection />
+      <TaxesFormSection />
     </Box>
   );
 }
