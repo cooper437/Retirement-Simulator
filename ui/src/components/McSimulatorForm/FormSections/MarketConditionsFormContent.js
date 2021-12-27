@@ -45,7 +45,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
           <InputLabel shrink htmlFor="inflation-mean">
-            Inflation Mean
+            Annual Inflation Mean
           </InputLabel>
           <OutlinedInput
             id="inflation-mean"
@@ -56,7 +56,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
-            label="Inflation Mean"
+            label="Annual Inflation Mean"
           />
         </FormControl>
       </Box>
@@ -99,7 +99,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
           <InputLabel shrink htmlFor="income-growth-mean">
-            Income Growth Mean
+            Annual Income Growth Mean
           </InputLabel>
           <OutlinedInput
             id="income-growth-mean"
@@ -110,7 +110,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
-            label="Income Growth Mean"
+            label="Annual Income Growth Mean"
           />
         </FormControl>
       </Box>

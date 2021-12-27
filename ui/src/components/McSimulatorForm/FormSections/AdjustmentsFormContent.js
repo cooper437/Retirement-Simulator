@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  Box,
-  Stack,
-  Checkbox,
-  FormControlLabel,
-  FormGroup
-} from '@mui/material';
+import { Stack, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
+// eslint-disable-next-line no-unused-vars
 export default function AdjustmentsFormContent({ commonFormStyles }) {
   return (
     <>
