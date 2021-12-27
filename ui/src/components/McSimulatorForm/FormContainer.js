@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
@@ -57,6 +57,27 @@ const TaxesFormSection = withFormSection({
 });
 
 export default function FormContainer() {
+  const [formValues, setFormValues] = useState({
+    adjustPortfolioBalanceForInflation: true,
+    adjustContributionsForIncomeGrowth: true,
+    adjustWithdrawalsForInflation: true,
+    adjustWithdrawalsForTaxation: true,
+    initialPortfolioAmount: '',
+    preRetirementAnnualContribution: '',
+    postRetirementAnnualWithdrawal: '',
+    currentAge: '',
+    retirementAge: '',
+    lifeExpectancy: '',
+    inflationMean: '',
+    incomeGrowthMean: '',
+    preRetirementMeanRateOfReturn: '',
+    postRetirementMeanRateOfReturn: '',
+    preRetirementRateOfReturnVolatility: '',
+    postRetirementRateOfReturnVolatility: '',
+    postRetirementTaxRate: '',
+    additionalPostRetirementAnnualIncome: ''
+  });
+
   return (
     <Box sx={{ mt: 4 }}>
       <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
