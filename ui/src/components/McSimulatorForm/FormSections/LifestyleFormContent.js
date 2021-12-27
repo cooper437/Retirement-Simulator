@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 
 function LifestyleFormContent({ commonFormStyles }) {
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="row" justifyContent="space-between">
       <TextField
         sx={commonFormStyles.shortFormInput}
         id="current-age-input"

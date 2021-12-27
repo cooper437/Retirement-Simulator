@@ -9,7 +9,7 @@ import TaxesFormContent from './FormSections/TaxesFormContent';
 const commonFormStyles = {
   shortFormInput: {
     mt: 2,
-    width: '20ch'
+    width: '30ch'
   },
   longFormInput: {
     mt: 2,
