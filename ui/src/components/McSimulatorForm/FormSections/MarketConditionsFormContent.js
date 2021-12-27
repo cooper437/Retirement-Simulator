@@ -62,7 +62,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
       </Box>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel id="pre-retirement-investment-style">
+          <InputLabel id="pre-retirement-investment-style-label">
             Pre-Retirement Investment Style
           </InputLabel>
           <Select
@@ -80,7 +80,7 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
           </Select>
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel id="post-retirement-investment-style">
+          <InputLabel id="post-retirement-investment-style-label">
             Post-Retirement Investment Style
           </InputLabel>
           <Select
