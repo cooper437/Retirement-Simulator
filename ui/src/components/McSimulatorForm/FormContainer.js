@@ -5,6 +5,7 @@ import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
+import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -56,6 +57,11 @@ const TaxesFormSection = withFormSection({
   sectionTitle: 'Taxes'
 });
 
+const AdjustmentsFormSection = withFormSection({
+  WrappedComponent: AdjustmentsFormContent,
+  sectionTitle: 'Adjustments'
+});
+
 export default function FormContainer() {
   const [formValues, setFormValues] = useState({
     adjustPortfolioBalanceForInflation: true,
@@ -95,6 +101,7 @@ export default function FormContainer() {
         sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}
       >
         <LifestyleFormSection />
+        <AdjustmentsFormSection />
         <PortfolioFormSection />
         <MarketConditionsFormSection />
         <TaxesFormSection />

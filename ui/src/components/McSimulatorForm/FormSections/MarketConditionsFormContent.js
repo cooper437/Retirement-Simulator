@@ -97,7 +97,22 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             <MenuItem value="conservative">Conservative</MenuItem>
           </Select>
         </FormControl>
-        <Box sx={commonFormStyles.shortFormInput} />
+        <FormControl sx={commonFormStyles.shortFormInput}>
+          <InputLabel shrink htmlFor="income-growth-mean">
+            Income Growth Mean
+          </InputLabel>
+          <OutlinedInput
+            id="income-growth-mean"
+            InputLabelProps={{ shrink: true }}
+            inputProps={{
+              style: { textAlign: 'right' }
+            }}
+            onChange={() => null}
+            startAdornment={<InputAdornment position="start" />}
+            endAdornment={<InputAdornment position="end">%</InputAdornment>}
+            label="Income Growth Mean"
+          />
+        </FormControl>
       </Box>
     </>
   );
