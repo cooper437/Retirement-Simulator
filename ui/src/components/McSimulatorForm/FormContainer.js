@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
@@ -67,11 +67,22 @@ export default function FormContainer() {
           market conditions
         </Typography>
       </Box>
-      <Box component="form" noValidate autoComplete="off">
+      <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        sx={{ pb: 4, borderBottom: '1px solid gray' }}
+      >
         <LifestyleFormSection />
         <PortfolioFormSection />
         <MarketConditionsFormSection />
         <TaxesFormSection />
+      </Box>
+      <Box sx={{ mt: 4 }}>
+        <Stack spacing={2} direction="row">
+          <Button variant="contained">Run Simulation</Button>
+          <Button variant="outlined">Reset</Button>
+        </Stack>
       </Box>
     </Box>
   );
