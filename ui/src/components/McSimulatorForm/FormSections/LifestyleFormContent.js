@@ -2,10 +2,11 @@ import React from 'react';
 import { Box } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-function LifestyleFormContent() {
+function LifestyleFormContent({ commonFormStyles }) {
   return (
     <Box display="flex" flexDirection="column">
       <TextField
+        sx={commonFormStyles.shortFormInput}
         id="current-age-input"
         label="Current Age"
         variant="outlined"
@@ -15,6 +16,7 @@ function LifestyleFormContent() {
         }}
       />
       <TextField
+        sx={commonFormStyles.shortFormInput}
         id="retirement-age-input"
         label="Retirement Age"
         variant="outlined"
@@ -24,6 +26,7 @@ function LifestyleFormContent() {
         }}
       />
       <TextField
+        sx={commonFormStyles.shortFormInput}
         id="life-expectancy-input"
         label="Life Expectancy"
         variant="outlined"

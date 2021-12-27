@@ -6,6 +6,17 @@ import MarketConditionsFormContent from './FormSections/MarketConditionsFormCont
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
 
+const commonFormStyles = {
+  shortFormInput: {
+    mt: 2,
+    width: '20ch'
+  },
+  longFormInput: {
+    mt: 2,
+    width: '30ch'
+  }
+};
+
 function withFormSection({ WrappedComponent, sectionTitle }) {
   // eslint-disable-next-line react/prefer-stateless-function
   return class extends React.Component {
@@ -13,7 +24,12 @@ function withFormSection({ WrappedComponent, sectionTitle }) {
       return (
         <McSimulatorFormSection
           sectionTitle={sectionTitle}
-          render={() => <WrappedComponent {...this.props} />}
+          render={() => (
+            <WrappedComponent
+              commonFormStyles={commonFormStyles}
+              {...this.props}
+            />
+          )}
         />
       );
     }
@@ -51,17 +67,10 @@ export default function FormContainer() {
           market conditions
         </Typography>
       </Box>
-      <Box
-        component="form"
-        sx={{
-          '& .MuiTextField-root': { mt: 2, width: '20ch' }
-        }}
-        noValidate
-        autoComplete="off"
-      >
+      <Box component="form" noValidate autoComplete="off">
         <LifestyleFormSection />
-        <MarketConditionsFormSection />
         <PortfolioFormSection />
+        <MarketConditionsFormSection />
         <TaxesFormSection />
       </Box>
     </Box>
