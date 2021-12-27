@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { SECTION_BACKGROUND_COLOR } from '../../colors';
+import { SECTION_BORDER_COLOR } from '../../colors';
 /**
  * A higher order component that produces an outlined section of the McSimulator form
  * @param {String} sectionTitle - The title of the section
@@ -13,7 +13,7 @@ export default function McSimulatorFormSection({ sectionTitle, render }) {
       sx={{
         mt: 2,
         p: 2,
-        backgroundColor: SECTION_BACKGROUND_COLOR,
+        border: `1px solid ${SECTION_BORDER_COLOR}`,
         borderRadius: '10px'
       }}
     >

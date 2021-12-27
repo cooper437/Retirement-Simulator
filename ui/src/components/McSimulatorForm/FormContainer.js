@@ -85,21 +85,21 @@ export default function FormContainer() {
         <Typography variant="p">
           Input the information below and then run the simulation to see the
           likelihood that you will meet your retirement goals under a variety of
-          market conditions
+          market conditions.
         </Typography>
       </Box>
       <Box
         component="form"
         noValidate
         autoComplete="off"
-        sx={{ pb: 4, borderBottom: '1px solid gray' }}
+        sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}
       >
         <LifestyleFormSection />
         <PortfolioFormSection />
         <MarketConditionsFormSection />
         <TaxesFormSection />
       </Box>
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
         <Stack spacing={2} direction="row">
           <Button variant="contained">Run Simulation</Button>
           <Button variant="outlined">Reset</Button>
