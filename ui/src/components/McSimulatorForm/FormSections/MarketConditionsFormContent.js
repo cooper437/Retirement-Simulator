@@ -92,6 +92,8 @@ export default function MarketConditionsFormContent({
             label="Pre-Retirement Investment Style"
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
+            value={preRetirementInvestmentStyle}
+            onChange={(e) => setPreRetirementInvestmentStyle(e.target.value)}
           >
             <MenuItem value="aggressive">Aggressive</MenuItem>
             <MenuItem value="moderate-agressive">Moderate Aggressive</MenuItem>
@@ -109,6 +111,8 @@ export default function MarketConditionsFormContent({
             label="Post-Retirement Investment Style"
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
+            value={postRetirementInvestmentStyle}
+            onChange={(e) => setPostRetirementInvestmentStyle(e.target.value)}
           >
             <MenuItem value="aggressive">Aggressive</MenuItem>
             <MenuItem value="moderate-agressive">Moderate Aggressive</MenuItem>
