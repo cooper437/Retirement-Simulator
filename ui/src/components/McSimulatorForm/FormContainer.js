@@ -80,6 +80,7 @@ export default function FormContainer() {
     postRetirementMeanRateOfReturn: '',
     preRetirementInvestmentStyle: '',
     postRetirementInvestmentStyle: '',
+    filingStatus: '',
     postRetirementTaxRate: '',
     additionalPostRetirementAnnualIncome: ''
   });
@@ -185,7 +186,16 @@ export default function FormContainer() {
           setInflationMean={handleChangeFormValue('inflationMean')}
           setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
         />
-        <TaxesFormSection />
+        <TaxesFormSection
+          filingStatus={formValues.filingStatus}
+          additionalPostRetirementAnnualIncome={
+            formValues.additionalPostRetirementAnnualIncome
+          }
+          setFilingStatus={handleChangeFormValue('filingStatus')}
+          setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
+            'additionalPostRetirementAnnualIncome'
+          )}
+        />
       </Box>
       <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
         <Stack spacing={2} direction="row">

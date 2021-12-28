@@ -9,18 +9,27 @@ import {
   MenuItem
 } from '@mui/material';
 
-export default function TaxesFormContent({ commonFormStyles }) {
+export default function TaxesFormContent({
+  commonFormStyles,
+  filingStatus,
+  additionalPostRetirementAnnualIncome,
+  setFilingStatus,
+  setAdditionalPostRetirementAnnualIncome
+}) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
       <FormControl sx={commonFormStyles.shortFormInput}>
-        <InputLabel id="filing-status-label">Filing Status</InputLabel>
+        <InputLabel id="filing-status-label">
+          Post-Retirement Filing Status
+        </InputLabel>
         <Select
           labelId="filing-status-label"
           id="filing-status-input"
-          label="Filing Status"
-          onChange={() => null}
+          label="Post-Retirement Filing Status"
           startAdornment={<InputAdornment position="start" />}
           endAdornment={<InputAdornment position="end" />}
+          value={filingStatus}
+          onChange={(e) => setFilingStatus(e.target.value)}
         >
           <MenuItem value="single">Single</MenuItem>
           <MenuItem value="married-filing-jointly">
@@ -37,7 +46,7 @@ export default function TaxesFormContent({ commonFormStyles }) {
       </FormControl>
       <FormControl sx={commonFormStyles.longFormInput}>
         <InputLabel htmlFor="additional-annual-income">
-          Additional Annual Income
+          Post-Retirement Additional Annual Income
         </InputLabel>
         <OutlinedInput
           id="additional-annual-income"
@@ -45,10 +54,15 @@ export default function TaxesFormContent({ commonFormStyles }) {
             style: { textAlign: 'right' }
           }}
           type="number"
-          onChange={() => null}
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
           endAdornment={<InputAdornment position="end">.00</InputAdornment>}
-          label="Additional Annual Income"
+          label="Post Retirement Additional Annual Income"
+          value={additionalPostRetirementAnnualIncome}
+          onChange={(e) =>
+            setAdditionalPostRetirementAnnualIncome(
+              parseInt(e.target.value, 10)
+            )
+          }
         />
       </FormControl>
       <Box sx={commonFormStyles.longFormInput} />
