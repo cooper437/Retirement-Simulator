@@ -84,6 +84,13 @@ export default function FormContainer() {
     additionalPostRetirementAnnualIncome: ''
   });
 
+  const handleChangeFormValue = (fieldName) => (updatedValue) => {
+    setFormValues({
+      ...formValues,
+      [fieldName]: updatedValue
+    });
+  };
+
   return (
     <Box sx={{ mt: 4 }}>
       <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
@@ -100,7 +107,12 @@ export default function FormContainer() {
         autoComplete="off"
         sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}
       >
-        <LifestyleFormSection />
+        <LifestyleFormSection
+          currentAge={formValues.currentAge}
+          retirementAge={formValues.retirementAge}
+          lifeExpectancy={formValues.lifeExpectancy}
+          setCurrentAge={handleChangeFormValue('currentAge')}
+        />
         <AdjustmentsFormSection />
         <PortfolioFormSection />
         <MarketConditionsFormSection />

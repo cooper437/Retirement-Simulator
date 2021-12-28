@@ -2,7 +2,13 @@ import React from 'react';
 import { Box } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-function LifestyleFormContent({ commonFormStyles }) {
+function LifestyleFormContent({
+  commonFormStyles,
+  currentAge,
+  retirementAge,
+  lifeExpectancy,
+  setCurrentAge
+}) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
       <TextField
@@ -14,6 +20,8 @@ function LifestyleFormContent({ commonFormStyles }) {
         InputLabelProps={{
           shrink: true
         }}
+        value={currentAge}
+        onChange={(e) => setCurrentAge(parseInt(e.target.value, 10))}
       />
       <TextField
         sx={commonFormStyles.shortFormInput}
