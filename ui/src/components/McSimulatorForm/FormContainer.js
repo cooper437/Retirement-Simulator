@@ -115,8 +115,48 @@ export default function FormContainer() {
           setRetirementAge={handleChangeFormValue('retirementAge')}
           setLifeExpectancy={handleChangeFormValue('lifeExpectancy')}
         />
-        <AdjustmentsFormSection />
-        <PortfolioFormSection />
+        <AdjustmentsFormSection
+          adjustPortfolioBalanceForInflation={
+            formValues.adjustPortfolioBalanceForInflation
+          }
+          adjustContributionsForIncomeGrowth={
+            formValues.adjustContributionsForIncomeGrowth
+          }
+          adjustWithdrawalsForInflation={
+            formValues.adjustWithdrawalsForInflation
+          }
+          adjustWithdrawalsForTaxation={formValues.adjustWithdrawalsForTaxation}
+          setAdjustPortfolioBalanceForInflation={handleChangeFormValue(
+            'adjustPortfolioBalanceForInflation'
+          )}
+          setAdjustContributionsForIncomeGrowth={handleChangeFormValue(
+            'adjustContributionsForIncomeGrowth'
+          )}
+          setAdjustWithdrawalsForInflation={handleChangeFormValue(
+            'adjustWithdrawalsForInflation'
+          )}
+          setAdjustWithdrawalsForTaxation={handleChangeFormValue(
+            'adjustWithdrawalsForTaxation'
+          )}
+        />
+        <PortfolioFormSection
+          initialPortfolioAmount={formValues.initialPortfolioAmount}
+          preRetirementAnnualContribution={
+            formValues.preRetirementAnnualContribution
+          }
+          postRetirementAnnualWithdrawal={
+            formValues.postRetirementAnnualWithdrawal
+          }
+          setInitialPortfolioAmount={handleChangeFormValue(
+            'initialPortfolioAmount'
+          )}
+          setPreRetirementAnnualContribution={handleChangeFormValue(
+            'preRetirementAnnualContribution'
+          )}
+          setPostRetirementAnnualWithdrawal={handleChangeFormValue(
+            'postRetirementAnnualWithdrawal'
+          )}
+        />
         <MarketConditionsFormSection />
         <TaxesFormSection />
       </Box>

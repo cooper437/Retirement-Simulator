@@ -7,7 +7,15 @@ import {
   InputAdornment
 } from '@mui/material';
 
-export default function PortfolioFormContent({ commonFormStyles }) {
+export default function PortfolioFormContent({
+  commonFormStyles,
+  initialPortfolioAmount,
+  preRetirementAnnualContribution,
+  postRetirementAnnualWithdrawal,
+  setInitialPortfolioAmount,
+  setPreRetirementAnnualContribution,
+  setPostRetirementAnnualWithdrawal
+}) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
       <FormControl sx={commonFormStyles.longFormInput}>
@@ -20,10 +28,13 @@ export default function PortfolioFormContent({ commonFormStyles }) {
             style: { textAlign: 'right' }
           }}
           type="number"
-          onChange={() => null}
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
           endAdornment={<InputAdornment position="end">.00</InputAdornment>}
           label="Initial Amount"
+          value={initialPortfolioAmount}
+          onChange={(e) =>
+            setInitialPortfolioAmount(parseInt(e.target.value, 10))
+          }
         />
       </FormControl>
       <FormControl sx={commonFormStyles.longFormInput}>
@@ -35,11 +46,14 @@ export default function PortfolioFormContent({ commonFormStyles }) {
           inputProps={{
             style: { textAlign: 'right' }
           }}
-          onChange={() => null}
           type="number"
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
           endAdornment={<InputAdornment position="end">.00</InputAdornment>}
           label="Annual Contribution Pre-Retirement"
+          value={preRetirementAnnualContribution}
+          onChange={(e) =>
+            setPreRetirementAnnualContribution(parseInt(e.target.value, 10))
+          }
         />
       </FormControl>
       <FormControl sx={commonFormStyles.longFormInput}>
@@ -51,11 +65,14 @@ export default function PortfolioFormContent({ commonFormStyles }) {
           inputProps={{
             style: { textAlign: 'right' }
           }}
-          onChange={() => null}
           type="number"
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
           endAdornment={<InputAdornment position="end">.00</InputAdornment>}
           label="Annual Net Withdrawal Post-Retirement"
+          value={postRetirementAnnualWithdrawal}
+          onChange={(e) =>
+            setPostRetirementAnnualWithdrawal(parseInt(e.target.value, 10))
+          }
         />
       </FormControl>
     </Box>
