@@ -185,6 +185,15 @@ export default function FormContainer() {
           )}
           setInflationMean={handleChangeFormValue('inflationMean')}
           setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
+          adjustPortfolioBalanceForInflation={
+            formValues.adjustPortfolioBalanceForInflation
+          }
+          adjustWithdrawalsForInflation={
+            formValues.adjustWithdrawalsForInflation
+          }
+          adjustContributionsForIncomeGrowth={
+            formValues.adjustContributionsForIncomeGrowth
+          }
         />
         <TaxesFormSection
           filingStatus={formValues.filingStatus}
@@ -195,6 +204,7 @@ export default function FormContainer() {
           setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
             'additionalPostRetirementAnnualIncome'
           )}
+          adjustWithdrawalsForTaxation={formValues.adjustWithdrawalsForTaxation}
         />
       </Box>
       <Box sx={{ mt: 4, ml: 4, mr: 4 }}>

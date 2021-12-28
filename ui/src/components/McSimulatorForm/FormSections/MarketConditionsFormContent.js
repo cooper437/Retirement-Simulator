@@ -22,7 +22,10 @@ export default function MarketConditionsFormContent({
   setPreRetirementInvestmentStyle,
   setPostRetirementInvestmentStyle,
   setInflationMean,
-  setIncomeGrowthMean
+  setIncomeGrowthMean,
+  adjustPortfolioBalanceForInflation,
+  adjustContributionsForIncomeGrowth,
+  adjustWithdrawalsForInflation
 }) {
   return (
     <>
@@ -63,23 +66,26 @@ export default function MarketConditionsFormContent({
             }
           />
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel shrink htmlFor="inflation-mean">
-            Annual Inflation Mean
-          </InputLabel>
-          <OutlinedInput
-            id="inflation-mean"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              style: { textAlign: 'right' }
-            }}
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end">%</InputAdornment>}
-            label="Annual Inflation Mean"
-            value={inflationMean}
-            onChange={(e) => setInflationMean(parseInt(e.target.value, 10))}
-          />
-        </FormControl>
+        {(adjustPortfolioBalanceForInflation ||
+          adjustWithdrawalsForInflation) && (
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <InputLabel shrink htmlFor="inflation-mean">
+              Annual Inflation Mean
+            </InputLabel>
+            <OutlinedInput
+              id="inflation-mean"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                style: { textAlign: 'right' }
+              }}
+              startAdornment={<InputAdornment position="start" />}
+              endAdornment={<InputAdornment position="end">%</InputAdornment>}
+              label="Annual Inflation Mean"
+              value={inflationMean}
+              onChange={(e) => setInflationMean(parseInt(e.target.value, 10))}
+            />
+          </FormControl>
+        )}
       </Box>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -120,23 +126,27 @@ export default function MarketConditionsFormContent({
             <MenuItem value="conservative">Conservative</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel shrink htmlFor="income-growth-mean">
-            Annual Income Growth Mean
-          </InputLabel>
-          <OutlinedInput
-            id="income-growth-mean"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              style: { textAlign: 'right' }
-            }}
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end">%</InputAdornment>}
-            label="Annual Income Growth Mean"
-            value={incomeGrowthMean}
-            onChange={(e) => setIncomeGrowthMean(parseInt(e.target.value, 10))}
-          />
-        </FormControl>
+        {adjustContributionsForIncomeGrowth && (
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <InputLabel shrink htmlFor="income-growth-mean">
+              Annual Income Growth Mean
+            </InputLabel>
+            <OutlinedInput
+              id="income-growth-mean"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                style: { textAlign: 'right' }
+              }}
+              startAdornment={<InputAdornment position="start" />}
+              endAdornment={<InputAdornment position="end">%</InputAdornment>}
+              label="Annual Income Growth Mean"
+              value={incomeGrowthMean}
+              onChange={(e) =>
+                setIncomeGrowthMean(parseInt(e.target.value, 10))
+              }
+            />
+          </FormControl>
+        )}
       </Box>
     </>
   );
