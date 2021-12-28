@@ -7,7 +7,9 @@ function LifestyleFormContent({
   currentAge,
   retirementAge,
   lifeExpectancy,
-  setCurrentAge
+  setCurrentAge,
+  setRetirementAge,
+  setLifeExpectancy
 }) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -32,6 +34,8 @@ function LifestyleFormContent({
         InputLabelProps={{
           shrink: true
         }}
+        value={retirementAge}
+        onChange={(e) => setRetirementAge(parseInt(e.target.value, 10))}
       />
       <TextField
         sx={commonFormStyles.shortFormInput}
@@ -42,6 +46,8 @@ function LifestyleFormContent({
         InputLabelProps={{
           shrink: true
         }}
+        value={lifeExpectancy}
+        onChange={(e) => setLifeExpectancy(parseInt(e.target.value, 10))}
       />
     </Box>
   );

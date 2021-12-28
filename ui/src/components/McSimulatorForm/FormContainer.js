@@ -112,6 +112,8 @@ export default function FormContainer() {
           retirementAge={formValues.retirementAge}
           lifeExpectancy={formValues.lifeExpectancy}
           setCurrentAge={handleChangeFormValue('currentAge')}
+          setRetirementAge={handleChangeFormValue('retirementAge')}
+          setLifeExpectancy={handleChangeFormValue('lifeExpectancy')}
         />
         <AdjustmentsFormSection />
         <PortfolioFormSection />
