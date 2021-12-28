@@ -93,7 +93,7 @@ export default function FormContainer() {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
         <Typography variant="h6">Monte Carlo Simulator</Typography>
         <Typography variant="p">

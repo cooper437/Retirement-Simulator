@@ -40,10 +40,7 @@ export default function TaxesFormContent({
             <MenuItem value="married-filing-separately">
               Married Filing Separately
             </MenuItem>
-            <MenuItem value="head-of-household">Head of Household</MenuItem>
-            <MenuItem value="qualifying-widower-with-dep-child">
-              Qualifying Widow(er) with Dependent Child
-            </MenuItem>
+            <MenuItem value="single-filer">Single Filer</MenuItem>
           </Select>
         </FormControl>
       )}
