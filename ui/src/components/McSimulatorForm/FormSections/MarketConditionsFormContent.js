@@ -9,7 +9,21 @@ import {
   MenuItem
 } from '@mui/material';
 
-export default function MarketConditionsFormContent({ commonFormStyles }) {
+export default function MarketConditionsFormContent({
+  commonFormStyles,
+  preRetirementMeanRateOfReturn,
+  postRetirementMeanRateOfReturn,
+  preRetirementInvestmentStyle,
+  postRetirementInvestmentStyle,
+  inflationMean,
+  incomeGrowthMean,
+  setPreRetirementMeanRateOfReturn,
+  setPostRetirementMeanRateOfReturn,
+  setPreRetirementInvestmentStyle,
+  setPostRetirementInvestmentStyle,
+  setInflationMean,
+  setIncomeGrowthMean
+}) {
   return (
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -22,10 +36,13 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             inputProps={{
               style: { textAlign: 'right' }
             }}
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
             label="Pre-Retirement Rate of Return"
+            value={preRetirementMeanRateOfReturn}
+            onChange={(e) =>
+              setPreRetirementMeanRateOfReturn(parseInt(e.target.value, 10))
+            }
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -37,10 +54,13 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             inputProps={{
               style: { textAlign: 'right' }
             }}
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
             label="Post-Retirement Rate of Return"
+            value={postRetirementMeanRateOfReturn}
+            onChange={(e) =>
+              setPostRetirementMeanRateOfReturn(parseInt(e.target.value, 10))
+            }
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -53,10 +73,11 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             inputProps={{
               style: { textAlign: 'right' }
             }}
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
             label="Annual Inflation Mean"
+            value={inflationMean}
+            onChange={(e) => setInflationMean(parseInt(e.target.value, 10))}
           />
         </FormControl>
       </Box>
@@ -69,7 +90,6 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             labelId="pre-retirement-investment-style-label"
             id="pre-retirement-investment-style"
             label="Pre-Retirement Investment Style"
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
           >
@@ -87,7 +107,6 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             labelId="post-retirement-investment-style-label"
             id="post-retirement-investment-style"
             label="Post-Retirement Investment Style"
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
           >
@@ -107,10 +126,11 @@ export default function MarketConditionsFormContent({ commonFormStyles }) {
             inputProps={{
               style: { textAlign: 'right' }
             }}
-            onChange={() => null}
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end">%</InputAdornment>}
             label="Annual Income Growth Mean"
+            value={incomeGrowthMean}
+            onChange={(e) => setIncomeGrowthMean(parseInt(e.target.value, 10))}
           />
         </FormControl>
       </Box>

@@ -78,8 +78,8 @@ export default function FormContainer() {
     incomeGrowthMean: '',
     preRetirementMeanRateOfReturn: '',
     postRetirementMeanRateOfReturn: '',
-    preRetirementRateOfReturnVolatility: '',
-    postRetirementRateOfReturnVolatility: '',
+    preRetirementInvestmentStyle: '',
+    postRetirementInvestmentStyle: '',
     postRetirementTaxRate: '',
     additionalPostRetirementAnnualIncome: ''
   });
@@ -157,7 +157,34 @@ export default function FormContainer() {
             'postRetirementAnnualWithdrawal'
           )}
         />
-        <MarketConditionsFormSection />
+        <MarketConditionsFormSection
+          preRetirementMeanRateOfReturn={
+            formValues.preRetirementMeanRateOfReturn
+          }
+          postRetirementMeanRateOfReturn={
+            formValues.postRetirementMeanRateOfReturn
+          }
+          preRetirementInvestmentStyle={formValues.preRetirementInvestmentStyle}
+          postRetirementInvestmentStyle={
+            formValues.postRetirementInvestmentStyle
+          }
+          inflationMean={formValues.inflationMean}
+          incomeGrowthMean={formValues.incomeGrowthMean}
+          setPreRetirementMeanRateOfReturn={handleChangeFormValue(
+            'preRetirementMeanRateOfReturn'
+          )}
+          setPostRetirementMeanRateOfReturn={handleChangeFormValue(
+            'postRetirementMeanRateOfReturn'
+          )}
+          setPreRetirementInvestmentStyle={handleChangeFormValue(
+            'preRetirementInvestmentStyle'
+          )}
+          setPostRetirementInvestmentStyle={handleChangeFormValue(
+            'postRetirementInvestmentStyle'
+          )}
+          setInflationMean={handleChangeFormValue('inflationMean')}
+          setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
+        />
         <TaxesFormSection />
       </Box>
       <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
