@@ -33,62 +33,6 @@ export default function MarketConditionsFormContent({
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <FormControl sx={commonFormStyles.shortFormInput}>
-          <TextField
-            label="Pre-Retirement Rate of Return"
-            variant="outlined"
-            value={preRetirementMeanRateOfReturn}
-            onChange={(e) => setPreRetirementMeanRateOfReturn(e.target.value)}
-            name="pre-retirement-ror"
-            id="pre-retirement-ror"
-            InputLabelProps={{
-              shrink: true
-            }}
-            InputProps={{
-              inputComponent: NumberFormatPercentage,
-              endAdornment: <InputAdornment position="end">%</InputAdornment>
-            }}
-          />
-        </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <TextField
-            label="Post-Retirement Rate of Return"
-            variant="outlined"
-            value={postRetirementMeanRateOfReturn}
-            onChange={(e) => setPostRetirementMeanRateOfReturn(e.target.value)}
-            name="post-retirement-ror"
-            id="post-retirement-ror"
-            InputLabelProps={{
-              shrink: true
-            }}
-            InputProps={{
-              inputComponent: NumberFormatPercentage,
-              endAdornment: <InputAdornment position="end">%</InputAdornment>
-            }}
-          />
-        </FormControl>
-        {(adjustPortfolioBalanceForInflation ||
-          adjustWithdrawalsForInflation) && (
-          <FormControl sx={commonFormStyles.shortFormInput}>
-            <TextField
-              label="Annual Inflation Mean"
-              variant="outlined"
-              value={inflationMean}
-              onChange={(e) => setInflationMean(e.target.value)}
-              name="inflation-mean"
-              id="inflation-mean"
-              InputLabelProps={{
-                shrink: true
-              }}
-              InputProps={{
-                inputComponent: NumberFormatPercentage,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>
-              }}
-            />
-          </FormControl>
-        )}
-      </Box>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <FormControl sx={commonFormStyles.shortFormInput}>
           <InputLabel id="pre-retirement-investment-style-label">
             Pre-Retirement Investment Style
           </InputLabel>
@@ -123,6 +67,62 @@ export default function MarketConditionsFormContent({
               <MenuItem value={i.value}>{i.label}</MenuItem>
             ))}
           </Select>
+        </FormControl>
+        {(adjustPortfolioBalanceForInflation ||
+          adjustWithdrawalsForInflation) && (
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <TextField
+              label="Annual Inflation Mean"
+              variant="outlined"
+              value={inflationMean}
+              onChange={(e) => setInflationMean(e.target.value)}
+              name="inflation-mean"
+              id="inflation-mean"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
+            />
+          </FormControl>
+        )}
+      </Box>
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <FormControl sx={commonFormStyles.shortFormInput}>
+          <TextField
+            label="Pre-Retirement Rate of Return"
+            variant="outlined"
+            value={preRetirementMeanRateOfReturn}
+            onChange={(e) => setPreRetirementMeanRateOfReturn(e.target.value)}
+            name="pre-retirement-ror"
+            id="pre-retirement-ror"
+            InputLabelProps={{
+              shrink: true
+            }}
+            InputProps={{
+              inputComponent: NumberFormatPercentage,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>
+            }}
+          />
+        </FormControl>
+        <FormControl sx={commonFormStyles.shortFormInput}>
+          <TextField
+            label="Post-Retirement Rate of Return"
+            variant="outlined"
+            value={postRetirementMeanRateOfReturn}
+            onChange={(e) => setPostRetirementMeanRateOfReturn(e.target.value)}
+            name="post-retirement-ror"
+            id="post-retirement-ror"
+            InputLabelProps={{
+              shrink: true
+            }}
+            InputProps={{
+              inputComponent: NumberFormatPercentage,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>
+            }}
+          />
         </FormControl>
         {adjustContributionsForIncomeGrowth && (
           <FormControl sx={commonFormStyles.shortFormInput}>
