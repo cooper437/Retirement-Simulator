@@ -93,131 +93,141 @@ export default function FormContainer() {
     });
   };
 
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    submitRetirementSimulationForm();
+  };
+
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
-        <Typography variant="h6">Monte Carlo Simulator</Typography>
-        <Typography variant="p">
-          Input the information below and then run the simulation to see the
-          likelihood that you will meet your retirement goals under a variety of
-          market conditions.
-        </Typography>
-      </Box>
       <Box
         component="form"
         noValidate
         autoComplete="off"
-        sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}
+        onSubmit={handleFormSubmit}
       >
-        <LifestyleFormSection
-          currentAge={formValues.currentAge}
-          retirementAge={formValues.retirementAge}
-          lifeExpectancy={formValues.lifeExpectancy}
-          setCurrentAge={handleChangeFormValue('currentAge')}
-          setRetirementAge={handleChangeFormValue('retirementAge')}
-          setLifeExpectancy={handleChangeFormValue('lifeExpectancy')}
-        />
-        <AdjustmentsFormSection
-          adjustPortfolioBalanceForInflation={
-            formValues.adjustPortfolioBalanceForInflation
-          }
-          adjustContributionsForIncomeGrowth={
-            formValues.adjustContributionsForIncomeGrowth
-          }
-          adjustWithdrawalsForInflation={
-            formValues.adjustWithdrawalsForInflation
-          }
-          adjustWithdrawalsForTaxation={formValues.adjustWithdrawalsForTaxation}
-          setAdjustPortfolioBalanceForInflation={handleChangeFormValue(
-            'adjustPortfolioBalanceForInflation'
-          )}
-          setAdjustContributionsForIncomeGrowth={handleChangeFormValue(
-            'adjustContributionsForIncomeGrowth'
-          )}
-          setAdjustWithdrawalsForInflation={handleChangeFormValue(
-            'adjustWithdrawalsForInflation'
-          )}
-          setAdjustWithdrawalsForTaxation={handleChangeFormValue(
-            'adjustWithdrawalsForTaxation'
-          )}
-        />
-        <PortfolioFormSection
-          initialPortfolioAmount={formValues.initialPortfolioAmount}
-          preRetirementAnnualContribution={
-            formValues.preRetirementAnnualContribution
-          }
-          postRetirementAnnualWithdrawal={
-            formValues.postRetirementAnnualWithdrawal
-          }
-          setInitialPortfolioAmount={handleChangeFormValue(
-            'initialPortfolioAmount'
-          )}
-          setPreRetirementAnnualContribution={handleChangeFormValue(
-            'preRetirementAnnualContribution'
-          )}
-          setPostRetirementAnnualWithdrawal={handleChangeFormValue(
-            'postRetirementAnnualWithdrawal'
-          )}
-        />
-        <MarketConditionsFormSection
-          preRetirementMeanRateOfReturn={
-            formValues.preRetirementMeanRateOfReturn
-          }
-          postRetirementMeanRateOfReturn={
-            formValues.postRetirementMeanRateOfReturn
-          }
-          preRetirementInvestmentStyle={formValues.preRetirementInvestmentStyle}
-          postRetirementInvestmentStyle={
-            formValues.postRetirementInvestmentStyle
-          }
-          inflationMean={formValues.inflationMean}
-          incomeGrowthMean={formValues.incomeGrowthMean}
-          setPreRetirementMeanRateOfReturn={handleChangeFormValue(
-            'preRetirementMeanRateOfReturn'
-          )}
-          setPostRetirementMeanRateOfReturn={handleChangeFormValue(
-            'postRetirementMeanRateOfReturn'
-          )}
-          setPreRetirementInvestmentStyle={handleChangeFormValue(
-            'preRetirementInvestmentStyle'
-          )}
-          setPostRetirementInvestmentStyle={handleChangeFormValue(
-            'postRetirementInvestmentStyle'
-          )}
-          setInflationMean={handleChangeFormValue('inflationMean')}
-          setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
-          adjustPortfolioBalanceForInflation={
-            formValues.adjustPortfolioBalanceForInflation
-          }
-          adjustWithdrawalsForInflation={
-            formValues.adjustWithdrawalsForInflation
-          }
-          adjustContributionsForIncomeGrowth={
-            formValues.adjustContributionsForIncomeGrowth
-          }
-        />
-        <TaxesFormSection
-          filingStatus={formValues.filingStatus}
-          additionalPostRetirementAnnualIncome={
-            formValues.additionalPostRetirementAnnualIncome
-          }
-          setFilingStatus={handleChangeFormValue('filingStatus')}
-          setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
-            'additionalPostRetirementAnnualIncome'
-          )}
-          adjustWithdrawalsForTaxation={formValues.adjustWithdrawalsForTaxation}
-        />
-      </Box>
-      <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
-        <Stack spacing={2} direction="row">
-          <Button
-            variant="contained"
-            onClick={() => submitRetirementSimulationForm()}
-          >
-            Run Simulation
-          </Button>
-          <Button variant="outlined">Reset</Button>
-        </Stack>
+        <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
+          <Typography variant="h6">Monte Carlo Simulator</Typography>
+          <Typography variant="p">
+            Input the information below and then run the simulation to see the
+            likelihood that you will meet your retirement goals under a variety
+            of market conditions.
+          </Typography>
+        </Box>
+        <Box sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}>
+          <LifestyleFormSection
+            currentAge={formValues.currentAge}
+            retirementAge={formValues.retirementAge}
+            lifeExpectancy={formValues.lifeExpectancy}
+            setCurrentAge={handleChangeFormValue('currentAge')}
+            setRetirementAge={handleChangeFormValue('retirementAge')}
+            setLifeExpectancy={handleChangeFormValue('lifeExpectancy')}
+          />
+          <AdjustmentsFormSection
+            adjustPortfolioBalanceForInflation={
+              formValues.adjustPortfolioBalanceForInflation
+            }
+            adjustContributionsForIncomeGrowth={
+              formValues.adjustContributionsForIncomeGrowth
+            }
+            adjustWithdrawalsForInflation={
+              formValues.adjustWithdrawalsForInflation
+            }
+            adjustWithdrawalsForTaxation={
+              formValues.adjustWithdrawalsForTaxation
+            }
+            setAdjustPortfolioBalanceForInflation={handleChangeFormValue(
+              'adjustPortfolioBalanceForInflation'
+            )}
+            setAdjustContributionsForIncomeGrowth={handleChangeFormValue(
+              'adjustContributionsForIncomeGrowth'
+            )}
+            setAdjustWithdrawalsForInflation={handleChangeFormValue(
+              'adjustWithdrawalsForInflation'
+            )}
+            setAdjustWithdrawalsForTaxation={handleChangeFormValue(
+              'adjustWithdrawalsForTaxation'
+            )}
+          />
+          <PortfolioFormSection
+            initialPortfolioAmount={formValues.initialPortfolioAmount}
+            preRetirementAnnualContribution={
+              formValues.preRetirementAnnualContribution
+            }
+            postRetirementAnnualWithdrawal={
+              formValues.postRetirementAnnualWithdrawal
+            }
+            setInitialPortfolioAmount={handleChangeFormValue(
+              'initialPortfolioAmount'
+            )}
+            setPreRetirementAnnualContribution={handleChangeFormValue(
+              'preRetirementAnnualContribution'
+            )}
+            setPostRetirementAnnualWithdrawal={handleChangeFormValue(
+              'postRetirementAnnualWithdrawal'
+            )}
+          />
+          <MarketConditionsFormSection
+            preRetirementMeanRateOfReturn={
+              formValues.preRetirementMeanRateOfReturn
+            }
+            postRetirementMeanRateOfReturn={
+              formValues.postRetirementMeanRateOfReturn
+            }
+            preRetirementInvestmentStyle={
+              formValues.preRetirementInvestmentStyle
+            }
+            postRetirementInvestmentStyle={
+              formValues.postRetirementInvestmentStyle
+            }
+            inflationMean={formValues.inflationMean}
+            incomeGrowthMean={formValues.incomeGrowthMean}
+            setPreRetirementMeanRateOfReturn={handleChangeFormValue(
+              'preRetirementMeanRateOfReturn'
+            )}
+            setPostRetirementMeanRateOfReturn={handleChangeFormValue(
+              'postRetirementMeanRateOfReturn'
+            )}
+            setPreRetirementInvestmentStyle={handleChangeFormValue(
+              'preRetirementInvestmentStyle'
+            )}
+            setPostRetirementInvestmentStyle={handleChangeFormValue(
+              'postRetirementInvestmentStyle'
+            )}
+            setInflationMean={handleChangeFormValue('inflationMean')}
+            setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
+            adjustPortfolioBalanceForInflation={
+              formValues.adjustPortfolioBalanceForInflation
+            }
+            adjustWithdrawalsForInflation={
+              formValues.adjustWithdrawalsForInflation
+            }
+            adjustContributionsForIncomeGrowth={
+              formValues.adjustContributionsForIncomeGrowth
+            }
+          />
+          <TaxesFormSection
+            filingStatus={formValues.filingStatus}
+            additionalPostRetirementAnnualIncome={
+              formValues.additionalPostRetirementAnnualIncome
+            }
+            setFilingStatus={handleChangeFormValue('filingStatus')}
+            setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
+              'additionalPostRetirementAnnualIncome'
+            )}
+            adjustWithdrawalsForTaxation={
+              formValues.adjustWithdrawalsForTaxation
+            }
+          />
+        </Box>
+        <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
+          <Stack spacing={2} direction="row">
+            <Button variant="contained" type="submit">
+              Run Simulation
+            </Button>
+            <Button variant="outlined">Reset</Button>
+          </Stack>
+        </Box>
       </Box>
     </Box>
   );
