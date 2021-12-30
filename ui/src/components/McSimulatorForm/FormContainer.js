@@ -63,28 +63,30 @@ const AdjustmentsFormSection = withFormSection({
   sectionTitle: 'Adjustments'
 });
 
+const INITIAL_FORM_VALUES = {
+  adjustPortfolioBalanceForInflation: true,
+  adjustContributionsForIncomeGrowth: true,
+  adjustWithdrawalsForInflation: true,
+  adjustWithdrawalsForTaxation: true,
+  initialPortfolioAmount: '',
+  preRetirementAnnualContribution: '',
+  postRetirementAnnualWithdrawal: '',
+  currentAge: '',
+  retirementAge: '',
+  lifeExpectancy: '',
+  inflationMean: '',
+  incomeGrowthMean: '',
+  preRetirementMeanRateOfReturn: '',
+  postRetirementMeanRateOfReturn: '',
+  preRetirementInvestmentStyle: '',
+  postRetirementInvestmentStyle: '',
+  filingStatus: '',
+  postRetirementTaxRate: '',
+  additionalPostRetirementAnnualIncome: ''
+};
+
 export default function FormContainer() {
-  const [formValues, setFormValues] = useState({
-    adjustPortfolioBalanceForInflation: true,
-    adjustContributionsForIncomeGrowth: true,
-    adjustWithdrawalsForInflation: true,
-    adjustWithdrawalsForTaxation: true,
-    initialPortfolioAmount: '',
-    preRetirementAnnualContribution: '',
-    postRetirementAnnualWithdrawal: '',
-    currentAge: '',
-    retirementAge: '',
-    lifeExpectancy: '',
-    inflationMean: '',
-    incomeGrowthMean: '',
-    preRetirementMeanRateOfReturn: '',
-    postRetirementMeanRateOfReturn: '',
-    preRetirementInvestmentStyle: '',
-    postRetirementInvestmentStyle: '',
-    filingStatus: '',
-    postRetirementTaxRate: '',
-    additionalPostRetirementAnnualIncome: ''
-  });
+  const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
 
   const handleChangeFormValue = (fieldName) => (updatedValue) => {
     setFormValues({
@@ -96,6 +98,10 @@ export default function FormContainer() {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     submitRetirementSimulationForm();
+  };
+
+  const handleResetForm = () => {
+    setFormValues(INITIAL_FORM_VALUES);
   };
 
   return (
@@ -225,7 +231,9 @@ export default function FormContainer() {
             <Button variant="contained" type="submit">
               Run Simulation
             </Button>
-            <Button variant="outlined">Reset</Button>
+            <Button variant="outlined" onClick={handleResetForm}>
+              Reset
+            </Button>
           </Stack>
         </Box>
       </Box>
