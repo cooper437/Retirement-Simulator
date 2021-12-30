@@ -85,6 +85,8 @@ const INITIAL_FORM_VALUES = {
   additionalPostRetirementAnnualIncome: ''
 };
 
+const numberToPercent = (aNumber) => aNumber / 100;
+
 export default function FormContainer() {
   const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
 
@@ -97,7 +99,22 @@ export default function FormContainer() {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    submitRetirementSimulationForm();
+
+    submitRetirementSimulationForm({
+      formParams: {
+        ...formValues,
+        postRetirementAnnualWithdrawal:
+          -formValues.postRetirementAnnualWithdrawal,
+        preRetirementMeanRateOfReturn: numberToPercent(
+          formValues.preRetirementMeanRateOfReturn
+        ),
+        postRetirementMeanRateOfReturn: numberToPercent(
+          formValues.postRetirementMeanRateOfReturn
+        ),
+        incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
+        inflationMean: numberToPercent(formValues.inflationMean)
+      }
+    });
   };
 
   const handleResetForm = () => {
