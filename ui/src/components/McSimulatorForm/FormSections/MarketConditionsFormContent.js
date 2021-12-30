@@ -41,7 +41,6 @@ export default function MarketConditionsFormContent({
             onChange={(e) => setPreRetirementMeanRateOfReturn(e.target.value)}
             name="pre-retirement-ror"
             id="pre-retirement-ror"
-            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -52,40 +51,39 @@ export default function MarketConditionsFormContent({
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel shrink htmlFor="post-retirement-ror">
-            Post-Retirement Rate of Return
-          </InputLabel>
-          <OutlinedInput
-            id="post-retirement-ror"
-            inputProps={{
-              style: { textAlign: 'right' }
-            }}
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end">%</InputAdornment>}
+          <TextField
             label="Post-Retirement Rate of Return"
+            variant="outlined"
             value={postRetirementMeanRateOfReturn}
-            onChange={(e) =>
-              setPostRetirementMeanRateOfReturn(parseInt(e.target.value, 10))
-            }
+            onChange={(e) => setPostRetirementMeanRateOfReturn(e.target.value)}
+            name="post-retirement-ror"
+            id="post-retirement-ror"
+            InputLabelProps={{
+              shrink: true
+            }}
+            InputProps={{
+              inputComponent: NumberFormatPercentage,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>
+            }}
           />
         </FormControl>
         {(adjustPortfolioBalanceForInflation ||
           adjustWithdrawalsForInflation) && (
           <FormControl sx={commonFormStyles.shortFormInput}>
-            <InputLabel shrink htmlFor="inflation-mean">
-              Annual Inflation Mean
-            </InputLabel>
-            <OutlinedInput
-              id="inflation-mean"
-              InputLabelProps={{ shrink: true }}
-              inputProps={{
-                style: { textAlign: 'right' }
-              }}
-              startAdornment={<InputAdornment position="start" />}
-              endAdornment={<InputAdornment position="end">%</InputAdornment>}
+            <TextField
               label="Annual Inflation Mean"
+              variant="outlined"
               value={inflationMean}
-              onChange={(e) => setInflationMean(parseInt(e.target.value, 10))}
+              onChange={(e) => setInflationMean(e.target.value)}
+              name="inflation-mean"
+              id="inflation-mean"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
             />
           </FormControl>
         )}
@@ -131,22 +129,20 @@ export default function MarketConditionsFormContent({
         </FormControl>
         {adjustContributionsForIncomeGrowth && (
           <FormControl sx={commonFormStyles.shortFormInput}>
-            <InputLabel shrink htmlFor="income-growth-mean">
-              Annual Income Growth Mean
-            </InputLabel>
-            <OutlinedInput
-              id="income-growth-mean"
-              InputLabelProps={{ shrink: true }}
-              inputProps={{
-                style: { textAlign: 'right' }
-              }}
-              startAdornment={<InputAdornment position="start" />}
-              endAdornment={<InputAdornment position="end">%</InputAdornment>}
+            <TextField
               label="Annual Income Growth Mean"
+              variant="outlined"
               value={incomeGrowthMean}
-              onChange={(e) =>
-                setIncomeGrowthMean(parseInt(e.target.value, 10))
-              }
+              onChange={(e) => setIncomeGrowthMean(e.target.value)}
+              name="income-growth-mean"
+              id="income-growth-mean"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
             />
           </FormControl>
         )}

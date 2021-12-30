@@ -8,6 +8,9 @@ export default React.forwardRef((props, ref) => {
     <NumberFormat
       {...other}
       getInputRef={ref}
+      allowNegative={false}
+      decimalScale={2}
+      fixedDecimalScale
       onValueChange={(values) => {
         onChange({
           target: {
