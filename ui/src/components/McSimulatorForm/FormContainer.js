@@ -103,6 +103,18 @@ export default function FormContainer() {
     submitRetirementSimulationForm({
       formParams: {
         ...formValues,
+        initialPortfolioAmount: Number.parseInt(
+          formValues.initialPortfolioAmount,
+          10
+        ),
+        additionalPostRetirementAnnualIncome: Number.parseInt(
+          formValues.additionalPostRetirementAnnualIncome,
+          10
+        ),
+        preRetirementAnnualContribution: Number.parseInt(
+          formValues.preRetirementAnnualContribution,
+          10
+        ),
         postRetirementAnnualWithdrawal:
           -formValues.postRetirementAnnualWithdrawal,
         preRetirementMeanRateOfReturn: numberToPercent(
