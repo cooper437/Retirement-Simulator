@@ -10,7 +10,7 @@ export const INVESTMENT_STYLE_ENUM = {
   },
   modAggresive: {
     label: 'Moderate Aggressive',
-    value: 'modAgressive',
+    value: 'modAggresive',
     preRetirementMeanRateOfReturn: '9.00',
     postRetirementMeanRateOfReturn: '5.70',
     preRetirementRateOfReturnVolatility: '11.29',

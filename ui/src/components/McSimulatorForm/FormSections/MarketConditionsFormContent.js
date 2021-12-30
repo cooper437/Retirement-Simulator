@@ -43,10 +43,20 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={preRetirementInvestmentStyle}
-            onChange={(e) => setPreRetirementInvestmentStyle(e.target.value)}
+            onChange={(e) => {
+              const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
+                (i) => i.label === e.target.value
+              );
+              setPreRetirementInvestmentStyle(
+                e.target.value,
+                selection.preRetirementMeanRateOfReturn
+              );
+            }}
           >
             {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
-              <MenuItem value={i.value}>{i.label}</MenuItem>
+              <MenuItem key={i.value} value={i.label}>
+                {i.label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -61,10 +71,20 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={postRetirementInvestmentStyle}
-            onChange={(e) => setPostRetirementInvestmentStyle(e.target.value)}
+            onChange={(e) => {
+              const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
+                (i) => i.label === e.target.value
+              );
+              setPostRetirementInvestmentStyle(
+                e.target.value,
+                selection.postRetirementMeanRateOfReturn
+              );
+            }}
           >
             {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
-              <MenuItem value={i.value}>{i.label}</MenuItem>
+              <MenuItem key={i.value} value={i.label}>
+                {i.label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

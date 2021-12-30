@@ -90,12 +90,11 @@ const numberToPercent = (aNumber) => aNumber / 100;
 export default function FormContainer() {
   const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
 
-  const handleChangeFormValue = (fieldName) => (updatedValue) => {
+  const handleChangeFormValue = (fieldName) => (updatedValue) =>
     setFormValues({
       ...formValues,
       [fieldName]: updatedValue
     });
-  };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -223,12 +222,26 @@ export default function FormContainer() {
             setPostRetirementMeanRateOfReturn={handleChangeFormValue(
               'postRetirementMeanRateOfReturn'
             )}
-            setPreRetirementInvestmentStyle={handleChangeFormValue(
-              'preRetirementInvestmentStyle'
-            )}
-            setPostRetirementInvestmentStyle={handleChangeFormValue(
-              'postRetirementInvestmentStyle'
-            )}
+            setPreRetirementInvestmentStyle={(
+              preRetirementInvestmentStyle,
+              preRetirementMeanRateOfReturn
+            ) => {
+              setFormValues({
+                ...formValues,
+                preRetirementInvestmentStyle,
+                preRetirementMeanRateOfReturn
+              });
+            }}
+            setPostRetirementInvestmentStyle={(
+              postRetirementInvestmentStyle,
+              postRetirementMeanRateOfReturn
+            ) => {
+              setFormValues({
+                ...formValues,
+                postRetirementInvestmentStyle,
+                postRetirementMeanRateOfReturn
+              });
+            }}
             setInflationMean={handleChangeFormValue('inflationMean')}
             setIncomeGrowthMean={handleChangeFormValue('incomeGrowthMean')}
             adjustPortfolioBalanceForInflation={
