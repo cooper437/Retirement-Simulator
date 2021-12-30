@@ -6,6 +6,7 @@ import MarketConditionsFormContent from './FormSections/MarketConditionsFormCont
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
 import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
+import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -209,7 +210,12 @@ export default function FormContainer() {
       </Box>
       <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
         <Stack spacing={2} direction="row">
-          <Button variant="contained">Run Simulation</Button>
+          <Button
+            variant="contained"
+            onClick={() => submitRetirementSimulationForm()}
+          >
+            Run Simulation
+          </Button>
           <Button variant="outlined">Reset</Button>
         </Stack>
       </Box>
