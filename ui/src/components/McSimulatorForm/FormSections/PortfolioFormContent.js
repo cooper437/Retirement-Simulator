@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment
-} from '@mui/material';
+import { Box, FormControl, InputAdornment, TextField } from '@mui/material';
+import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 
 export default function PortfolioFormContent({
   commonFormStyles,
@@ -18,61 +13,58 @@ export default function PortfolioFormContent({
 }) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
-      <FormControl sx={commonFormStyles.longFormInput}>
-        <InputLabel htmlFor="initial-portfolio-amount">
-          Initial Amount
-        </InputLabel>
-        <OutlinedInput
-          id="initial-portfolio-amount"
-          inputProps={{
-            style: { textAlign: 'right' }
-          }}
-          type="number"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          endAdornment={<InputAdornment position="end">.00</InputAdornment>}
+      <FormControl sx={commonFormStyles.shortFormInput}>
+        <TextField
           label="Initial Amount"
+          variant="outlined"
           value={initialPortfolioAmount}
-          onChange={(e) =>
-            setInitialPortfolioAmount(parseInt(e.target.value, 10))
-          }
+          onChange={(e) => setInitialPortfolioAmount(e.target.value)}
+          name="initial-portfolio-amount"
+          id="initial-portfolio-amount"
+          InputLabelProps={{
+            shrink: true
+          }}
+          InputProps={{
+            inputComponent: NumberFormatDollarAmount,
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            endAdornment: <InputAdornment position="end">.00</InputAdornment>
+          }}
         />
       </FormControl>
-      <FormControl sx={commonFormStyles.longFormInput}>
-        <InputLabel htmlFor="annual-contribution-pre-retirement">
-          Annual Contribution Pre-Retirement
-        </InputLabel>
-        <OutlinedInput
-          id="annual-contribution-pre-retirement"
-          inputProps={{
-            style: { textAlign: 'right' }
-          }}
-          type="number"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          endAdornment={<InputAdornment position="end">.00</InputAdornment>}
+      <FormControl sx={commonFormStyles.shortFormInput}>
+        <TextField
           label="Annual Contribution Pre-Retirement"
+          variant="outlined"
           value={preRetirementAnnualContribution}
-          onChange={(e) =>
-            setPreRetirementAnnualContribution(parseInt(e.target.value, 10))
-          }
+          onChange={(e) => setPreRetirementAnnualContribution(e.target.value)}
+          name="annual-contribution-pre-retirement"
+          id="annual-contribution-pre-retirement"
+          InputLabelProps={{
+            shrink: true
+          }}
+          InputProps={{
+            inputComponent: NumberFormatDollarAmount,
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            endAdornment: <InputAdornment position="end">.00</InputAdornment>
+          }}
         />
       </FormControl>
-      <FormControl sx={commonFormStyles.longFormInput}>
-        <InputLabel htmlFor="annual-withdrawal-post-retirement">
-          Annual Net Withdrawal Post-Retirement
-        </InputLabel>
-        <OutlinedInput
-          id="annual-withdrawal-post-retirement"
-          inputProps={{
-            style: { textAlign: 'right' }
-          }}
-          type="number"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          endAdornment={<InputAdornment position="end">.00</InputAdornment>}
+      <FormControl sx={commonFormStyles.shortFormInput}>
+        <TextField
           label="Annual Net Withdrawal Post-Retirement"
+          variant="outlined"
           value={postRetirementAnnualWithdrawal}
-          onChange={(e) =>
-            setPostRetirementAnnualWithdrawal(parseInt(e.target.value, 10))
-          }
+          onChange={(e) => setPostRetirementAnnualWithdrawal(e.target.value)}
+          name="annual-withdrawal-post-retirement"
+          id="annual-withdrawal-post-retirement"
+          InputLabelProps={{
+            shrink: true
+          }}
+          InputProps={{
+            inputComponent: NumberFormatDollarAmount,
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            endAdornment: <InputAdornment position="end">.00</InputAdornment>
+          }}
         />
       </FormControl>
     </Box>

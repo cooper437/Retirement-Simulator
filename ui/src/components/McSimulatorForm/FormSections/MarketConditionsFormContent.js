@@ -9,7 +9,6 @@ import {
   MenuItem,
   TextField
 } from '@mui/material';
-import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
 
 export default function MarketConditionsFormContent({

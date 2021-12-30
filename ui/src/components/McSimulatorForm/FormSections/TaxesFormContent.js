@@ -3,11 +3,12 @@ import {
   Box,
   FormControl,
   InputLabel,
-  OutlinedInput,
   InputAdornment,
   Select,
-  MenuItem
+  MenuItem,
+  TextField
 } from '@mui/material';
+import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 
 export default function TaxesFormContent({
   commonFormStyles,
@@ -44,25 +45,24 @@ export default function TaxesFormContent({
           </Select>
         </FormControl>
       )}
-      <FormControl sx={commonFormStyles.longFormInput}>
-        <InputLabel htmlFor="additional-annual-income">
-          Post-Retirement Additional Annual Income
-        </InputLabel>
-        <OutlinedInput
-          id="additional-annual-income"
-          inputProps={{
-            style: { textAlign: 'right' }
-          }}
-          type="number"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          endAdornment={<InputAdornment position="end">.00</InputAdornment>}
-          label="Post Retirement Additional Annual Income"
+      <FormControl sx={commonFormStyles.shortFormInput}>
+        <TextField
+          label="Post-Retirement Additional Annual Income"
+          variant="outlined"
           value={additionalPostRetirementAnnualIncome}
           onChange={(e) =>
-            setAdditionalPostRetirementAnnualIncome(
-              parseInt(e.target.value, 10)
-            )
+            setAdditionalPostRetirementAnnualIncome(e.target.value)
           }
+          name="additional-annual-income"
+          id="additional-annual-income"
+          InputLabelProps={{
+            shrink: true
+          }}
+          InputProps={{
+            inputComponent: NumberFormatDollarAmount,
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            endAdornment: <InputAdornment position="end">.00</InputAdornment>
+          }}
         />
       </FormControl>
       <Box sx={commonFormStyles.longFormInput} />

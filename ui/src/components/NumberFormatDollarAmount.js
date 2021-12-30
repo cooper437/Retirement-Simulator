@@ -18,7 +18,6 @@ export default React.forwardRef((props, ref) => {
       }}
       thousandSeparator
       isNumericString
-      prefix="$"
     />
   );
 });
