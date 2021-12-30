@@ -10312,6 +10312,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-number-format@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "react-number-format@npm:4.9.0"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    react-dom: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 3ed720d97a67f1ce2b135406a4fd41a65b1d1309814844a2ec11aa2e3c626ae69824be63feac5f2e630aaf282b360018989bf92dafd247b3b33c5db89bd4bcc1
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.11.0":
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
@@ -11943,6 +11955,7 @@ __metadata:
     prettier: ^2.5.1
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-number-format: ^4.9.0
     react-scripts: 5.0.0
     web-vitals: ^2.1.0
   languageName: unknown

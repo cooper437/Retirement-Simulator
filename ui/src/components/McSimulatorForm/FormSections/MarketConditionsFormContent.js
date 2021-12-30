@@ -6,8 +6,11 @@ import {
   OutlinedInput,
   InputAdornment,
   Select,
-  MenuItem
+  MenuItem,
+  TextField
 } from '@mui/material';
+import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
+import NumberFormatPercentage from '../../NumberFormatPercentage';
 
 export default function MarketConditionsFormContent({
   commonFormStyles,
@@ -31,21 +34,21 @@ export default function MarketConditionsFormContent({
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel shrink htmlFor="pre-retirement-ror">
-            Pre-Retirement Rate of Return
-          </InputLabel>
-          <OutlinedInput
-            id="pre-retirement-ror"
-            inputProps={{
-              style: { textAlign: 'right' }
-            }}
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end">%</InputAdornment>}
+          <TextField
             label="Pre-Retirement Rate of Return"
+            variant="outlined"
             value={preRetirementMeanRateOfReturn}
-            onChange={(e) =>
-              setPreRetirementMeanRateOfReturn(parseInt(e.target.value, 10))
-            }
+            onChange={(e) => setPreRetirementMeanRateOfReturn(e.target.value)}
+            name="pre-retirement-ror"
+            id="pre-retirement-ror"
+            type="number"
+            InputLabelProps={{
+              shrink: true
+            }}
+            InputProps={{
+              inputComponent: NumberFormatPercentage,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>
+            }}
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
