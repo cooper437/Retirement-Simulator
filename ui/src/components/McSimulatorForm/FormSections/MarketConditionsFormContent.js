@@ -3,13 +3,13 @@ import {
   Box,
   FormControl,
   InputLabel,
-  OutlinedInput,
   InputAdornment,
   Select,
   MenuItem,
   TextField
 } from '@mui/material';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
+import { INVESTMENT_STYLE_ENUM } from '../../../constants';
 
 export default function MarketConditionsFormContent({
   commonFormStyles,
@@ -101,10 +101,9 @@ export default function MarketConditionsFormContent({
             value={preRetirementInvestmentStyle}
             onChange={(e) => setPreRetirementInvestmentStyle(e.target.value)}
           >
-            <MenuItem value="aggressive">Aggressive</MenuItem>
-            <MenuItem value="moderate-agressive">Moderate Aggressive</MenuItem>
-            <MenuItem value="moderate">Moderate</MenuItem>
-            <MenuItem value="conservative">Conservative</MenuItem>
+            {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+              <MenuItem value={i.value}>{i.label}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -120,10 +119,9 @@ export default function MarketConditionsFormContent({
             value={postRetirementInvestmentStyle}
             onChange={(e) => setPostRetirementInvestmentStyle(e.target.value)}
           >
-            <MenuItem value="aggressive">Aggressive</MenuItem>
-            <MenuItem value="moderate-agressive">Moderate Aggressive</MenuItem>
-            <MenuItem value="moderate">Moderate</MenuItem>
-            <MenuItem value="conservative">Conservative</MenuItem>
+            {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+              <MenuItem value={i.value}>{i.label}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         {adjustContributionsForIncomeGrowth && (
