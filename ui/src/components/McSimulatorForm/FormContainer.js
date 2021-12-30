@@ -7,6 +7,7 @@ import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
 import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
+import { INVESTMENT_STYLE_ENUM } from '../../constants';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -74,8 +75,8 @@ const INITIAL_FORM_VALUES = {
   currentAge: '',
   retirementAge: '',
   lifeExpectancy: '',
-  inflationMean: '2.70',
-  incomeGrowthMean: '3.00',
+  inflationMean: '2.40',
+  incomeGrowthMean: '5.00',
   preRetirementMeanRateOfReturn: '',
   postRetirementMeanRateOfReturn: '',
   preRetirementInvestmentStyle: '',
@@ -98,6 +99,14 @@ export default function FormContainer() {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+
+    const { preRetirementRateOfReturnVolatility } = Object.values(
+      INVESTMENT_STYLE_ENUM
+    ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
+
+    const { postRetirementRateOfReturnVolatility } = Object.values(
+      INVESTMENT_STYLE_ENUM
+    ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
 
     submitRetirementSimulationForm({
       formParams: {
@@ -123,7 +132,13 @@ export default function FormContainer() {
           formValues.postRetirementMeanRateOfReturn
         ),
         incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
-        inflationMean: numberToPercent(formValues.inflationMean)
+        inflationMean: numberToPercent(formValues.inflationMean),
+        preRetirementRateOfReturnVolatility: numberToPercent(
+          parseFloat(preRetirementRateOfReturnVolatility, 10)
+        ),
+        postRetirementRateOfReturnVolatility: numberToPercent(
+          parseFloat(postRetirementRateOfReturnVolatility, 10)
+        )
       }
     });
   };

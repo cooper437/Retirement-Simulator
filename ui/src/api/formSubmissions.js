@@ -25,8 +25,8 @@ export const submitRetirementSimulationForm = async ({ formParams }) => {
   // };
   const requestPayload = {
     ...formParams,
-    preRetirementRateOfReturnVolatility: 0.1429,
-    postRetirementRateOfReturnVolatility: 0.0477,
+    // preRetirementRateOfReturnVolatility: 0.1429,
+    // postRetirementRateOfReturnVolatility: 0.0477,
     postRetirementTaxRate: 0.35
   };
   try {
