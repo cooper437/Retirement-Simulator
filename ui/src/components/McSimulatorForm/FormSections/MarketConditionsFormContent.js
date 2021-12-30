@@ -31,7 +31,12 @@ export default function MarketConditionsFormContent({
 }) {
   return (
     <>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flexWrap="wrap"
+      >
         <FormControl sx={commonFormStyles.shortFormInput}>
           <InputLabel id="pre-retirement-investment-style-label">
             Pre-Retirement Investment Style
@@ -109,7 +114,12 @@ export default function MarketConditionsFormContent({
           </FormControl>
         )}
       </Box>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flexWrap="wrap"
+      >
         <FormControl sx={commonFormStyles.shortFormInput}>
           <TextField
             label="Pre-Retirement Rate of Return"

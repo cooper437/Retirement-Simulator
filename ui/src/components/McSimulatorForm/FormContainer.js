@@ -51,7 +51,7 @@ const MarketConditionsFormSection = withFormSection({
 
 const PortfolioFormSection = withFormSection({
   WrappedComponent: PortfolioFormContent,
-  sectionTitle: 'Portfolio'
+  sectionTitle: 'Portfolio & Income'
 });
 
 const TaxesFormSection = withFormSection({
@@ -215,6 +215,12 @@ export default function FormContainer() {
             setPostRetirementAnnualWithdrawal={handleChangeFormValue(
               'postRetirementAnnualWithdrawal'
             )}
+            additionalPostRetirementAnnualIncome={
+              formValues.additionalPostRetirementAnnualIncome
+            }
+            setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
+              'additionalPostRetirementAnnualIncome'
+            )}
           />
           <MarketConditionsFormSection
             preRetirementMeanRateOfReturn={
@@ -269,19 +275,15 @@ export default function FormContainer() {
               formValues.adjustContributionsForIncomeGrowth
             }
           />
-          <TaxesFormSection
-            filingStatus={formValues.filingStatus}
-            additionalPostRetirementAnnualIncome={
-              formValues.additionalPostRetirementAnnualIncome
-            }
-            setFilingStatus={handleChangeFormValue('filingStatus')}
-            setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
-              'additionalPostRetirementAnnualIncome'
-            )}
-            adjustWithdrawalsForTaxation={
-              formValues.adjustWithdrawalsForTaxation
-            }
-          />
+          {formValues.adjustWithdrawalsForTaxation && (
+            <TaxesFormSection
+              filingStatus={formValues.filingStatus}
+              setFilingStatus={handleChangeFormValue('filingStatus')}
+              adjustWithdrawalsForTaxation={
+                formValues.adjustWithdrawalsForTaxation
+              }
+            />
+          )}
         </Box>
         <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
           <Stack spacing={2} direction="row">

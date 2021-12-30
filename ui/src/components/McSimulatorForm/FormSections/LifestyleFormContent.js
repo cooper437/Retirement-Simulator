@@ -12,7 +12,12 @@ function LifestyleFormContent({
   setLifeExpectancy
 }) {
   return (
-    <Box display="flex" flexDirection="row" justifyContent="space-between">
+    <Box
+      display="flex"
+      flexDirection="row"
+      justifyContent="space-between"
+      flexWrap="wrap"
+    >
       <TextField
         sx={commonFormStyles.shortFormInput}
         id="current-age-input"
