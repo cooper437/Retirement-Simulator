@@ -20,14 +20,13 @@ export default function MarketConditionsFormContent({
   postRetirementInvestmentStyle,
   inflationMean,
   incomeGrowthMean,
-  setPreRetirementInvestmentStyle,
-  setPostRetirementInvestmentStyle,
   adjustPortfolioBalanceForInflation,
   adjustContributionsForIncomeGrowth,
   adjustWithdrawalsForInflation,
   touched,
   errors,
-  handleChange
+  handleChange,
+  setFieldValue
 }) {
   return (
     <>
@@ -54,13 +53,14 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={preRetirementInvestmentStyle}
-            name={preRetirementInvestmentStyle}
-            onChange={(e) => {
+            name="preRetirementInvestmentStyle"
+            onChange={async (e) => {
               const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
                 (i) => i.label === e.target.value
               );
-              setPreRetirementInvestmentStyle(
-                e.target.value,
+              await handleChange(e);
+              setFieldValue(
+                'preRetirementMeanRateOfReturn',
                 selection.preRetirementMeanRateOfReturn
               );
             }}
@@ -93,13 +93,14 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={postRetirementInvestmentStyle}
-            name={postRetirementInvestmentStyle}
-            onChange={(e) => {
+            name="postRetirementInvestmentStyle"
+            onChange={async (e) => {
               const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
                 (i) => i.label === e.target.value
               );
-              setPostRetirementInvestmentStyle(
-                e.target.value,
+              await handleChange(e);
+              setFieldValue(
+                'postRetirementMeanRateOfReturn',
                 selection.postRetirementMeanRateOfReturn
               );
             }}

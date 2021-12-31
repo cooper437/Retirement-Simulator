@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Formik, useFormik } from 'formik';
+import React from 'react';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
@@ -92,36 +92,64 @@ const numberToPercent = (aNumber) => aNumber / 100;
 
 export default function FormContainer() {
   // eslint-disable-next-line arrow-body-style
-  const handleResetForm = () => {
-    // setFormValues(INITIAL_FORM_VALUES);
-    return null;
-  };
-
   return (
     <Formik
       initialValues={INITIAL_FORM_VALUES}
       validationSchema={Yup.object({
-        currentAge: Yup.string()
-          .max(3, 'Must be 3 characters or less')
+        currentAge: Yup.number()
+          .integer()
+          .moreThan(-1, 'Must be >= 0')
+          .max(150, 'Cannot exceed 150')
           .required('Required'),
-        retirementAge: Yup.string()
-          .max(3, 'Must be 3 characters or less')
+        retirementAge: Yup.number()
+          .integer()
+          .moreThan(Yup.ref('currentAge'), 'Must be greater than Current Age')
+          .max(150, 'Cannot exceed 150')
           .required('Required'),
-        lifeExpectancy: Yup.string()
-          .max(3, 'Must be 3 characters or less')
+        lifeExpectancy: Yup.number()
+          .integer()
+          .moreThan(
+            Yup.ref('retirementAge'),
+            'Must be greater than Retirement Age'
+          )
+          .max(150, 'Cannot exceed 150')
           .required('Required'),
         initialPortfolioAmount: Yup.string().required('Required'),
         preRetirementAnnualContribution: Yup.string().required('Required'),
         postRetirementAnnualWithdrawal: Yup.string().required('Required'),
         preRetirementInvestmentStyle: Yup.string().required('Required'),
         postRetirementInvestmentStyle: Yup.string().required('Required'),
-        inflationMean: Yup.string().required('Required'),
+        inflationMean: Yup.string().when(
+          [
+            'adjustPortfolioBalanceForInflation',
+            'adjustWithdrawalsForInflation'
+          ],
+          {
+            is: (
+              adjustPortfolioBalanceForInflation,
+              adjustWithdrawalsForInflation
+            ) =>
+              adjustPortfolioBalanceForInflation ||
+              adjustWithdrawalsForInflation,
+            then: Yup.string().required('Required')
+          }
+        ),
         preRetirementMeanRateOfReturn: Yup.string().required('Required'),
         postRetirementMeanRateOfReturn: Yup.string().required('Required'),
-        incomeGrowthMean: Yup.string().required('Required'),
-        filingStatus: Yup.string().required('Required')
+        incomeGrowthMean: Yup.string().when(
+          'adjustContributionsForIncomeGrowth',
+          {
+            is: true,
+            then: Yup.string().required('Required')
+          }
+        ),
+        filingStatus: Yup.string().when('adjustWithdrawalsForTaxation', {
+          is: true,
+          then: Yup.string().required('Required')
+        }),
+        additionalPostRetirementAnnualIncome: Yup.string().required('Required')
       })}
-      onSubmit={(formValues, actions) => {
+      onSubmit={(formValues) => {
         const { preRetirementRateOfReturnVolatility } = Object.values(
           INVESTMENT_STYLE_ENUM
         ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
@@ -168,10 +196,13 @@ export default function FormContainer() {
       {({
         values: formValues,
         handleChange,
-        setValues: setFormValues,
+        // eslint-disable-next-line no-unused-vars
+        setValues,
         handleSubmit,
         touched,
-        errors
+        errors,
+        setFieldValue,
+        resetForm
       }) => (
         <Box sx={{ mt: 4, mb: 4 }}>
           <Box
@@ -248,26 +279,7 @@ export default function FormContainer() {
                 touched={touched}
                 errors={errors}
                 handleChange={handleChange}
-                setPreRetirementInvestmentStyle={(
-                  preRetirementInvestmentStyle,
-                  preRetirementMeanRateOfReturn
-                ) => {
-                  setFormValues({
-                    ...formValues,
-                    preRetirementInvestmentStyle,
-                    preRetirementMeanRateOfReturn
-                  });
-                }}
-                setPostRetirementInvestmentStyle={(
-                  postRetirementInvestmentStyle,
-                  postRetirementMeanRateOfReturn
-                ) => {
-                  setFormValues({
-                    ...formValues,
-                    postRetirementInvestmentStyle,
-                    postRetirementMeanRateOfReturn
-                  });
-                }}
+                setFieldValue={setFieldValue}
                 adjustPortfolioBalanceForInflation={
                   formValues.adjustPortfolioBalanceForInflation
                 }
@@ -295,7 +307,7 @@ export default function FormContainer() {
                 <Button variant="contained" type="submit">
                   Run Simulation
                 </Button>
-                <Button variant="outlined" onClick={handleResetForm}>
+                <Button variant="outlined" onClick={resetForm}>
                   Reset
                 </Button>
               </Stack>

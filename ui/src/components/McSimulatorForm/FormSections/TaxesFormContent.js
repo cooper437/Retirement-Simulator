@@ -12,7 +12,6 @@ import {
 export default function TaxesFormContent({
   commonFormStyles,
   filingStatus,
-  setFilingStatus,
   handleChange,
   touched,
   errors
