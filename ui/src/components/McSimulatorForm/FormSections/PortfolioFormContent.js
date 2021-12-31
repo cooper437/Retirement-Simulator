@@ -7,11 +7,10 @@ export default function PortfolioFormContent({
   initialPortfolioAmount,
   preRetirementAnnualContribution,
   postRetirementAnnualWithdrawal,
-  setInitialPortfolioAmount,
-  setPreRetirementAnnualContribution,
-  setPostRetirementAnnualWithdrawal,
   additionalPostRetirementAnnualIncome,
-  setAdditionalPostRetirementAnnualIncome
+  touched,
+  errors,
+  handleChange
 }) {
   return (
     <>
@@ -26,8 +25,8 @@ export default function PortfolioFormContent({
             label="Initial Amount"
             variant="outlined"
             value={initialPortfolioAmount}
-            onChange={(e) => setInitialPortfolioAmount(e.target.value)}
-            name="initial-portfolio-amount"
+            onChange={handleChange}
+            name="initialPortfolioAmount"
             id="initial-portfolio-amount"
             InputLabelProps={{
               shrink: true
@@ -39,6 +38,13 @@ export default function PortfolioFormContent({
               ),
               endAdornment: <InputAdornment position="end">.00</InputAdornment>
             }}
+            error={
+              touched.initialPortfolioAmount &&
+              Boolean(errors.initialPortfolioAmount)
+            }
+            helperText={
+              touched.initialPortfolioAmount && errors.initialPortfolioAmount
+            }
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -46,8 +52,8 @@ export default function PortfolioFormContent({
             label="Annual Contribution Pre-Retirement"
             variant="outlined"
             value={preRetirementAnnualContribution}
-            onChange={(e) => setPreRetirementAnnualContribution(e.target.value)}
-            name="annual-contribution-pre-retirement"
+            onChange={handleChange}
+            name="preRetirementAnnualContribution"
             id="annual-contribution-pre-retirement"
             InputLabelProps={{
               shrink: true
@@ -59,6 +65,14 @@ export default function PortfolioFormContent({
               ),
               endAdornment: <InputAdornment position="end">.00</InputAdornment>
             }}
+            error={
+              touched.preRetirementAnnualContribution &&
+              Boolean(errors.preRetirementAnnualContribution)
+            }
+            helperText={
+              touched.preRetirementAnnualContribution &&
+              errors.preRetirementAnnualContribution
+            }
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -66,8 +80,8 @@ export default function PortfolioFormContent({
             label="Annual Net Withdrawal Post-Retirement"
             variant="outlined"
             value={postRetirementAnnualWithdrawal}
-            onChange={(e) => setPostRetirementAnnualWithdrawal(e.target.value)}
-            name="annual-withdrawal-post-retirement"
+            onChange={handleChange}
+            name="postRetirementAnnualWithdrawal"
             id="annual-withdrawal-post-retirement"
             InputLabelProps={{
               shrink: true
@@ -79,6 +93,14 @@ export default function PortfolioFormContent({
               ),
               endAdornment: <InputAdornment position="end">.00</InputAdornment>
             }}
+            error={
+              touched.postRetirementAnnualWithdrawal &&
+              Boolean(errors.postRetirementAnnualWithdrawal)
+            }
+            helperText={
+              touched.postRetirementAnnualWithdrawal &&
+              errors.postRetirementAnnualWithdrawal
+            }
           />
         </FormControl>
       </Box>
@@ -93,10 +115,8 @@ export default function PortfolioFormContent({
             label="Post-Retirement Additional Annual Income"
             variant="outlined"
             value={additionalPostRetirementAnnualIncome}
-            onChange={(e) =>
-              setAdditionalPostRetirementAnnualIncome(e.target.value)
-            }
-            name="additional-annual-income"
+            onChange={handleChange}
+            name="additionalPostRetirementAnnualIncome"
             id="additional-annual-income"
             InputLabelProps={{
               shrink: true
@@ -108,6 +128,14 @@ export default function PortfolioFormContent({
               ),
               endAdornment: <InputAdornment position="end">.00</InputAdornment>
             }}
+            error={
+              touched.additionalPostRetirementAnnualIncome &&
+              Boolean(errors.additionalPostRetirementAnnualIncome)
+            }
+            helperText={
+              touched.additionalPostRetirementAnnualIncome &&
+              errors.additionalPostRetirementAnnualIncome
+            }
           />
         </FormControl>
       </Box>

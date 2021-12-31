@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
@@ -83,65 +85,131 @@ const INITIAL_FORM_VALUES = {
   postRetirementInvestmentStyle: '',
   filingStatus: '',
   postRetirementTaxRate: '',
-  additionalPostRetirementAnnualIncome: ''
+  additionalPostRetirementAnnualIncome: '0'
 };
 
 const numberToPercent = (aNumber) => aNumber / 100;
 
 export default function FormContainer() {
-  const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
+  // const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
+  const formik = useFormik({
+    initialValues: INITIAL_FORM_VALUES,
+    validationSchema: Yup.object({
+      currentAge: Yup.string()
+        .max(3, 'Must be 3 characters or less')
+        .required('Required'),
+      retirementAge: Yup.string()
+        .max(3, 'Must be 3 characters or less')
+        .required('Required'),
+      lifeExpectancy: Yup.string()
+        .max(3, 'Must be 3 characters or less')
+        .required('Required'),
+      initialPortfolioAmount: Yup.string().required('Required'),
+      preRetirementAnnualContribution: Yup.string().required('Required'),
+      postRetirementAnnualWithdrawal: Yup.string().required('Required')
+    }),
+    onSubmit: (formValues) => {
+      const { preRetirementRateOfReturnVolatility } = Object.values(
+        INVESTMENT_STYLE_ENUM
+      ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
 
-  const handleChangeFormValue = (fieldName) => (updatedValue) =>
-    setFormValues({
-      ...formValues,
-      [fieldName]: updatedValue
-    });
+      const { postRetirementRateOfReturnVolatility } = Object.values(
+        INVESTMENT_STYLE_ENUM
+      ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
+      submitRetirementSimulationForm({
+        formParams: {
+          ...formValues,
+          initialPortfolioAmount: Number.parseInt(
+            formValues.initialPortfolioAmount,
+            10
+          ),
+          additionalPostRetirementAnnualIncome: Number.parseInt(
+            formValues.additionalPostRetirementAnnualIncome,
+            10
+          ),
+          preRetirementAnnualContribution: Number.parseInt(
+            formValues.preRetirementAnnualContribution,
+            10
+          ),
+          postRetirementAnnualWithdrawal:
+            -formValues.postRetirementAnnualWithdrawal,
+          preRetirementMeanRateOfReturn: numberToPercent(
+            formValues.preRetirementMeanRateOfReturn
+          ),
+          postRetirementMeanRateOfReturn: numberToPercent(
+            formValues.postRetirementMeanRateOfReturn
+          ),
+          incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
+          inflationMean: numberToPercent(formValues.inflationMean),
+          preRetirementRateOfReturnVolatility: numberToPercent(
+            parseFloat(preRetirementRateOfReturnVolatility, 10)
+          ),
+          postRetirementRateOfReturnVolatility: numberToPercent(
+            parseFloat(postRetirementRateOfReturnVolatility, 10)
+          )
+        }
+      });
+    }
+  });
 
-    const { preRetirementRateOfReturnVolatility } = Object.values(
-      INVESTMENT_STYLE_ENUM
-    ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
+  const {
+    values: formValues,
+    handleChange: handleChangeFormValue,
+    setValues: setFormValues
+  } = formik;
 
-    const { postRetirementRateOfReturnVolatility } = Object.values(
-      INVESTMENT_STYLE_ENUM
-    ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
+  // const handleChangeFormValue = (fieldName) => (updatedValue) =>
+  //   setFormValues({
+  //     ...formValues,
+  //     [fieldName]: updatedValue
+  //   });
 
-    submitRetirementSimulationForm({
-      formParams: {
-        ...formValues,
-        initialPortfolioAmount: Number.parseInt(
-          formValues.initialPortfolioAmount,
-          10
-        ),
-        additionalPostRetirementAnnualIncome: Number.parseInt(
-          formValues.additionalPostRetirementAnnualIncome,
-          10
-        ),
-        preRetirementAnnualContribution: Number.parseInt(
-          formValues.preRetirementAnnualContribution,
-          10
-        ),
-        postRetirementAnnualWithdrawal:
-          -formValues.postRetirementAnnualWithdrawal,
-        preRetirementMeanRateOfReturn: numberToPercent(
-          formValues.preRetirementMeanRateOfReturn
-        ),
-        postRetirementMeanRateOfReturn: numberToPercent(
-          formValues.postRetirementMeanRateOfReturn
-        ),
-        incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
-        inflationMean: numberToPercent(formValues.inflationMean),
-        preRetirementRateOfReturnVolatility: numberToPercent(
-          parseFloat(preRetirementRateOfReturnVolatility, 10)
-        ),
-        postRetirementRateOfReturnVolatility: numberToPercent(
-          parseFloat(postRetirementRateOfReturnVolatility, 10)
-        )
-      }
-    });
-  };
+  // const handleFormSubmit = (event) => {
+  //   event.preventDefault();
+
+  //   const { preRetirementRateOfReturnVolatility } = Object.values(
+  //     INVESTMENT_STYLE_ENUM
+  //   ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
+
+  //   const { postRetirementRateOfReturnVolatility } = Object.values(
+  //     INVESTMENT_STYLE_ENUM
+  //   ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
+
+  //   submitRetirementSimulationForm({
+  //     formParams: {
+  //       ...formValues,
+  //       initialPortfolioAmount: Number.parseInt(
+  //         formValues.initialPortfolioAmount,
+  //         10
+  //       ),
+  //       additionalPostRetirementAnnualIncome: Number.parseInt(
+  //         formValues.additionalPostRetirementAnnualIncome,
+  //         10
+  //       ),
+  //       preRetirementAnnualContribution: Number.parseInt(
+  //         formValues.preRetirementAnnualContribution,
+  //         10
+  //       ),
+  //       postRetirementAnnualWithdrawal:
+  //         -formValues.postRetirementAnnualWithdrawal,
+  //       preRetirementMeanRateOfReturn: numberToPercent(
+  //         formValues.preRetirementMeanRateOfReturn
+  //       ),
+  //       postRetirementMeanRateOfReturn: numberToPercent(
+  //         formValues.postRetirementMeanRateOfReturn
+  //       ),
+  //       incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
+  //       inflationMean: numberToPercent(formValues.inflationMean),
+  //       preRetirementRateOfReturnVolatility: numberToPercent(
+  //         parseFloat(preRetirementRateOfReturnVolatility, 10)
+  //       ),
+  //       postRetirementRateOfReturnVolatility: numberToPercent(
+  //         parseFloat(postRetirementRateOfReturnVolatility, 10)
+  //       )
+  //     }
+  //   });
+  // };
 
   const handleResetForm = () => {
     setFormValues(INITIAL_FORM_VALUES);
@@ -153,7 +221,10 @@ export default function FormContainer() {
         component="form"
         noValidate
         autoComplete="off"
-        onSubmit={handleFormSubmit}
+        onSubmit={(e) => {
+          e.preventDefault();
+          formik.handleSubmit(e);
+        }}
       >
         <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
           <Typography variant="h6">Monte Carlo Simulator</Typography>
@@ -168,9 +239,9 @@ export default function FormContainer() {
             currentAge={formValues.currentAge}
             retirementAge={formValues.retirementAge}
             lifeExpectancy={formValues.lifeExpectancy}
-            setCurrentAge={handleChangeFormValue('currentAge')}
-            setRetirementAge={handleChangeFormValue('retirementAge')}
-            setLifeExpectancy={handleChangeFormValue('lifeExpectancy')}
+            touched={formik.touched}
+            errors={formik.errors}
+            handleChange={formik.handleChange}
           />
           <AdjustmentsFormSection
             adjustPortfolioBalanceForInflation={
@@ -185,18 +256,7 @@ export default function FormContainer() {
             adjustWithdrawalsForTaxation={
               formValues.adjustWithdrawalsForTaxation
             }
-            setAdjustPortfolioBalanceForInflation={handleChangeFormValue(
-              'adjustPortfolioBalanceForInflation'
-            )}
-            setAdjustContributionsForIncomeGrowth={handleChangeFormValue(
-              'adjustContributionsForIncomeGrowth'
-            )}
-            setAdjustWithdrawalsForInflation={handleChangeFormValue(
-              'adjustWithdrawalsForInflation'
-            )}
-            setAdjustWithdrawalsForTaxation={handleChangeFormValue(
-              'adjustWithdrawalsForTaxation'
-            )}
+            handleChange={formik.handleChange}
           />
           <PortfolioFormSection
             initialPortfolioAmount={formValues.initialPortfolioAmount}
@@ -206,21 +266,12 @@ export default function FormContainer() {
             postRetirementAnnualWithdrawal={
               formValues.postRetirementAnnualWithdrawal
             }
-            setInitialPortfolioAmount={handleChangeFormValue(
-              'initialPortfolioAmount'
-            )}
-            setPreRetirementAnnualContribution={handleChangeFormValue(
-              'preRetirementAnnualContribution'
-            )}
-            setPostRetirementAnnualWithdrawal={handleChangeFormValue(
-              'postRetirementAnnualWithdrawal'
-            )}
             additionalPostRetirementAnnualIncome={
               formValues.additionalPostRetirementAnnualIncome
             }
-            setAdditionalPostRetirementAnnualIncome={handleChangeFormValue(
-              'additionalPostRetirementAnnualIncome'
-            )}
+            touched={formik.touched}
+            errors={formik.errors}
+            handleChange={formik.handleChange}
           />
           <MarketConditionsFormSection
             preRetirementMeanRateOfReturn={

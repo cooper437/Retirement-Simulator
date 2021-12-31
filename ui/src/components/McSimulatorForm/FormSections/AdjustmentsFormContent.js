@@ -8,10 +8,7 @@ export default function AdjustmentsFormContent({
   adjustContributionsForIncomeGrowth,
   adjustWithdrawalsForInflation,
   adjustWithdrawalsForTaxation,
-  setAdjustPortfolioBalanceForInflation,
-  setAdjustContributionsForIncomeGrowth,
-  setAdjustWithdrawalsForInflation,
-  setAdjustWithdrawalsForTaxation
+  handleChange
 }) {
   return (
     <>
@@ -21,9 +18,8 @@ export default function AdjustmentsFormContent({
             control={
               <Checkbox
                 checked={adjustPortfolioBalanceForInflation}
-                onChange={(e) =>
-                  setAdjustPortfolioBalanceForInflation(e.target.checked)
-                }
+                name="adjustPortfolioBalanceForInflation"
+                onChange={handleChange}
               />
             }
             label="Adjust Portfolio Balance for Inflation"
@@ -34,9 +30,8 @@ export default function AdjustmentsFormContent({
             control={
               <Checkbox
                 checked={adjustWithdrawalsForInflation}
-                onChange={(e) =>
-                  setAdjustWithdrawalsForInflation(e.target.checked)
-                }
+                name="adjustWithdrawalsForInflation"
+                onChange={handleChange}
               />
             }
             label="Adjust Withdrawals for Inflation"
@@ -49,9 +44,8 @@ export default function AdjustmentsFormContent({
             control={
               <Checkbox
                 checked={adjustContributionsForIncomeGrowth}
-                onChange={(e) =>
-                  setAdjustContributionsForIncomeGrowth(e.target.checked)
-                }
+                name="adjustContributionsForIncomeGrowth"
+                onChange={handleChange}
               />
             }
             label="Adjust Contributions for Income Growth"
@@ -62,9 +56,8 @@ export default function AdjustmentsFormContent({
             control={
               <Checkbox
                 checked={adjustWithdrawalsForTaxation}
-                onChange={(e) =>
-                  setAdjustWithdrawalsForTaxation(e.target.checked)
-                }
+                name="adjustWithdrawalsForTaxation"
+                onChange={handleChange}
               />
             }
             label="Adjust Withdrawals for Taxation"

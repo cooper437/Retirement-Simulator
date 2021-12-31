@@ -7,9 +7,9 @@ function LifestyleFormContent({
   currentAge,
   retirementAge,
   lifeExpectancy,
-  setCurrentAge,
-  setRetirementAge,
-  setLifeExpectancy
+  touched,
+  errors,
+  handleChange
 }) {
   return (
     <Box
@@ -24,11 +24,14 @@ function LifestyleFormContent({
         label="Current Age"
         variant="outlined"
         type="number"
+        name="currentAge"
         InputLabelProps={{
           shrink: true
         }}
         value={currentAge}
-        onChange={(e) => setCurrentAge(parseInt(e.target.value, 10))}
+        onChange={handleChange}
+        error={touched.currentAge && Boolean(errors.currentAge)}
+        helperText={touched.currentAge && errors.currentAge}
       />
       <TextField
         sx={commonFormStyles.shortFormInput}
@@ -36,11 +39,14 @@ function LifestyleFormContent({
         label="Retirement Age"
         variant="outlined"
         type="number"
+        name="retirementAge"
         InputLabelProps={{
           shrink: true
         }}
         value={retirementAge}
-        onChange={(e) => setRetirementAge(parseInt(e.target.value, 10))}
+        onChange={handleChange}
+        error={touched.retirementAge && Boolean(errors.retirementAge)}
+        helperText={touched.retirementAge && errors.retirementAge}
       />
       <TextField
         sx={commonFormStyles.shortFormInput}
@@ -48,11 +54,14 @@ function LifestyleFormContent({
         label="Life Expectancy"
         variant="outlined"
         type="number"
+        name="lifeExpectancy"
         InputLabelProps={{
           shrink: true
         }}
         value={lifeExpectancy}
-        onChange={(e) => setLifeExpectancy(parseInt(e.target.value, 10))}
+        onChange={handleChange}
+        error={touched.lifeExpectancy && Boolean(errors.lifeExpectancy)}
+        helperText={touched.lifeExpectancy && errors.lifeExpectancy}
       />
     </Box>
   );
