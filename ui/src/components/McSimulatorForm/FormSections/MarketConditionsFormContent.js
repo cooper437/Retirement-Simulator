@@ -6,7 +6,8 @@ import {
   InputAdornment,
   Select,
   MenuItem,
-  TextField
+  TextField,
+  FormHelperText
 } from '@mui/material';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
 import { INVESTMENT_STYLE_ENUM } from '../../../constants';
@@ -19,15 +20,14 @@ export default function MarketConditionsFormContent({
   postRetirementInvestmentStyle,
   inflationMean,
   incomeGrowthMean,
-  setPreRetirementMeanRateOfReturn,
-  setPostRetirementMeanRateOfReturn,
   setPreRetirementInvestmentStyle,
   setPostRetirementInvestmentStyle,
-  setInflationMean,
-  setIncomeGrowthMean,
   adjustPortfolioBalanceForInflation,
   adjustContributionsForIncomeGrowth,
-  adjustWithdrawalsForInflation
+  adjustWithdrawalsForInflation,
+  touched,
+  errors,
+  handleChange
 }) {
   return (
     <>
@@ -37,7 +37,13 @@ export default function MarketConditionsFormContent({
         justifyContent="space-between"
         flexWrap="wrap"
       >
-        <FormControl sx={commonFormStyles.shortFormInput}>
+        <FormControl
+          sx={commonFormStyles.shortFormInput}
+          error={
+            touched.preRetirementInvestmentStyle &&
+            Boolean(errors.preRetirementInvestmentStyle)
+          }
+        >
           <InputLabel id="pre-retirement-investment-style-label">
             Pre-Retirement Investment Style
           </InputLabel>
@@ -48,6 +54,7 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={preRetirementInvestmentStyle}
+            name={preRetirementInvestmentStyle}
             onChange={(e) => {
               const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
                 (i) => i.label === e.target.value
@@ -64,8 +71,18 @@ export default function MarketConditionsFormContent({
               </MenuItem>
             ))}
           </Select>
+          <FormHelperText>
+            {touched.preRetirementInvestmentStyle &&
+              errors.preRetirementInvestmentStyle}
+          </FormHelperText>
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
+        <FormControl
+          sx={commonFormStyles.shortFormInput}
+          error={
+            touched.postRetirementInvestmentStyle &&
+            Boolean(errors.postRetirementInvestmentStyle)
+          }
+        >
           <InputLabel id="post-retirement-investment-style-label">
             Post-Retirement Investment Style
           </InputLabel>
@@ -76,6 +93,7 @@ export default function MarketConditionsFormContent({
             startAdornment={<InputAdornment position="start" />}
             endAdornment={<InputAdornment position="end" />}
             value={postRetirementInvestmentStyle}
+            name={postRetirementInvestmentStyle}
             onChange={(e) => {
               const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
                 (i) => i.label === e.target.value
@@ -92,6 +110,10 @@ export default function MarketConditionsFormContent({
               </MenuItem>
             ))}
           </Select>
+          <FormHelperText>
+            {touched.postRetirementInvestmentStyle &&
+              errors.postRetirementInvestmentStyle}
+          </FormHelperText>
         </FormControl>
         {(adjustPortfolioBalanceForInflation ||
           adjustWithdrawalsForInflation) && (
@@ -100,8 +122,8 @@ export default function MarketConditionsFormContent({
               label="Annual Inflation Mean"
               variant="outlined"
               value={inflationMean}
-              onChange={(e) => setInflationMean(e.target.value)}
-              name="inflation-mean"
+              name="inflationMean"
+              onChange={handleChange}
               id="inflation-mean"
               InputLabelProps={{
                 shrink: true
@@ -110,6 +132,8 @@ export default function MarketConditionsFormContent({
                 inputComponent: NumberFormatPercentage,
                 endAdornment: <InputAdornment position="end">%</InputAdornment>
               }}
+              error={touched.inflationMean && Boolean(errors.inflationMean)}
+              helperText={touched.inflationMean && errors.inflationMean}
             />
           </FormControl>
         )}
@@ -125,8 +149,8 @@ export default function MarketConditionsFormContent({
             label="Pre-Retirement Rate of Return"
             variant="outlined"
             value={preRetirementMeanRateOfReturn}
-            onChange={(e) => setPreRetirementMeanRateOfReturn(e.target.value)}
-            name="pre-retirement-ror"
+            onChange={handleChange}
+            name="preRetirementMeanRateOfReturn"
             id="pre-retirement-ror"
             InputLabelProps={{
               shrink: true
@@ -135,6 +159,14 @@ export default function MarketConditionsFormContent({
               inputComponent: NumberFormatPercentage,
               endAdornment: <InputAdornment position="end">%</InputAdornment>
             }}
+            error={
+              touched.preRetirementMeanRateOfReturn &&
+              Boolean(errors.preRetirementMeanRateOfReturn)
+            }
+            helperText={
+              touched.preRetirementMeanRateOfReturn &&
+              errors.preRetirementMeanRateOfReturn
+            }
           />
         </FormControl>
         <FormControl sx={commonFormStyles.shortFormInput}>
@@ -142,8 +174,8 @@ export default function MarketConditionsFormContent({
             label="Post-Retirement Rate of Return"
             variant="outlined"
             value={postRetirementMeanRateOfReturn}
-            onChange={(e) => setPostRetirementMeanRateOfReturn(e.target.value)}
-            name="post-retirement-ror"
+            onChange={handleChange}
+            name="postRetirementMeanRateOfReturn"
             id="post-retirement-ror"
             InputLabelProps={{
               shrink: true
@@ -152,6 +184,14 @@ export default function MarketConditionsFormContent({
               inputComponent: NumberFormatPercentage,
               endAdornment: <InputAdornment position="end">%</InputAdornment>
             }}
+            error={
+              touched.postRetirementMeanRateOfReturn &&
+              Boolean(errors.postRetirementMeanRateOfReturn)
+            }
+            helperText={
+              touched.postRetirementMeanRateOfReturn &&
+              errors.postRetirementMeanRateOfReturn
+            }
           />
         </FormControl>
         {adjustContributionsForIncomeGrowth && (
@@ -160,8 +200,8 @@ export default function MarketConditionsFormContent({
               label="Annual Income Growth Mean"
               variant="outlined"
               value={incomeGrowthMean}
-              onChange={(e) => setIncomeGrowthMean(e.target.value)}
-              name="income-growth-mean"
+              onChange={handleChange}
+              name="incomeGrowthMean"
               id="income-growth-mean"
               InputLabelProps={{
                 shrink: true
@@ -170,6 +210,10 @@ export default function MarketConditionsFormContent({
                 inputComponent: NumberFormatPercentage,
                 endAdornment: <InputAdornment position="end">%</InputAdornment>
               }}
+              error={
+                touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
+              }
+              helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
             />
           </FormControl>
         )}
