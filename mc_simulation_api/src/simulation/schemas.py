@@ -7,6 +7,7 @@ from pydantic import (BaseModel,
                       )
 
 decimal_positive = condecimal(ge=0)
+decimal_negative = condecimal(le=0)
 
 
 class CamelModel(BaseModel):
@@ -27,8 +28,8 @@ class RunSimulationIn(CamelModel):
     adjust_withdrawals_for_taxation: bool
     # Portfolio Parameters
     initial_portfolio_amount: PositiveInt
-    pre_retirement_annual_contribution: PositiveInt
-    post_retirement_annual_withdrawal: NegativeInt
+    pre_retirement_annual_contribution: decimal_positive
+    post_retirement_annual_withdrawal: decimal_negative
     # Lifestyle Parameters
     current_age: PositiveInt
     retirement_age: PositiveInt
