@@ -5,17 +5,24 @@ import {
   InputLabel,
   InputAdornment,
   Select,
-  MenuItem
+  MenuItem,
+  FormHelperText
 } from '@mui/material';
 
 export default function TaxesFormContent({
   commonFormStyles,
   filingStatus,
-  setFilingStatus
+  setFilingStatus,
+  handleChange,
+  touched,
+  errors
 }) {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-between">
-      <FormControl sx={commonFormStyles.shortFormInput}>
+      <FormControl
+        sx={commonFormStyles.shortFormInput}
+        error={touched.filingStatus && Boolean(errors.filingStatus)}
+      >
         <InputLabel id="filing-status-label">
           Post-Retirement Filing Status
         </InputLabel>
@@ -26,7 +33,8 @@ export default function TaxesFormContent({
           startAdornment={<InputAdornment position="start" />}
           endAdornment={<InputAdornment position="end" />}
           value={filingStatus}
-          onChange={(e) => setFilingStatus(e.target.value)}
+          name="filingStatus"
+          onChange={handleChange}
         >
           <MenuItem value="single">Single</MenuItem>
           <MenuItem value="married-filing-jointly">
@@ -37,6 +45,9 @@ export default function TaxesFormContent({
           </MenuItem>
           <MenuItem value="single-filer">Single Filer</MenuItem>
         </Select>
+        <FormHelperText>
+          {touched.filingStatus && errors.filingStatus}
+        </FormHelperText>
       </FormControl>
       <Box sx={commonFormStyles.longFormInput} />
     </Box>
