@@ -18,7 +18,7 @@ export default function TaxesFormContent({
   touched,
   errors,
   postRetirementAnnualIncome,
-  taxRate
+  postRetirementTaxRate
 }) {
   return (
     <>
@@ -72,7 +72,7 @@ export default function TaxesFormContent({
               thousandSeparator
               allowNegative
             />{' '}
-            your assumed tax rate is {taxRate}%.
+            your assumed tax rate is {postRetirementTaxRate}%.
           </Typography>
         </Box>
       )}

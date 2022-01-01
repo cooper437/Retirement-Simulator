@@ -102,7 +102,8 @@ const calcPostRetirementAnnualIncomeAndTaxRate = ({
   additionalPostRetirementAnnualIncome
 }) => {
   let postRetirementAnnualIncome;
-  let taxRate;
+  let postRetirementTaxRate;
+  let postRetirementTaxRateAsDecimal;
   if (
     filingStatus &&
     postRetirementAnnualWithdrawal &&
@@ -111,14 +112,18 @@ const calcPostRetirementAnnualIncomeAndTaxRate = ({
     postRetirementAnnualIncome =
       parseInt(postRetirementAnnualWithdrawal, 10) +
       parseInt(additionalPostRetirementAnnualIncome, 10);
-    const taxRateNonDecimal =
-      determineTaxRate({
-        filingStatus,
-        annualIncome: postRetirementAnnualIncome
-      }) * 100;
-    taxRate = taxRateNonDecimal.toString();
+    postRetirementTaxRateAsDecimal = determineTaxRate({
+      filingStatus,
+      annualIncome: postRetirementAnnualIncome
+    });
+    const taxRateNonDecimal = postRetirementTaxRateAsDecimal * 100;
+    postRetirementTaxRate = taxRateNonDecimal.toString();
   }
-  return { postRetirementAnnualIncome, taxRate };
+  return {
+    postRetirementAnnualIncome,
+    postRetirementTaxRate,
+    postRetirementTaxRateAsDecimal
+  };
 };
 
 export default function FormContainer() {
@@ -189,6 +194,15 @@ export default function FormContainer() {
           INVESTMENT_STYLE_ENUM
         ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
 
+        const { postRetirementTaxRateAsDecimal } =
+          calcPostRetirementAnnualIncomeAndTaxRate({
+            filingStatus: formValues.filingStatus,
+            postRetirementAnnualWithdrawal:
+              formValues.postRetirementAnnualWithdrawal,
+            additionalPostRetirementAnnualIncome:
+              formValues.additionalPostRetirementAnnualIncome
+          });
+
         submitRetirementSimulationForm({
           formParams: {
             ...formValues,
@@ -219,7 +233,8 @@ export default function FormContainer() {
             ),
             postRetirementRateOfReturnVolatility: numberToPercent(
               parseFloat(postRetirementRateOfReturnVolatility, 10)
-            )
+            ),
+            postRetirementTaxRate: postRetirementTaxRateAsDecimal
           }
         });
       }}
@@ -235,7 +250,7 @@ export default function FormContainer() {
         setFieldValue,
         resetForm
       }) => {
-        const { postRetirementAnnualIncome, taxRate } =
+        const { postRetirementAnnualIncome, postRetirementTaxRate } =
           calcPostRetirementAnnualIncomeAndTaxRate({
             filingStatus: formValues.filingStatus,
             postRetirementAnnualWithdrawal:
@@ -337,7 +352,7 @@ export default function FormContainer() {
                       formValues.adjustWithdrawalsForTaxation
                     }
                     postRetirementAnnualIncome={postRetirementAnnualIncome}
-                    taxRate={taxRate}
+                    postRetirementTaxRate={postRetirementTaxRate}
                     handleChange={handleChange}
                     touched={touched}
                     errors={errors}
