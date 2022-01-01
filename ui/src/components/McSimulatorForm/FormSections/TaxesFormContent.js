@@ -9,6 +9,7 @@ import {
   FormHelperText,
   Typography
 } from '@mui/material';
+import NumberFormat from 'react-number-format';
 import { determineTaxRate } from '../../../utils/generalUtils';
 
 export default function TaxesFormContent({
@@ -16,9 +17,27 @@ export default function TaxesFormContent({
   filingStatus,
   handleChange,
   touched,
-  errors
+  errors,
+  postRetirementAnnualWithdrawal,
+  additionalPostRetirementAnnualIncome
 }) {
-  // const postRetirementAnnualIncome =
+  let postRetirementAnnualIncome;
+  let taxRate;
+  if (
+    filingStatus &&
+    postRetirementAnnualWithdrawal &&
+    additionalPostRetirementAnnualIncome
+  ) {
+    postRetirementAnnualIncome =
+      parseInt(postRetirementAnnualWithdrawal, 10) +
+      parseInt(additionalPostRetirementAnnualIncome, 10);
+    const taxRateNonDecimal =
+      determineTaxRate({
+        filingStatus,
+        annualIncome: postRetirementAnnualIncome
+      }) * 100;
+    taxRate = taxRateNonDecimal.toString();
+  }
   return (
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -52,11 +71,29 @@ export default function TaxesFormContent({
           </FormHelperText>
         </FormControl>
       </Box>
-      <Box display="flex" flexDirection="row" justifyContent="center">
-        <Typography>
-          Based on your expected income post retirement you tax rate is X%
-        </Typography>
-      </Box>
+      {postRetirementAnnualIncome && !Number.isNaN(postRetirementAnnualIncome) && (
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="center"
+          sx={{ mt: 2 }}
+        >
+          <Typography>
+            Based on your expected annual income post retirement of{' '}
+            <NumberFormat
+              thousandsGroupStyle="thousand"
+              value={postRetirementAnnualIncome.toString()}
+              prefix="$"
+              decimalSeparator="."
+              displayType="text"
+              type="text"
+              thousandSeparator
+              allowNegative
+            />{' '}
+            your assumed tax rate is {taxRate}%.
+          </Typography>
+        </Box>
+      )}
     </>
   );
 }

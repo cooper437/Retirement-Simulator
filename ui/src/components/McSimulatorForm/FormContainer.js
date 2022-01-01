@@ -296,6 +296,12 @@ export default function FormContainer() {
                   adjustWithdrawalsForTaxation={
                     formValues.adjustWithdrawalsForTaxation
                   }
+                  postRetirementAnnualWithdrawal={
+                    formValues.postRetirementAnnualWithdrawal
+                  }
+                  additionalPostRetirementAnnualIncome={
+                    formValues.additionalPostRetirementAnnualIncome
+                  }
                   handleChange={handleChange}
                   touched={touched}
                   errors={errors}

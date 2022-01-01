@@ -16,6 +16,7 @@ export default React.forwardRef((props, ref) => {
           }
         });
       }}
+      decimalScale={0}
       thousandSeparator
       isNumericString
     />
