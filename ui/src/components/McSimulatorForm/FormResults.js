@@ -10,7 +10,7 @@ export default function FormResults({ simulationResults }) {
     return (
       <Box sx={{ mb: 2 }} display="flex" justifyContent="center">
         Out of {simulationResults.numberOfSimulations} simulations your
-        portfolio survival rate is {roundedSurvivalRate}%.
+        portfolio did not run out of money {roundedSurvivalRate}% of the time.
       </Box>
     );
   }
