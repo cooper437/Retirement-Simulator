@@ -10,7 +10,6 @@ import {
   Typography
 } from '@mui/material';
 import NumberFormat from 'react-number-format';
-import { determineTaxRate } from '../../../utils/generalUtils';
 
 export default function TaxesFormContent({
   commonFormStyles,
@@ -18,26 +17,9 @@ export default function TaxesFormContent({
   handleChange,
   touched,
   errors,
-  postRetirementAnnualWithdrawal,
-  additionalPostRetirementAnnualIncome
+  postRetirementAnnualIncome,
+  taxRate
 }) {
-  let postRetirementAnnualIncome;
-  let taxRate;
-  if (
-    filingStatus &&
-    postRetirementAnnualWithdrawal &&
-    additionalPostRetirementAnnualIncome
-  ) {
-    postRetirementAnnualIncome =
-      parseInt(postRetirementAnnualWithdrawal, 10) +
-      parseInt(additionalPostRetirementAnnualIncome, 10);
-    const taxRateNonDecimal =
-      determineTaxRate({
-        filingStatus,
-        annualIncome: postRetirementAnnualIncome
-      }) * 100;
-    taxRate = taxRateNonDecimal.toString();
-  }
   return (
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">

@@ -60,7 +60,7 @@ export default function AdjustmentsFormContent({
                 onChange={handleChange}
               />
             }
-            label="Adjust Withdrawals for Taxation"
+            label="Adjust Withdrawals for Taxes"
           />
         </FormGroup>
       </Stack>

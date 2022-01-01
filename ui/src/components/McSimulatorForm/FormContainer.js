@@ -10,6 +10,7 @@ import TaxesFormContent from './FormSections/TaxesFormContent';
 import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
+import { determineTaxRate } from '../../utils/generalUtils';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -203,98 +204,71 @@ export default function FormContainer() {
         errors,
         setFieldValue,
         resetForm
-      }) => (
-        <Box sx={{ mt: 4, mb: 4 }}>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(e);
-            }}
-          >
-            <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
-              <Typography variant="h6">Monte Carlo Simulator</Typography>
-              <Typography variant="p">
-                Input the information below and then run the simulation to see
-                the likelihood that you will meet your retirement goals under a
-                variety of market conditions.
-              </Typography>
-            </Box>
-            <Box sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}>
-              <LifestyleFormSection
-                currentAge={formValues.currentAge}
-                retirementAge={formValues.retirementAge}
-                lifeExpectancy={formValues.lifeExpectancy}
-                touched={touched}
-                errors={errors}
-                handleChange={handleChange}
-              />
-              <AdjustmentsFormSection
-                adjustPortfolioBalanceForInflation={
-                  formValues.adjustPortfolioBalanceForInflation
-                }
-                adjustContributionsForIncomeGrowth={
-                  formValues.adjustContributionsForIncomeGrowth
-                }
-                adjustWithdrawalsForInflation={
-                  formValues.adjustWithdrawalsForInflation
-                }
-                adjustWithdrawalsForTaxation={
-                  formValues.adjustWithdrawalsForTaxation
-                }
-                handleChange={handleChange}
-              />
-              <PortfolioFormSection
-                initialPortfolioAmount={formValues.initialPortfolioAmount}
-                preRetirementAnnualContribution={
-                  formValues.preRetirementAnnualContribution
-                }
-                postRetirementAnnualWithdrawal={
-                  formValues.postRetirementAnnualWithdrawal
-                }
-                additionalPostRetirementAnnualIncome={
-                  formValues.additionalPostRetirementAnnualIncome
-                }
-                touched={touched}
-                errors={errors}
-                handleChange={handleChange}
-              />
-              <MarketConditionsFormSection
-                preRetirementMeanRateOfReturn={
-                  formValues.preRetirementMeanRateOfReturn
-                }
-                postRetirementMeanRateOfReturn={
-                  formValues.postRetirementMeanRateOfReturn
-                }
-                preRetirementInvestmentStyle={
-                  formValues.preRetirementInvestmentStyle
-                }
-                postRetirementInvestmentStyle={
-                  formValues.postRetirementInvestmentStyle
-                }
-                inflationMean={formValues.inflationMean}
-                incomeGrowthMean={formValues.incomeGrowthMean}
-                touched={touched}
-                errors={errors}
-                handleChange={handleChange}
-                setFieldValue={setFieldValue}
-                adjustPortfolioBalanceForInflation={
-                  formValues.adjustPortfolioBalanceForInflation
-                }
-                adjustWithdrawalsForInflation={
-                  formValues.adjustWithdrawalsForInflation
-                }
-                adjustContributionsForIncomeGrowth={
-                  formValues.adjustContributionsForIncomeGrowth
-                }
-              />
-              {formValues.adjustWithdrawalsForTaxation && (
-                <TaxesFormSection
-                  filingStatus={formValues.filingStatus}
+      }) => {
+        let postRetirementAnnualIncome;
+        let taxRate;
+        if (
+          formValues.filingStatus &&
+          formValues.postRetirementAnnualWithdrawal &&
+          formValues.additionalPostRetirementAnnualIncome
+        ) {
+          postRetirementAnnualIncome =
+            parseInt(formValues.postRetirementAnnualWithdrawal, 10) +
+            parseInt(formValues.additionalPostRetirementAnnualIncome, 10);
+          const taxRateNonDecimal =
+            determineTaxRate({
+              filingStatus: formValues.filingStatus,
+              annualIncome: postRetirementAnnualIncome
+            }) * 100;
+          taxRate = taxRateNonDecimal.toString();
+        }
+        return (
+          <Box sx={{ mt: 4, mb: 4 }}>
+            <Box
+              component="form"
+              noValidate
+              autoComplete="off"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+              }}
+            >
+              <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
+                <Typography variant="h6">Monte Carlo Simulator</Typography>
+                <Typography variant="p">
+                  Input the information below and then run the simulation to see
+                  the likelihood that you will meet your retirement goals under
+                  a variety of market conditions.
+                </Typography>
+              </Box>
+              <Box sx={{ ml: 4, mr: 4, pb: 4, borderBottom: '1px solid gray' }}>
+                <LifestyleFormSection
+                  currentAge={formValues.currentAge}
+                  retirementAge={formValues.retirementAge}
+                  lifeExpectancy={formValues.lifeExpectancy}
+                  touched={touched}
+                  errors={errors}
+                  handleChange={handleChange}
+                />
+                <AdjustmentsFormSection
+                  adjustPortfolioBalanceForInflation={
+                    formValues.adjustPortfolioBalanceForInflation
+                  }
+                  adjustContributionsForIncomeGrowth={
+                    formValues.adjustContributionsForIncomeGrowth
+                  }
+                  adjustWithdrawalsForInflation={
+                    formValues.adjustWithdrawalsForInflation
+                  }
                   adjustWithdrawalsForTaxation={
                     formValues.adjustWithdrawalsForTaxation
+                  }
+                  handleChange={handleChange}
+                />
+                <PortfolioFormSection
+                  initialPortfolioAmount={formValues.initialPortfolioAmount}
+                  preRetirementAnnualContribution={
+                    formValues.preRetirementAnnualContribution
                   }
                   postRetirementAnnualWithdrawal={
                     formValues.postRetirementAnnualWithdrawal
@@ -302,25 +276,67 @@ export default function FormContainer() {
                   additionalPostRetirementAnnualIncome={
                     formValues.additionalPostRetirementAnnualIncome
                   }
-                  handleChange={handleChange}
                   touched={touched}
                   errors={errors}
+                  handleChange={handleChange}
                 />
-              )}
-            </Box>
-            <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
-              <Stack spacing={2} direction="row">
-                <Button variant="contained" type="submit">
-                  Run Simulation
-                </Button>
-                <Button variant="outlined" onClick={resetForm}>
-                  Reset
-                </Button>
-              </Stack>
+                <MarketConditionsFormSection
+                  preRetirementMeanRateOfReturn={
+                    formValues.preRetirementMeanRateOfReturn
+                  }
+                  postRetirementMeanRateOfReturn={
+                    formValues.postRetirementMeanRateOfReturn
+                  }
+                  preRetirementInvestmentStyle={
+                    formValues.preRetirementInvestmentStyle
+                  }
+                  postRetirementInvestmentStyle={
+                    formValues.postRetirementInvestmentStyle
+                  }
+                  inflationMean={formValues.inflationMean}
+                  incomeGrowthMean={formValues.incomeGrowthMean}
+                  touched={touched}
+                  errors={errors}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                  adjustPortfolioBalanceForInflation={
+                    formValues.adjustPortfolioBalanceForInflation
+                  }
+                  adjustWithdrawalsForInflation={
+                    formValues.adjustWithdrawalsForInflation
+                  }
+                  adjustContributionsForIncomeGrowth={
+                    formValues.adjustContributionsForIncomeGrowth
+                  }
+                />
+                {formValues.adjustWithdrawalsForTaxation && (
+                  <TaxesFormSection
+                    filingStatus={formValues.filingStatus}
+                    adjustWithdrawalsForTaxation={
+                      formValues.adjustWithdrawalsForTaxation
+                    }
+                    postRetirementAnnualIncome={postRetirementAnnualIncome}
+                    taxRate={taxRate}
+                    handleChange={handleChange}
+                    touched={touched}
+                    errors={errors}
+                  />
+                )}
+              </Box>
+              <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
+                <Stack spacing={2} direction="row">
+                  <Button variant="contained" type="submit">
+                    Run Simulation
+                  </Button>
+                  <Button variant="outlined" onClick={resetForm}>
+                    Reset
+                  </Button>
+                </Stack>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      )}
+        );
+      }}
     </Formik>
   );
 }
