@@ -33,3 +33,33 @@ export const INVESTMENT_STYLE_ENUM = {
     postRetirementRateOfReturnVolatility: '3.20'
   }
 };
+
+export const TAX_BRACKETS_ENUM = {
+  singleFiler: [
+    { rangeBottom: 0, rangeTop: 10275, taxRate: 0.1 },
+    { rangeBottom: 10276, rangeTop: 41775, taxRate: 0.12 },
+    { rangeBottom: 41776, rangeTop: 89075, taxRate: 0.22 },
+    { rangeBottom: 89076, rangeTop: 170050, taxRate: 0.24 },
+    { rangeBottom: 170051, rangeTop: 215950, taxRate: 0.32 },
+    { rangeBottom: 215951, rangeTop: 539900, taxRate: 0.35 },
+    { rangeBottom: 539901, rangeTop: null, taxRate: 0.37 }
+  ],
+  marriedFilingJointly: [
+    { rangeBottom: 0, rangeTop: 20500, taxRate: 0.1 },
+    { rangeBottom: 20501, rangeTop: 83550, taxRate: 0.12 },
+    { rangeBottom: 83551, rangeTop: 178150, taxRate: 0.22 },
+    { rangeBottom: 178151, rangeTop: 340100, taxRate: 0.24 },
+    { rangeBottom: 340101, rangeTop: 431900, taxRate: 0.32 },
+    { rangeBottom: 431901, rangeTop: 647850, taxRate: 0.35 },
+    { rangeBottom: 647851, rangeTop: null, taxRate: 0.37 }
+  ],
+  marriedFilingSeparately: [
+    { rangeBottom: 0, rangeTop: 10275, taxRate: 0.1 },
+    { rangeBottom: 10276, rangeTop: 41775, taxRate: 0.12 },
+    { rangeBottom: 41776, rangeTop: 89075, taxRate: 0.22 },
+    { rangeBottom: 89076, rangeTop: 170050, taxRate: 0.24 },
+    { rangeBottom: 170051, rangeTop: 215950, taxRate: 0.32 },
+    { rangeBottom: 215951, rangeTop: 323925, taxRate: 0.35 },
+    { rangeBottom: 323926, rangeTop: null, taxRate: 0.37 }
+  ]
+};
