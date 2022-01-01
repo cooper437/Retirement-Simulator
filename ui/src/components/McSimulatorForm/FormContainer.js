@@ -91,6 +91,36 @@ const INITIAL_FORM_VALUES = {
 
 const numberToPercent = (aNumber) => aNumber / 100;
 
+/**
+ * Determine the Total Post Retirement Annual Income Amount and effective tax rate
+ * given the filing status, post retirement withdrawal amount amd addtiontional post retirement
+ * annual income
+ */
+const calcPostRetirementAnnualIncomeAndTaxRate = ({
+  filingStatus,
+  postRetirementAnnualWithdrawal,
+  additionalPostRetirementAnnualIncome
+}) => {
+  let postRetirementAnnualIncome;
+  let taxRate;
+  if (
+    filingStatus &&
+    postRetirementAnnualWithdrawal &&
+    additionalPostRetirementAnnualIncome
+  ) {
+    postRetirementAnnualIncome =
+      parseInt(postRetirementAnnualWithdrawal, 10) +
+      parseInt(additionalPostRetirementAnnualIncome, 10);
+    const taxRateNonDecimal =
+      determineTaxRate({
+        filingStatus,
+        annualIncome: postRetirementAnnualIncome
+      }) * 100;
+    taxRate = taxRateNonDecimal.toString();
+  }
+  return { postRetirementAnnualIncome, taxRate };
+};
+
 export default function FormContainer() {
   // eslint-disable-next-line arrow-body-style
   return (
@@ -205,23 +235,14 @@ export default function FormContainer() {
         setFieldValue,
         resetForm
       }) => {
-        let postRetirementAnnualIncome;
-        let taxRate;
-        if (
-          formValues.filingStatus &&
-          formValues.postRetirementAnnualWithdrawal &&
-          formValues.additionalPostRetirementAnnualIncome
-        ) {
-          postRetirementAnnualIncome =
-            parseInt(formValues.postRetirementAnnualWithdrawal, 10) +
-            parseInt(formValues.additionalPostRetirementAnnualIncome, 10);
-          const taxRateNonDecimal =
-            determineTaxRate({
-              filingStatus: formValues.filingStatus,
-              annualIncome: postRetirementAnnualIncome
-            }) * 100;
-          taxRate = taxRateNonDecimal.toString();
-        }
+        const { postRetirementAnnualIncome, taxRate } =
+          calcPostRetirementAnnualIncomeAndTaxRate({
+            filingStatus: formValues.filingStatus,
+            postRetirementAnnualWithdrawal:
+              formValues.postRetirementAnnualWithdrawal,
+            additionalPostRetirementAnnualIncome:
+              formValues.additionalPostRetirementAnnualIncome
+          });
         return (
           <Box sx={{ mt: 4, mb: 4 }}>
             <Box
