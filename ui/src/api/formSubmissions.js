@@ -8,8 +8,9 @@ export const submitRetirementSimulationForm = async ({ formParams }) => {
   };
   try {
     const response = await axios.post('/simulate', requestPayload);
-    console.log('response', response.data);
+    return response.data;
   } catch (err) {
     console.error('An error occured');
+    return null;
   }
 };
