@@ -2017,6 +2017,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/styled-engine@npm:^5.2.6":
+  version: 5.2.6
+  resolution: "@mui/styled-engine@npm:5.2.6"
+  dependencies:
+    "@babel/runtime": ^7.16.3
+    "@emotion/cache": ^11.7.1
+    prop-types: ^15.7.2
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/styled": ^11.3.0
+    react: ^17.0.2
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+  checksum: a657593d6554d94366143f9cb2af45786221fff93d5193a4e9e3c487440f58615180af2fdf1c68f3b7b4919181ec9258333e5ddd999c37f941bf4d9d9c03713c
+  languageName: node
+  linkType: hard
+
 "@mui/system@npm:^5.2.5":
   version: 5.2.5
   resolution: "@mui/system@npm:5.2.5"
@@ -2042,6 +2062,34 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 95002007f816da47d3349627a2efced5146319af96c75463ea7ca762c1bb3057f15cf6ae69506c6baf3f5f1bfa19f4a72d3819fcccc99a153064e04a04013153
+  languageName: node
+  linkType: hard
+
+"@mui/system@npm:^5.2.6":
+  version: 5.2.6
+  resolution: "@mui/system@npm:5.2.6"
+  dependencies:
+    "@babel/runtime": ^7.16.3
+    "@mui/private-theming": ^5.2.3
+    "@mui/styled-engine": ^5.2.6
+    "@mui/types": ^7.1.0
+    "@mui/utils": ^5.2.3
+    clsx: ^1.1.1
+    csstype: ^3.0.10
+    prop-types: ^15.7.2
+  peerDependencies:
+    "@emotion/react": ^11.5.0
+    "@emotion/styled": ^11.3.0
+    "@types/react": ^16.8.6 || ^17.0.0
+    react: ^17.0.2
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: 24d99fedf9743b9665749ee8fcd927fa7a1a6b366d92345c1b006153844eb9d76cffc40ff341a8af9499af8335605e6a91d536f7f1f976fa0858b95537a6e013
   languageName: node
   linkType: hard
 
@@ -12011,6 +12059,7 @@ __metadata:
     "@mui/icons-material": ^5.2.5
     "@mui/material": ^5.2.5
     "@mui/styled-engine": ^5.2.5
+    "@mui/system": ^5.2.6
     "@testing-library/jest-dom": ^5.14.1
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^13.2.1

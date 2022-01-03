@@ -17,7 +17,7 @@ import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
 import { determineTaxRate } from '../../utils/generalUtils';
-import FormResults from './FormResults';
+import ResultsContainer from './FormResults/ResultsContainer';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -80,26 +80,48 @@ const INITIAL_STATE = {
 };
 
 // The internal form state managed by formik
+// const INITIAL_FORM_VALUES = {
+//   adjustPortfolioBalanceForInflation: true,
+//   adjustContributionsForIncomeGrowth: true,
+//   adjustWithdrawalsForInflation: true,
+//   adjustWithdrawalsForTaxation: true,
+//   initialPortfolioAmount: '',
+//   preRetirementAnnualContribution: '',
+//   postRetirementAnnualWithdrawal: '',
+//   currentAge: '',
+//   retirementAge: '',
+//   lifeExpectancy: '',
+//   inflationMean: '2.40',
+//   incomeGrowthMean: '2.79',
+//   preRetirementMeanRateOfReturn: '',
+//   postRetirementMeanRateOfReturn: '',
+//   preRetirementInvestmentStyle: '',
+//   postRetirementInvestmentStyle: '',
+//   filingStatus: '',
+//   postRetirementTaxRate: '',
+//   additionalPostRetirementAnnualIncome: '0'
+// };
+
+// The internal form state managed by formik
 const INITIAL_FORM_VALUES = {
   adjustPortfolioBalanceForInflation: true,
   adjustContributionsForIncomeGrowth: true,
   adjustWithdrawalsForInflation: true,
   adjustWithdrawalsForTaxation: true,
-  initialPortfolioAmount: '',
-  preRetirementAnnualContribution: '',
-  postRetirementAnnualWithdrawal: '',
-  currentAge: '',
-  retirementAge: '',
-  lifeExpectancy: '',
+  initialPortfolioAmount: '100000',
+  preRetirementAnnualContribution: '20000',
+  postRetirementAnnualWithdrawal: '100000',
+  currentAge: '20',
+  retirementAge: '65',
+  lifeExpectancy: '90',
   inflationMean: '2.40',
   incomeGrowthMean: '2.79',
-  preRetirementMeanRateOfReturn: '',
-  postRetirementMeanRateOfReturn: '',
-  preRetirementInvestmentStyle: '',
-  postRetirementInvestmentStyle: '',
-  filingStatus: '',
-  postRetirementTaxRate: '',
-  additionalPostRetirementAnnualIncome: '0'
+  preRetirementMeanRateOfReturn: '9.50',
+  postRetirementMeanRateOfReturn: '4.00',
+  preRetirementInvestmentStyle: 'Aggressive',
+  postRetirementInvestmentStyle: 'Conservative',
+  filingStatus: 'singleFiler',
+  additionalPostRetirementAnnualIncome: '20000'
 };
 
 const numberToPercent = (aNumber) => aNumber / 100;
@@ -408,7 +430,7 @@ export default function FormContainer() {
           );
         }}
       </Formik>
-      <FormResults simulationResults={simulationResults} />
+      <ResultsContainer simulationResults={simulationResults} />
     </>
   );
 }
