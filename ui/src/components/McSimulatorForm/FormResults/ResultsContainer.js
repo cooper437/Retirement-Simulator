@@ -22,7 +22,7 @@ export default function ResultsContainer({ simulationResults }) {
         </Typography>
         <Visualizations survivalRate={simulationResults.survivalRate} />
         <Typography sx={{ mb: 2 }} variant="h6">
-          Key Facts
+          Key Insights
         </Typography>
         <KeyFactsList
           simulationResults={simulationResults}
