@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Box } from '@mui/material';
 
 export default function FormResults({ simulationResults }) {
-  if (!_.isEmpty(simulationResults)) {
+  if (simulationResults.simulationRunCompleted) {
     const survivalRateNonDecimal = simulationResults.survivalRate * 100;
     const roundedSurvivalRate =
       Math.round((survivalRateNonDecimal + Number.EPSILON) * 100) / 100;

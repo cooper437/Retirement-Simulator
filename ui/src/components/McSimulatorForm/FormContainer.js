@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Typography, Button, Stack } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Stack,
+  CircularProgress
+} from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
@@ -69,7 +75,8 @@ const AdjustmentsFormSection = withFormSection({
 });
 
 const INITIAL_STATE = {
-  simulationRunCompleted: false
+  simulationRunCompleted: false,
+  isFetching: false
 };
 
 // The internal form state managed by formik
@@ -210,7 +217,7 @@ export default function FormContainer() {
               additionalPostRetirementAnnualIncome:
                 formValues.additionalPostRetirementAnnualIncome
             });
-
+          setSimulationResults({ isFetching: true });
           const results = await submitRetirementSimulationForm({
             formParams: {
               ...formValues,
@@ -247,6 +254,7 @@ export default function FormContainer() {
           });
           setSimulationResults({
             ...results,
+            isFetching: false,
             simulationRunCompleted: true
           });
         }}
@@ -378,15 +386,21 @@ export default function FormContainer() {
                   )}
                 </Box>
                 <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
-                  <Stack spacing={2} direction="row">
-                    <Button variant="contained" type="submit">
-                      {simulationResults.simulationRunCompleted
-                        ? 'Re-run Simulation'
-                        : 'Run Simulation'}
-                    </Button>
-                    <Button variant="outlined" onClick={handleClickResetButton}>
-                      Reset
-                    </Button>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Stack direction="row" spacing={2}>
+                      <Button variant="contained" type="submit">
+                        {simulationResults.simulationRunCompleted
+                          ? 'Re-run Simulation'
+                          : 'Run Simulation'}
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={handleClickResetButton}
+                      >
+                        Reset
+                      </Button>
+                    </Stack>
+                    {simulationResults.isFetching && <CircularProgress />}
                   </Stack>
                 </Box>
               </Box>
