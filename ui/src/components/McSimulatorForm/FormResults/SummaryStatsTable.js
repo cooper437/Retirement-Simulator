@@ -40,6 +40,11 @@ const rows = [
     key: 'balanceAtEol',
     label: 'Wealth Transfer Amount',
     formatAs: 'dollar'
+  },
+  {
+    key: 'safeWithdrawalRate',
+    label: 'Post-Retirement Safe Withdrawal Rate',
+    formatAs: 'percent'
   }
 ];
 

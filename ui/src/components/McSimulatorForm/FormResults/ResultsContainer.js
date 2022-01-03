@@ -8,7 +8,7 @@ export default function ResultsContainer({ simulationResults }) {
     const roundedSurvivalRate =
       Math.round((survivalRateNonDecimal + Number.EPSILON) * 100) / 100;
     return (
-      <Box sx={{ ml: 4, mr: 4 }}>
+      <Box sx={{ ml: 4, mr: 4, mb: 4 }}>
         <Box sx={{ mb: 2 }} display="flex" justifyContent="center">
           Out of {simulationResults.numberOfSimulations} simulations your
           portfolio did not run out of money {roundedSurvivalRate}% of the time.
