@@ -68,6 +68,11 @@ const AdjustmentsFormSection = withFormSection({
   sectionTitle: 'Adjustments'
 });
 
+const INITIAL_STATE = {
+  simulationRunCompleted: false
+};
+
+// The internal form state managed by formik
 const INITIAL_FORM_VALUES = {
   adjustPortfolioBalanceForInflation: true,
   adjustContributionsForIncomeGrowth: true,
@@ -128,7 +133,7 @@ const calcPostRetirementAnnualIncomeAndTaxRate = ({
 };
 
 export default function FormContainer() {
-  const [simulationResults, setSimulationResults] = useState({});
+  const [simulationResults, setSimulationResults] = useState(INITIAL_STATE);
   return (
     <>
       <Formik
@@ -240,7 +245,10 @@ export default function FormContainer() {
               postRetirementTaxRate: postRetirementTaxRateAsDecimal
             }
           });
-          setSimulationResults(results);
+          setSimulationResults({
+            ...results,
+            simulationRunCompleted: true
+          });
         }}
       >
         {({
@@ -256,7 +264,7 @@ export default function FormContainer() {
         }) => {
           const handleClickResetButton = () => {
             resetForm(); // Reset the input form state in Formik
-            setSimulationResults({}); // Reset the output of the simulation on display
+            setSimulationResults(INITIAL_STATE); // Reset the output of the simulation on display
           };
           const { postRetirementAnnualIncome, postRetirementTaxRate } =
             calcPostRetirementAnnualIncomeAndTaxRate({
@@ -372,7 +380,9 @@ export default function FormContainer() {
                 <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
                   <Stack spacing={2} direction="row">
                     <Button variant="contained" type="submit">
-                      Run Simulation
+                      {simulationResults.simulationRunCompleted
+                        ? 'Re-run Simulation'
+                        : 'Run Simulation'}
                     </Button>
                     <Button variant="outlined" onClick={handleClickResetButton}>
                       Reset
