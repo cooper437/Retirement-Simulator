@@ -11,12 +11,7 @@ import {
 } from '@mui/material';
 import NumberFormat from 'react-number-format';
 import { SECTION_BACKGROUND_COLOR } from '../../../colors';
-
-const decimalToPercent = (aDecimal) => {
-  const asPercent = aDecimal * 100;
-  const rounded = Math.round(asPercent * 100) / 100;
-  return `${rounded}%`;
-};
+import { decimalToPercent } from '../../../utils/generalUtils';
 
 const rows = [
   {

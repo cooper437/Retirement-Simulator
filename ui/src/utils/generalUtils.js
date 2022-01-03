@@ -16,3 +16,9 @@ export const determineTaxRate = ({ filingStatus, annualIncome }) => {
   const { taxRate } = bracketsForFilingStatus[bracketForIncomeIndex];
   return taxRate;
 };
+
+export const decimalToPercent = (aDecimal) => {
+  const asPercent = aDecimal * 100;
+  const rounded = Math.round(asPercent * 100) / 100;
+  return `${rounded}%`;
+};
