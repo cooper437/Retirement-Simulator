@@ -4189,6 +4189,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "chart.js@npm:3.7.0"
+  checksum: 050d675d15742e873ec10aa3c77fecd43d16062a5f188615795a08158b8aed591f98f2f067adf5d3f6b710093ea3a754977b2418fb30ff0babdeabbcf6898e5e
+  languageName: node
+  linkType: hard
+
 "check-types@npm:^11.1.1":
   version: 11.1.2
   resolution: "check-types@npm:11.1.2"
@@ -10346,6 +10353,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-chartjs-2@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "react-chartjs-2@npm:4.0.0"
+  peerDependencies:
+    chart.js: ^3.5.0
+    react: ^16.8.0 || ^17.0.0
+  checksum: 25998a4cc14910641c1184245c6672211d436877a456c70fa16bf67e2b470e7899cef578618fd8842a7d25103a973f25c7f7ec01200fdcbe1b04913fabb87650
+  languageName: node
+  linkType: hard
+
 "react-dev-utils@npm:^12.0.0":
   version: 12.0.0
   resolution: "react-dev-utils@npm:12.0.0"
@@ -12064,6 +12081,7 @@ __metadata:
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^13.2.1
     axios: ^0.24.0
+    chart.js: ^3.7.0
     eslint: ^8.5.0
     eslint-config-airbnb: ^19.0.2
     eslint-config-prettier: ^8.3.0
@@ -12077,6 +12095,7 @@ __metadata:
     lodash: ^4.17.21
     prettier: ^2.5.1
     react: ^17.0.2
+    react-chartjs-2: ^4.0.0
     react-dom: ^17.0.2
     react-number-format: ^4.9.0
     react-scripts: 5.0.0

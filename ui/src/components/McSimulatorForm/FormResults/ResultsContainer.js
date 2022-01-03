@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import SummaryStatsTable from './SummaryStatsTable';
 import { decimalToPercent } from '../../../utils/generalUtils';
 import KeyFactsList from './KeyFactsList';
+import Visualizations from './Visualizations';
 
 export default function ResultsContainer({ simulationResults }) {
   if (simulationResults.simulationRunCompleted) {
@@ -14,6 +15,7 @@ export default function ResultsContainer({ simulationResults }) {
     );
     return (
       <Box sx={{ ml: 4, mr: 4, mb: 4 }}>
+        <Visualizations />
         <Typography sx={{ mb: 2 }} variant="h6">
           Key Facts
         </Typography>
