@@ -24,6 +24,25 @@ const portfolioSurvivalPlugins = [
   }
 ];
 
+const safeWithdrawalPlugins = [
+  {
+    beforeDraw(chart) {
+      const { width } = chart;
+      const { height } = chart;
+      const { ctx } = chart;
+      ctx.restore();
+      const fontSize = (height / 360).toFixed(2);
+      ctx.font = `${fontSize}em sans-serif`;
+      ctx.textBaseline = 'middle';
+      const text = 'Portfolio Survival on $XXk / year';
+      const textX = Math.round((width - ctx.measureText(text).width) / 2);
+      const textY = height / 2;
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }
+];
+
 const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
   labels: ['Did Not Run Out of Money', 'Did Run Out of Money'],
   datasets: [
@@ -83,6 +102,7 @@ export default function Visualizations({ survivalRate }) {
               }
             }
           }}
+          plugins={safeWithdrawalPlugins}
         />
       </Box>
     </Box>
