@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { alpha, styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from '@mui/material';
+import NumberFormat from 'react-number-format';
 import { SECTION_BACKGROUND_COLOR } from '../../../colors';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-// const rows = [
-//   createData('Pre-Retirement Mean Rate Of Return', 159, 6.0, 24, 4.0),
-//   createData('Post-Retirement Mean Rate Of Return', 237, 9.0, 37, 4.3),
-//   createData('Wealth Transfer Amount', 262, 16.0, 24, 6.0),
-//   createData('Post-Retirement Safe Withdrawal Rate', 305, 3.7, 67, 4.3)
-// ];
+const decimalToPercent = (aDecimal) => {
+  const asPercent = aDecimal * 100;
+  const rounded = Math.round(asPercent * 100) / 100;
+  return `${rounded}%`;
+};
 
 const rowHeaders = [
   'Pre-Retirement Mean Rate Of Return',
@@ -30,15 +28,18 @@ const rowHeaders = [
 const rows = [
   {
     key: 'preRetirementRateOfReturn',
-    label: 'Pre-Retirement Mean Rate Of Return'
+    label: 'Pre-Retirement Mean Rate Of Return',
+    formatAs: 'percent'
   },
   {
     key: 'postRetirementRateOfReturn',
-    label: 'Post-Retirement Mean Rate Of Return'
+    label: 'Post-Retirement Mean Rate Of Return',
+    formatAs: 'percent'
   },
   {
     key: 'balanceAtEol',
-    label: 'Wealth Transfer Amount'
+    label: 'Wealth Transfer Amount',
+    formatAs: 'dollar'
   }
 ];
 
@@ -46,6 +47,29 @@ const rows = [
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold'
 }));
+
+const conditionalCellDisplayFormat = (formatAs, cellValue) => {
+  switch (formatAs) {
+    case 'percent':
+      return decimalToPercent(cellValue);
+    case 'dollar':
+      return (
+        <NumberFormat
+          thousandsGroupStyle="thousand"
+          value={cellValue.toString()}
+          prefix="$"
+          decimalSeparator="."
+          decimalScale={0}
+          displayType="text"
+          type="text"
+          thousandSeparator
+          allowNegative
+        />
+      );
+    default:
+      return cellValue;
+  }
+};
 
 export default function SummaryStatsTable({ quantileStatistics }) {
   return (
@@ -81,7 +105,7 @@ export default function SummaryStatsTable({ quantileStatistics }) {
                 .map((cellValue, innerIndex) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <TableCell key={`${index}-${innerIndex}`} align="center">
-                    {cellValue}
+                    {conditionalCellDisplayFormat(row.formatAs, cellValue)}
                   </TableCell>
                 ))}
             </TableRow>
