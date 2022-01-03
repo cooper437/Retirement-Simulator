@@ -18,13 +18,6 @@ const decimalToPercent = (aDecimal) => {
   return `${rounded}%`;
 };
 
-const rowHeaders = [
-  'Pre-Retirement Mean Rate Of Return',
-  'Post-Retirement Mean Rate Of Return',
-  'Wealth Transfer Amount',
-  'Post-Retirement Safe Withdrawal Rate'
-];
-
 const rows = [
   {
     key: 'preRetirementRateOfReturn',

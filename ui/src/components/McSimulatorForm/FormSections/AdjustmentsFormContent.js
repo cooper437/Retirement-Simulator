@@ -1,8 +1,8 @@
 import React from 'react';
 import { Stack, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
-// eslint-disable-next-line no-unused-vars
 export default function AdjustmentsFormContent({
+  // eslint-disable-next-line no-unused-vars
   commonFormStyles,
   adjustPortfolioBalanceForInflation,
   adjustContributionsForIncomeGrowth,
