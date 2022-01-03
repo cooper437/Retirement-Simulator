@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { decimalToPercent } from '../../../utils/generalUtils';
@@ -15,10 +15,14 @@ const portfolioSurvivalPlugins = [
       const fontSize = (height / 360).toFixed(2);
       ctx.font = `${fontSize}em sans-serif`;
       ctx.textBaseline = 'middle';
-      const text = 'Portfolio Survival';
-      const textX = Math.round((width - ctx.measureText(text).width) / 2);
-      const textY = height / 2;
-      ctx.fillText(text, textX, textY);
+      const text1 = 'Overall Portfolio';
+      const text2 = 'Survival Rate';
+      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+      const text1Y = height / 2 - 10;
+      const text2Y = height / 2 + 10;
+      ctx.fillText(text1, text1X, text1Y);
+      ctx.fillText(text2, text2X, text2Y);
       ctx.save();
     }
   }
@@ -38,8 +42,8 @@ const safeWithdrawalPlugins = [
       const text2 = 'on $XXk / year';
       const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
       const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-      const text1Y = height / 2;
-      const text2Y = height / 2 + 20;
+      const text1Y = height / 2 - 10;
+      const text2Y = height / 2 + 10;
       ctx.fillText(text1, text1X, text1Y);
       ctx.fillText(text2, text2X, text2Y);
       ctx.save();
