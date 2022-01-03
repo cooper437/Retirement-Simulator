@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Typography, Button, Stack } from '@mui/material';
@@ -81,7 +80,7 @@ const INITIAL_FORM_VALUES = {
   retirementAge: '',
   lifeExpectancy: '',
   inflationMean: '2.40',
-  incomeGrowthMean: '5.00',
+  incomeGrowthMean: '2.79',
   preRetirementMeanRateOfReturn: '',
   postRetirementMeanRateOfReturn: '',
   preRetirementInvestmentStyle: '',
@@ -255,6 +254,10 @@ export default function FormContainer() {
           setFieldValue,
           resetForm
         }) => {
+          const handleClickResetButton = () => {
+            resetForm(); // Reset the input form state in Formik
+            setSimulationResults({}); // Reset the output of the simulation on display
+          };
           const { postRetirementAnnualIncome, postRetirementTaxRate } =
             calcPostRetirementAnnualIncomeAndTaxRate({
               filingStatus: formValues.filingStatus,
@@ -371,7 +374,7 @@ export default function FormContainer() {
                     <Button variant="contained" type="submit">
                       Run Simulation
                     </Button>
-                    <Button variant="outlined" onClick={resetForm}>
+                    <Button variant="outlined" onClick={handleClickResetButton}>
                       Reset
                     </Button>
                   </Stack>
