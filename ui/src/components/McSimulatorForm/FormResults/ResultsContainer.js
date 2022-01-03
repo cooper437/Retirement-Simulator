@@ -17,6 +17,9 @@ export default function ResultsContainer({ simulationResults }) {
     );
     return (
       <Box sx={{ ml: 4, mr: 4, mb: 4 }}>
+        <Typography sx={{ mb: 2 }} variant="h6">
+          Outcome Visualization
+        </Typography>
         <Visualizations survivalRate={simulationResults.survivalRate} />
         <Typography sx={{ mb: 2 }} variant="h6">
           Key Facts

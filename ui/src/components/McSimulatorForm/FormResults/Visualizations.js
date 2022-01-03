@@ -34,10 +34,14 @@ const safeWithdrawalPlugins = [
       const fontSize = (height / 360).toFixed(2);
       ctx.font = `${fontSize}em sans-serif`;
       ctx.textBaseline = 'middle';
-      const text = 'Portfolio Survival on $XXk / year';
-      const textX = Math.round((width - ctx.measureText(text).width) / 2);
-      const textY = height / 2;
-      ctx.fillText(text, textX, textY);
+      const text1 = 'Portfolio Survival';
+      const text2 = 'on $XXk / year';
+      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+      const text1Y = height / 2;
+      const text2Y = height / 2 + 20;
+      ctx.fillText(text1, text1X, text1Y);
+      ctx.fillText(text2, text2X, text2Y);
       ctx.save();
     }
   }
@@ -48,22 +52,22 @@ const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
   datasets: [
     {
       label: 'Portfolio Survival',
-      data: [roundedDepletionRate, roundedSurvivalRate],
-      backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-      borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+      data: [roundedSurvivalRate, roundedDepletionRate],
+      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
   ]
 });
 
-const data = {
-  labels: ['Red', 'Blue'],
+const safeWithdrawalData = {
+  labels: ['Did Not Run Out of Money', 'Did Run Out of Money'],
   datasets: [
     {
       label: 'Portfolio Survival',
-      data: [5, 95],
-      backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-      borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+      data: [95, 5],
+      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
   ]
@@ -93,7 +97,7 @@ export default function Visualizations({ survivalRate }) {
       </Box>
       <Box sx={{ position: 'relative', width: '50%' }}>
         <Doughnut
-          data={data}
+          data={safeWithdrawalData}
           options={{
             maintainAspectRatio: false,
             plugins: {
