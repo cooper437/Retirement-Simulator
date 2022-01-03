@@ -17,8 +17,9 @@ export const determineTaxRate = ({ filingStatus, annualIncome }) => {
   return taxRate;
 };
 
-export const decimalToPercent = (aDecimal) => {
+export const decimalToPercent = (aDecimal, returnAsString) => {
   const asPercent = aDecimal * 100;
   const rounded = Math.round(asPercent * 100) / 100;
-  return `${rounded}%`;
+  if (returnAsString) return `${rounded}%`;
+  return rounded;
 };

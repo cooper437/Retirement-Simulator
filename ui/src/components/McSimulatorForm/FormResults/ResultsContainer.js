@@ -8,14 +8,16 @@ import Visualizations from './Visualizations';
 export default function ResultsContainer({ simulationResults }) {
   if (simulationResults.simulationRunCompleted) {
     const roundedSurvivalRate = decimalToPercent(
-      simulationResults.survivalRate
+      simulationResults.survivalRate,
+      true
     );
     const roundedDepletionRate = decimalToPercent(
-      1 - simulationResults.survivalRate
+      1 - simulationResults.survivalRate,
+      true
     );
     return (
       <Box sx={{ ml: 4, mr: 4, mb: 4 }}>
-        <Visualizations />
+        <Visualizations survivalRate={simulationResults.survivalRate} />
         <Typography sx={{ mb: 2 }} variant="h6">
           Key Facts
         </Typography>

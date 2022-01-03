@@ -44,7 +44,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const conditionalCellDisplayFormat = (formatAs, cellValue) => {
   switch (formatAs) {
     case 'percent':
-      return decimalToPercent(cellValue);
+      return decimalToPercent(cellValue, true);
     case 'dollar':
       return (
         <NumberFormat
