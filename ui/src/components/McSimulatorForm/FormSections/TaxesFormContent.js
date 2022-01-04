@@ -33,49 +33,54 @@ export default function TaxesFormContent({
         justifyContent="space-between"
         height="72px"
       >
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={adjustWithdrawalsForTaxation}
-                name="adjustWithdrawalsForTaxation"
-                onChange={handleChange}
-              />
-            }
-            label="Adjust for Taxes"
-          />
-        </FormGroup>
+        <Box sx={{ flex: 1 }}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={adjustWithdrawalsForTaxation}
+                  name="adjustWithdrawalsForTaxation"
+                  onChange={handleChange}
+                />
+              }
+              label="Adjust for Taxes"
+            />
+          </FormGroup>
+        </Box>
         {adjustWithdrawalsForTaxation && (
-          <FormControl
-            sx={commonFormStyles.shortFormInput}
-            error={touched.filingStatus && Boolean(errors.filingStatus)}
-          >
-            <InputLabel id="filing-status-label">
-              Post-Retirement Filing Status
-            </InputLabel>
-            <Select
-              labelId="filing-status-label"
-              id="filing-status-input"
-              label="Post-Retirement Filing Status"
-              startAdornment={<InputAdornment position="start" />}
-              endAdornment={<InputAdornment position="end" />}
-              value={filingStatus}
-              name="filingStatus"
-              onChange={handleChange}
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <FormControl
+              sx={commonFormStyles.shortFormInput}
+              error={touched.filingStatus && Boolean(errors.filingStatus)}
             >
-              <MenuItem value="singleFiler">Single Filer</MenuItem>
-              <MenuItem value="marriedFilingJointly">
-                Married Filing Jointly
-              </MenuItem>
-              <MenuItem value="marriedFilingSeparately">
-                Married Filing Separately
-              </MenuItem>
-            </Select>
-            <FormHelperText>
-              {touched.filingStatus && errors.filingStatus}
-            </FormHelperText>
-          </FormControl>
+              <InputLabel id="filing-status-label">
+                Post-Retirement Filing Status
+              </InputLabel>
+              <Select
+                labelId="filing-status-label"
+                id="filing-status-input"
+                label="Post-Retirement Filing Status"
+                startAdornment={<InputAdornment position="start" />}
+                endAdornment={<InputAdornment position="end" />}
+                value={filingStatus}
+                name="filingStatus"
+                onChange={handleChange}
+              >
+                <MenuItem value="singleFiler">Single Filer</MenuItem>
+                <MenuItem value="marriedFilingJointly">
+                  Married Filing Jointly
+                </MenuItem>
+                <MenuItem value="marriedFilingSeparately">
+                  Married Filing Separately
+                </MenuItem>
+              </Select>
+              <FormHelperText>
+                {touched.filingStatus && errors.filingStatus}
+              </FormHelperText>
+            </FormControl>
+          </Box>
         )}
+        <Box sx={{ flex: 1 }} />
       </Box>
       {adjustWithdrawalsForTaxation &&
         postRetirementAnnualIncome &&
