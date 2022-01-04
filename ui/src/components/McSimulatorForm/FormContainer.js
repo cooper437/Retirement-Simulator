@@ -154,136 +154,137 @@ const calcPostRetirementAnnualIncomeAndTaxRate = ({
 export default function FormContainer() {
   const [simulationResults, setSimulationResults] = useState(INITIAL_STATE);
   return (
-    <>
-      <Formik
-        initialValues={INITIAL_FORM_VALUES}
-        validationSchema={Yup.object({
-          currentAge: Yup.number()
-            .integer()
-            .moreThan(-1, 'Must be >= 0')
-            .max(150, 'Cannot exceed 150')
-            .required('Required'),
-          retirementAge: Yup.number()
-            .integer()
-            .moreThan(Yup.ref('currentAge'), 'Must be greater than Current Age')
-            .max(150, 'Cannot exceed 150')
-            .required('Required'),
-          lifeExpectancy: Yup.number()
-            .integer()
-            .moreThan(
-              Yup.ref('retirementAge'),
-              'Must be greater than Retirement Age'
-            )
-            .max(150, 'Cannot exceed 150')
-            .required('Required'),
-          initialPortfolioAmount: Yup.string().required('Required'),
-          preRetirementAnnualContribution: Yup.string().required('Required'),
-          postRetirementAnnualWithdrawal: Yup.string().required('Required'),
-          preRetirementInvestmentStyle: Yup.string().required('Required'),
-          postRetirementInvestmentStyle: Yup.string().required('Required'),
-          inflationMean: Yup.string().when('adjustForInflation', {
+    <Formik
+      initialValues={INITIAL_FORM_VALUES}
+      validationSchema={Yup.object({
+        currentAge: Yup.number()
+          .integer()
+          .moreThan(-1, 'Must be >= 0')
+          .max(150, 'Cannot exceed 150')
+          .required('Required'),
+        retirementAge: Yup.number()
+          .integer()
+          .moreThan(Yup.ref('currentAge'), 'Must be greater than Current Age')
+          .max(150, 'Cannot exceed 150')
+          .required('Required'),
+        lifeExpectancy: Yup.number()
+          .integer()
+          .moreThan(
+            Yup.ref('retirementAge'),
+            'Must be greater than Retirement Age'
+          )
+          .max(150, 'Cannot exceed 150')
+          .required('Required'),
+        initialPortfolioAmount: Yup.string().required('Required'),
+        preRetirementAnnualContribution: Yup.string().required('Required'),
+        postRetirementAnnualWithdrawal: Yup.string().required('Required'),
+        preRetirementInvestmentStyle: Yup.string().required('Required'),
+        postRetirementInvestmentStyle: Yup.string().required('Required'),
+        inflationMean: Yup.string().when('adjustForInflation', {
+          is: true,
+          then: Yup.string().required('Required')
+        }),
+        preRetirementMeanRateOfReturn: Yup.string().required('Required'),
+        postRetirementMeanRateOfReturn: Yup.string().required('Required'),
+        incomeGrowthMean: Yup.string().when(
+          'adjustContributionsForIncomeGrowth',
+          {
             is: true,
             then: Yup.string().required('Required')
-          }),
-          preRetirementMeanRateOfReturn: Yup.string().required('Required'),
-          postRetirementMeanRateOfReturn: Yup.string().required('Required'),
-          incomeGrowthMean: Yup.string().when(
-            'adjustContributionsForIncomeGrowth',
-            {
-              is: true,
-              then: Yup.string().required('Required')
-            }
-          ),
-          filingStatus: Yup.string().when('adjustWithdrawalsForTaxation', {
-            is: true,
-            then: Yup.string().required('Required')
-          }),
-          additionalPostRetirementAnnualIncome:
-            Yup.string().required('Required')
-        })}
-        onSubmit={async (formValues) => {
-          const { preRetirementRateOfReturnVolatility } = Object.values(
-            INVESTMENT_STYLE_ENUM
-          ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
+          }
+        ),
+        filingStatus: Yup.string().when('adjustWithdrawalsForTaxation', {
+          is: true,
+          then: Yup.string().required('Required')
+        }),
+        additionalPostRetirementAnnualIncome: Yup.string().required('Required')
+      })}
+      onSubmit={async (formValues) => {
+        const { preRetirementRateOfReturnVolatility } = Object.values(
+          INVESTMENT_STYLE_ENUM
+        ).find((i) => i.label === formValues.preRetirementInvestmentStyle);
 
-          const { postRetirementRateOfReturnVolatility } = Object.values(
-            INVESTMENT_STYLE_ENUM
-          ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
+        const { postRetirementRateOfReturnVolatility } = Object.values(
+          INVESTMENT_STYLE_ENUM
+        ).find((i) => i.label === formValues.postRetirementInvestmentStyle);
 
-          const { postRetirementTaxRateAsDecimal } =
-            calcPostRetirementAnnualIncomeAndTaxRate({
-              filingStatus: formValues.filingStatus,
-              postRetirementAnnualWithdrawal:
-                formValues.postRetirementAnnualWithdrawal,
-              additionalPostRetirementAnnualIncome:
-                formValues.additionalPostRetirementAnnualIncome
-            });
-          setSimulationResults({ isFetching: true });
-          const results = await submitRetirementSimulationForm({
-            formParams: {
-              ...formValues,
-              initialPortfolioAmount: Number.parseInt(
-                formValues.initialPortfolioAmount,
-                10
-              ),
-              additionalPostRetirementAnnualIncome: Number.parseInt(
-                formValues.additionalPostRetirementAnnualIncome,
-                10
-              ),
-              preRetirementAnnualContribution: Number.parseInt(
-                formValues.preRetirementAnnualContribution,
-                10
-              ),
-              postRetirementAnnualWithdrawal:
-                -formValues.postRetirementAnnualWithdrawal,
-              preRetirementMeanRateOfReturn: numberToPercent(
-                formValues.preRetirementMeanRateOfReturn
-              ),
-              postRetirementMeanRateOfReturn: numberToPercent(
-                formValues.postRetirementMeanRateOfReturn
-              ),
-              incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
-              inflationMean: numberToPercent(formValues.inflationMean),
-              preRetirementRateOfReturnVolatility: numberToPercent(
-                parseFloat(preRetirementRateOfReturnVolatility, 10)
-              ),
-              postRetirementRateOfReturnVolatility: numberToPercent(
-                parseFloat(postRetirementRateOfReturnVolatility, 10)
-              ),
-              postRetirementTaxRate: postRetirementTaxRateAsDecimal
-            }
+        const { postRetirementTaxRateAsDecimal } =
+          calcPostRetirementAnnualIncomeAndTaxRate({
+            filingStatus: formValues.filingStatus,
+            postRetirementAnnualWithdrawal:
+              formValues.postRetirementAnnualWithdrawal,
+            additionalPostRetirementAnnualIncome:
+              formValues.additionalPostRetirementAnnualIncome
           });
-          setSimulationResults({
-            ...results,
-            isFetching: false,
-            simulationRunCompleted: true
+        setSimulationResults({ isFetching: true });
+        const results = await submitRetirementSimulationForm({
+          formParams: {
+            ...formValues,
+            adjustPortfolioBalanceForInflation: formValues.adjustForInflation,
+            adjustWithdrawalsForInflation: formValues.adjustForInflation,
+            initialPortfolioAmount: Number.parseInt(
+              formValues.initialPortfolioAmount,
+              10
+            ),
+            additionalPostRetirementAnnualIncome: Number.parseInt(
+              formValues.additionalPostRetirementAnnualIncome,
+              10
+            ),
+            preRetirementAnnualContribution: Number.parseInt(
+              formValues.preRetirementAnnualContribution,
+              10
+            ),
+            postRetirementAnnualWithdrawal:
+              -formValues.postRetirementAnnualWithdrawal,
+            preRetirementMeanRateOfReturn: numberToPercent(
+              formValues.preRetirementMeanRateOfReturn
+            ),
+            postRetirementMeanRateOfReturn: numberToPercent(
+              formValues.postRetirementMeanRateOfReturn
+            ),
+            incomeGrowthMean: numberToPercent(formValues.incomeGrowthMean),
+            inflationMean: numberToPercent(formValues.inflationMean),
+            preRetirementRateOfReturnVolatility: numberToPercent(
+              parseFloat(preRetirementRateOfReturnVolatility, 10)
+            ),
+            postRetirementRateOfReturnVolatility: numberToPercent(
+              parseFloat(postRetirementRateOfReturnVolatility, 10)
+            ),
+            postRetirementTaxRate: postRetirementTaxRateAsDecimal
+          }
+        });
+        setSimulationResults({
+          ...results,
+          isFetching: false,
+          simulationRunCompleted: true
+        });
+      }}
+    >
+      {({
+        values: formValues,
+        handleChange,
+        // eslint-disable-next-line no-unused-vars
+        setValues,
+        handleSubmit,
+        touched,
+        errors,
+        setFieldValue,
+        resetForm
+      }) => {
+        const handleClickResetButton = () => {
+          resetForm(); // Reset the input form state in Formik
+          setSimulationResults(INITIAL_STATE); // Reset the output of the simulation on display
+        };
+        const { postRetirementAnnualIncome, postRetirementTaxRate } =
+          calcPostRetirementAnnualIncomeAndTaxRate({
+            filingStatus: formValues.filingStatus,
+            postRetirementAnnualWithdrawal:
+              formValues.postRetirementAnnualWithdrawal,
+            additionalPostRetirementAnnualIncome:
+              formValues.additionalPostRetirementAnnualIncome
           });
-        }}
-      >
-        {({
-          values: formValues,
-          handleChange,
-          // eslint-disable-next-line no-unused-vars
-          setValues,
-          handleSubmit,
-          touched,
-          errors,
-          setFieldValue,
-          resetForm
-        }) => {
-          const handleClickResetButton = () => {
-            resetForm(); // Reset the input form state in Formik
-            setSimulationResults(INITIAL_STATE); // Reset the output of the simulation on display
-          };
-          const { postRetirementAnnualIncome, postRetirementTaxRate } =
-            calcPostRetirementAnnualIncomeAndTaxRate({
-              filingStatus: formValues.filingStatus,
-              postRetirementAnnualWithdrawal:
-                formValues.postRetirementAnnualWithdrawal,
-              additionalPostRetirementAnnualIncome:
-                formValues.additionalPostRetirementAnnualIncome
-            });
-          return (
+        return (
+          <>
             <Box sx={{ mt: 4, mb: 4 }}>
               <Box
                 component="form"
@@ -384,10 +385,13 @@ export default function FormContainer() {
                 </Box>
               </Box>
             </Box>
-          );
-        }}
-      </Formik>
-      <ResultsContainer simulationResults={simulationResults} />
-    </>
+            <ResultsContainer
+              simulationResults={simulationResults}
+              adjustForInflation={formValues.adjustForInflation}
+            />
+          </>
+        );
+      }}
+    </Formik>
   );
 }

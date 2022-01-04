@@ -5,7 +5,10 @@ import { decimalToPercent } from '../../../utils/generalUtils';
 import KeyFactsList from './KeyFactsList';
 import Visualizations from './Visualizations';
 
-export default function ResultsContainer({ simulationResults }) {
+export default function ResultsContainer({
+  simulationResults,
+  adjustForInflation
+}) {
   if (simulationResults.simulationRunCompleted) {
     const roundedSurvivalRate = decimalToPercent(
       simulationResults.survivalRate,
@@ -34,6 +37,7 @@ export default function ResultsContainer({ simulationResults }) {
         </Typography>
         <SummaryStatsTable
           quantileStatistics={simulationResults.quantileStatistics}
+          adjustForInflation={adjustForInflation}
         />
       </Box>
     );

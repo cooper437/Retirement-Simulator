@@ -13,29 +13,6 @@ import NumberFormat from 'react-number-format';
 import { SECTION_BACKGROUND_COLOR } from '../../../colors';
 import { decimalToPercent } from '../../../utils/generalUtils';
 
-const rows = [
-  {
-    key: 'preRetirementRateOfReturn',
-    label: 'Pre-Retirement Mean Rate Of Return',
-    formatAs: 'percent'
-  },
-  {
-    key: 'postRetirementRateOfReturn',
-    label: 'Post-Retirement Mean Rate Of Return',
-    formatAs: 'percent'
-  },
-  {
-    key: 'balanceAtEol',
-    label: 'Wealth Transfer Amount',
-    formatAs: 'dollar'
-  },
-  {
-    key: 'safeWithdrawalRate',
-    label: 'Post-Retirement Safe Withdrawal Rate',
-    formatAs: 'percent'
-  }
-];
-
 // eslint-disable-next-line no-unused-vars
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold'
@@ -64,7 +41,34 @@ const conditionalCellDisplayFormat = (formatAs, cellValue) => {
   }
 };
 
-export default function SummaryStatsTable({ quantileStatistics }) {
+export default function SummaryStatsTable({
+  quantileStatistics,
+  adjustForInflation
+}) {
+  const rows = [
+    {
+      key: 'preRetirementRateOfReturn',
+      label: 'Pre-Retirement Mean Rate Of Return',
+      formatAs: 'percent'
+    },
+    {
+      key: 'postRetirementRateOfReturn',
+      label: 'Post-Retirement Mean Rate Of Return',
+      formatAs: 'percent'
+    },
+    {
+      key: 'balanceAtEol',
+      label: adjustForInflation
+        ? 'Wealth Transfer Amount (Post-Inflation)'
+        : 'Wealth Transfer Amount',
+      formatAs: 'dollar'
+    },
+    {
+      key: 'safeWithdrawalRate',
+      label: 'Post-Retirement Safe Withdrawal Rate',
+      formatAs: 'percent'
+    }
+  ];
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
