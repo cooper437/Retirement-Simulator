@@ -6,7 +6,8 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
-  FormGroup
+  FormGroup,
+  Stack
 } from '@mui/material';
 import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
@@ -150,15 +151,13 @@ export default function PortfolioFormContent({
           />
         </FormControl>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="row"
+      <Stack
+        direction="row"
         justifyContent="space-between"
         alignItems="flex-end"
-        flexWrap="wrap"
         height="72px"
       >
-        <FormGroup>
+        <FormGroup sx={{ flex: 1 }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -171,29 +170,34 @@ export default function PortfolioFormContent({
           />
         </FormGroup>
         {adjustContributionsForIncomeGrowth && (
-          <FormControl sx={commonFormStyles.shortFormInput}>
-            <TextField
-              label="Annual Income Growth Mean"
-              variant="outlined"
-              value={incomeGrowthMean}
-              onChange={handleChange}
-              name="incomeGrowthMean"
-              id="income-growth-mean"
-              InputLabelProps={{
-                shrink: true
-              }}
-              InputProps={{
-                inputComponent: NumberFormatPercentage,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>
-              }}
-              error={
-                touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
-              }
-              helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
-            />
-          </FormControl>
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
+              <TextField
+                label="Annual Income Growth Mean"
+                variant="outlined"
+                value={incomeGrowthMean}
+                onChange={handleChange}
+                name="incomeGrowthMean"
+                id="income-growth-mean"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                InputProps={{
+                  inputComponent: NumberFormatPercentage,
+                  endAdornment: (
+                    <InputAdornment position="end">%</InputAdornment>
+                  )
+                }}
+                error={
+                  touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
+                }
+                helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
+              />
+            </FormControl>
+          </Box>
         )}
-      </Box>
+        <Box sx={{ flex: 1 }} />
+      </Stack>
     </>
   );
 }
