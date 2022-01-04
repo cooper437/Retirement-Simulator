@@ -7,7 +7,10 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-  Typography
+  Typography,
+  FormGroup,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material';
 import NumberFormat from 'react-number-format';
 
@@ -18,64 +21,87 @@ export default function TaxesFormContent({
   touched,
   errors,
   postRetirementAnnualIncome,
-  postRetirementTaxRate
+  postRetirementTaxRate,
+  adjustWithdrawalsForTaxation
 }) {
   return (
     <>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <FormControl
-          sx={commonFormStyles.shortFormInput}
-          error={touched.filingStatus && Boolean(errors.filingStatus)}
-        >
-          <InputLabel id="filing-status-label">
-            Post-Retirement Filing Status
-          </InputLabel>
-          <Select
-            labelId="filing-status-label"
-            id="filing-status-input"
-            label="Post-Retirement Filing Status"
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end" />}
-            value={filingStatus}
-            name="filingStatus"
-            onChange={handleChange}
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="flex-end"
+        justifyContent="space-between"
+        height="72px"
+      >
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={adjustWithdrawalsForTaxation}
+                name="adjustWithdrawalsForTaxation"
+                onChange={handleChange}
+              />
+            }
+            label="Adjust for Taxes"
+          />
+        </FormGroup>
+        {adjustWithdrawalsForTaxation && (
+          <FormControl
+            sx={commonFormStyles.shortFormInput}
+            error={touched.filingStatus && Boolean(errors.filingStatus)}
           >
-            <MenuItem value="singleFiler">Single Filer</MenuItem>
-            <MenuItem value="marriedFilingJointly">
-              Married Filing Jointly
-            </MenuItem>
-            <MenuItem value="marriedFilingSeparately">
-              Married Filing Separately
-            </MenuItem>
-          </Select>
-          <FormHelperText>
-            {touched.filingStatus && errors.filingStatus}
-          </FormHelperText>
-        </FormControl>
+            <InputLabel id="filing-status-label">
+              Post-Retirement Filing Status
+            </InputLabel>
+            <Select
+              labelId="filing-status-label"
+              id="filing-status-input"
+              label="Post-Retirement Filing Status"
+              startAdornment={<InputAdornment position="start" />}
+              endAdornment={<InputAdornment position="end" />}
+              value={filingStatus}
+              name="filingStatus"
+              onChange={handleChange}
+            >
+              <MenuItem value="singleFiler">Single Filer</MenuItem>
+              <MenuItem value="marriedFilingJointly">
+                Married Filing Jointly
+              </MenuItem>
+              <MenuItem value="marriedFilingSeparately">
+                Married Filing Separately
+              </MenuItem>
+            </Select>
+            <FormHelperText>
+              {touched.filingStatus && errors.filingStatus}
+            </FormHelperText>
+          </FormControl>
+        )}
       </Box>
-      {postRetirementAnnualIncome && !Number.isNaN(postRetirementAnnualIncome) && (
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
-          sx={{ mt: 2 }}
-        >
-          <Typography>
-            Based on your expected annual income post retirement of{' '}
-            <NumberFormat
-              thousandsGroupStyle="thousand"
-              value={postRetirementAnnualIncome.toString()}
-              prefix="$"
-              decimalSeparator="."
-              displayType="text"
-              type="text"
-              thousandSeparator
-              allowNegative
-            />{' '}
-            your assumed tax rate is {postRetirementTaxRate}%.
-          </Typography>
-        </Box>
-      )}
+      {adjustWithdrawalsForTaxation &&
+        postRetirementAnnualIncome &&
+        !Number.isNaN(postRetirementAnnualIncome) && (
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            sx={{ mt: 2 }}
+          >
+            <Typography>
+              Based on your expected annual income post retirement of{' '}
+              <NumberFormat
+                thousandsGroupStyle="thousand"
+                value={postRetirementAnnualIncome.toString()}
+                prefix="$"
+                decimalSeparator="."
+                displayType="text"
+                type="text"
+                thousandSeparator
+                allowNegative
+              />{' '}
+              your assumed tax rate is {postRetirementTaxRate}%.
+            </Typography>
+          </Box>
+        )}
     </>
   );
 }

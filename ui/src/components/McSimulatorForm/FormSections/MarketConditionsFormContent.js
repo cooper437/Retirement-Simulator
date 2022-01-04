@@ -7,7 +7,10 @@ import {
   Select,
   MenuItem,
   TextField,
-  FormHelperText
+  FormHelperText,
+  Checkbox,
+  FormControlLabel,
+  FormGroup
 } from '@mui/material';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
 import { INVESTMENT_STYLE_ENUM } from '../../../constants';
@@ -19,10 +22,7 @@ export default function MarketConditionsFormContent({
   preRetirementInvestmentStyle,
   postRetirementInvestmentStyle,
   inflationMean,
-  incomeGrowthMean,
-  adjustPortfolioBalanceForInflation,
-  adjustContributionsForIncomeGrowth,
-  adjustWithdrawalsForInflation,
+  adjustForInflation,
   touched,
   errors,
   handleChange,
@@ -116,28 +116,6 @@ export default function MarketConditionsFormContent({
               errors.postRetirementInvestmentStyle}
           </FormHelperText>
         </FormControl>
-        {(adjustPortfolioBalanceForInflation ||
-          adjustWithdrawalsForInflation) && (
-          <FormControl sx={commonFormStyles.shortFormInput}>
-            <TextField
-              label="Annual Inflation Mean"
-              variant="outlined"
-              value={inflationMean}
-              name="inflationMean"
-              onChange={handleChange}
-              id="inflation-mean"
-              InputLabelProps={{
-                shrink: true
-              }}
-              InputProps={{
-                inputComponent: NumberFormatPercentage,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>
-              }}
-              error={touched.inflationMean && Boolean(errors.inflationMean)}
-              helperText={touched.inflationMean && errors.inflationMean}
-            />
-          </FormControl>
-        )}
       </Box>
       <Box
         display="flex"
@@ -195,15 +173,36 @@ export default function MarketConditionsFormContent({
             }
           />
         </FormControl>
-        {adjustContributionsForIncomeGrowth && (
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        height="72px"
+        flexWrap="wrap"
+      >
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={adjustForInflation}
+                name="adjustForInflation"
+                onChange={handleChange}
+              />
+            }
+            label="Adjust for Inflation"
+          />
+        </FormGroup>
+        {adjustForInflation && (
           <FormControl sx={commonFormStyles.shortFormInput}>
             <TextField
-              label="Annual Income Growth Mean"
+              label="Annual Inflation Mean"
               variant="outlined"
-              value={incomeGrowthMean}
+              value={inflationMean}
+              name="inflationMean"
               onChange={handleChange}
-              name="incomeGrowthMean"
-              id="income-growth-mean"
+              id="inflation-mean"
               InputLabelProps={{
                 shrink: true
               }}
@@ -211,10 +210,8 @@ export default function MarketConditionsFormContent({
                 inputComponent: NumberFormatPercentage,
                 endAdornment: <InputAdornment position="end">%</InputAdornment>
               }}
-              error={
-                touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
-              }
-              helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
+              error={touched.inflationMean && Boolean(errors.inflationMean)}
+              helperText={touched.inflationMean && errors.inflationMean}
             />
           </FormControl>
         )}

@@ -1,6 +1,15 @@
 import React from 'react';
-import { Box, FormControl, InputAdornment, TextField } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputAdornment,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  FormGroup
+} from '@mui/material';
 import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
+import NumberFormatPercentage from '../../NumberFormatPercentage';
 
 export default function PortfolioFormContent({
   commonFormStyles,
@@ -8,6 +17,8 @@ export default function PortfolioFormContent({
   preRetirementAnnualContribution,
   postRetirementAnnualWithdrawal,
   additionalPostRetirementAnnualIncome,
+  adjustContributionsForIncomeGrowth,
+  incomeGrowthMean,
   touched,
   errors,
   handleChange
@@ -138,6 +149,50 @@ export default function PortfolioFormContent({
             }
           />
         </FormControl>
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        flexWrap="wrap"
+        height="72px"
+      >
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={adjustContributionsForIncomeGrowth}
+                name="adjustContributionsForIncomeGrowth"
+                onChange={handleChange}
+              />
+            }
+            label="Adjust for Income Growth"
+          />
+        </FormGroup>
+        {adjustContributionsForIncomeGrowth && (
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <TextField
+              label="Annual Income Growth Mean"
+              variant="outlined"
+              value={incomeGrowthMean}
+              onChange={handleChange}
+              name="incomeGrowthMean"
+              id="income-growth-mean"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
+              error={
+                touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
+              }
+              helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
+            />
+          </FormControl>
+        )}
       </Box>
     </>
   );

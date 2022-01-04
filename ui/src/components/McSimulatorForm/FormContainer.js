@@ -13,7 +13,6 @@ import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
-import AdjustmentsFormContent from './FormSections/AdjustmentsFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
 import { determineTaxRate } from '../../utils/generalUtils';
@@ -69,11 +68,6 @@ const TaxesFormSection = withFormSection({
   sectionTitle: 'Taxes'
 });
 
-const AdjustmentsFormSection = withFormSection({
-  WrappedComponent: AdjustmentsFormContent,
-  sectionTitle: 'Adjustments'
-});
-
 const INITIAL_STATE = {
   simulationRunCompleted: false,
   isFetching: false
@@ -81,9 +75,8 @@ const INITIAL_STATE = {
 
 // The internal form state managed by formik
 const INITIAL_FORM_VALUES = {
-  adjustPortfolioBalanceForInflation: true,
+  adjustForInflation: true,
   adjustContributionsForIncomeGrowth: true,
-  adjustWithdrawalsForInflation: true,
   adjustWithdrawalsForTaxation: true,
   initialPortfolioAmount: '',
   preRetirementAnnualContribution: '',
@@ -102,9 +95,8 @@ const INITIAL_FORM_VALUES = {
 };
 
 // const INITIAL_FORM_VALUES = {
-//   adjustPortfolioBalanceForInflation: true,
+//   adjustForInflation: true,
 //   adjustContributionsForIncomeGrowth: true,
-//   adjustWithdrawalsForInflation: true,
 //   adjustWithdrawalsForTaxation: true,
 //   initialPortfolioAmount: '100000',
 //   preRetirementAnnualContribution: '20000',
@@ -189,21 +181,10 @@ export default function FormContainer() {
           postRetirementAnnualWithdrawal: Yup.string().required('Required'),
           preRetirementInvestmentStyle: Yup.string().required('Required'),
           postRetirementInvestmentStyle: Yup.string().required('Required'),
-          inflationMean: Yup.string().when(
-            [
-              'adjustPortfolioBalanceForInflation',
-              'adjustWithdrawalsForInflation'
-            ],
-            {
-              is: (
-                adjustPortfolioBalanceForInflation,
-                adjustWithdrawalsForInflation
-              ) =>
-                adjustPortfolioBalanceForInflation ||
-                adjustWithdrawalsForInflation,
-              then: Yup.string().required('Required')
-            }
-          ),
+          inflationMean: Yup.string().when('adjustForInflation', {
+            is: true,
+            then: Yup.string().required('Required')
+          }),
           preRetirementMeanRateOfReturn: Yup.string().required('Required'),
           postRetirementMeanRateOfReturn: Yup.string().required('Required'),
           incomeGrowthMean: Yup.string().when(
@@ -332,21 +313,6 @@ export default function FormContainer() {
                     errors={errors}
                     handleChange={handleChange}
                   />
-                  <AdjustmentsFormSection
-                    adjustPortfolioBalanceForInflation={
-                      formValues.adjustPortfolioBalanceForInflation
-                    }
-                    adjustContributionsForIncomeGrowth={
-                      formValues.adjustContributionsForIncomeGrowth
-                    }
-                    adjustWithdrawalsForInflation={
-                      formValues.adjustWithdrawalsForInflation
-                    }
-                    adjustWithdrawalsForTaxation={
-                      formValues.adjustWithdrawalsForTaxation
-                    }
-                    handleChange={handleChange}
-                  />
                   <PortfolioFormSection
                     initialPortfolioAmount={formValues.initialPortfolioAmount}
                     preRetirementAnnualContribution={
@@ -358,6 +324,10 @@ export default function FormContainer() {
                     additionalPostRetirementAnnualIncome={
                       formValues.additionalPostRetirementAnnualIncome
                     }
+                    adjustContributionsForIncomeGrowth={
+                      formValues.adjustContributionsForIncomeGrowth
+                    }
+                    incomeGrowthMean={formValues.incomeGrowthMean}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
@@ -376,34 +346,23 @@ export default function FormContainer() {
                       formValues.postRetirementInvestmentStyle
                     }
                     inflationMean={formValues.inflationMean}
-                    incomeGrowthMean={formValues.incomeGrowthMean}
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
                     setFieldValue={setFieldValue}
-                    adjustPortfolioBalanceForInflation={
-                      formValues.adjustPortfolioBalanceForInflation
-                    }
-                    adjustWithdrawalsForInflation={
-                      formValues.adjustWithdrawalsForInflation
-                    }
-                    adjustContributionsForIncomeGrowth={
-                      formValues.adjustContributionsForIncomeGrowth
-                    }
+                    adjustForInflation={formValues.adjustForInflation}
                   />
-                  {formValues.adjustWithdrawalsForTaxation && (
-                    <TaxesFormSection
-                      filingStatus={formValues.filingStatus}
-                      adjustWithdrawalsForTaxation={
-                        formValues.adjustWithdrawalsForTaxation
-                      }
-                      postRetirementAnnualIncome={postRetirementAnnualIncome}
-                      postRetirementTaxRate={postRetirementTaxRate}
-                      handleChange={handleChange}
-                      touched={touched}
-                      errors={errors}
-                    />
-                  )}
+                  <TaxesFormSection
+                    filingStatus={formValues.filingStatus}
+                    adjustWithdrawalsForTaxation={
+                      formValues.adjustWithdrawalsForTaxation
+                    }
+                    postRetirementAnnualIncome={postRetirementAnnualIncome}
+                    postRetirementTaxRate={postRetirementTaxRate}
+                    handleChange={handleChange}
+                    touched={touched}
+                    errors={errors}
+                  />
                 </Box>
                 <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
                   <Stack direction="row" justifyContent="space-between">
