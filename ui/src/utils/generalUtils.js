@@ -23,3 +23,7 @@ export const decimalToPercent = (aDecimal, returnAsString) => {
   if (returnAsString) return `${rounded}%`;
   return rounded;
 };
+
+// Replace a number with a version of it that has commas every 3 digits
+export const numberWithCommas = (aNumber) =>
+  aNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

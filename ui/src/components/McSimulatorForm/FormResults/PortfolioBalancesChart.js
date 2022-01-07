@@ -11,6 +11,7 @@ import {
   Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { numberWithCommas } from '../../../utils/generalUtils';
 
 ChartJS.register(
   CategoryScale,
@@ -32,13 +33,34 @@ export const options = {
       display: false,
       text: 'Portfolio Balances By Quantile'
     }
+  },
+  scales: {
+    y: {
+      title: {
+        display: true,
+        text: 'Balance'
+      },
+      ticks: {
+        // Include a dollar sign and commas in the ticks
+        callback(value) {
+          return `$${numberWithCommas(value)}`;
+        }
+      }
+    },
+    x: {
+      title: {
+        display: true,
+        text: 'Year'
+      }
+    }
   }
 };
 
 const constructChartData = (quantileStatistics) => {
+  const currentYear = new Date().getFullYear();
   const firstAvailableQuantile = Object.keys(quantileStatistics)[0];
   const numYears = quantileStatistics[firstAvailableQuantile].balances.length;
-  const labels = [...Array(numYears).keys()].map((i) => i + 1);
+  const labels = [...Array(numYears).keys()].map((i) => i + currentYear);
   const datasets = Object.entries(quantileStatistics).map(([key, value]) => ({
     label: key,
     data: value.balances,
