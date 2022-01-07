@@ -8,6 +8,8 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
 from src.simulation import schemas
 from src.simulation.distribution_sampling import get_random_sample_pairs
 
+KEY_QUANTILE_VALUES = (0.1, 0.25, 0.5, 0.75, 0.9)
+
 
 def format_as_currency(currency_amount: Decimal) -> str:
     return '${:,.2f}'.format(currency_amount)  # pylint: disable=consider-using-f-string
@@ -271,7 +273,7 @@ def calculate_retirement_balance(
     }
 
 
-def get_simulation_value_at_value_quantile(
+def get_value_of_simulation_param_at_quantile(
         all_simulations: List, field_name: str, quantile: float):
     '''
     The value of an input or output parameter to the simulation
@@ -302,22 +304,21 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     num_survived = sum(
         map(lambda i: i['ran_out_of_money_before_eol'] is False, all_simulations))
     survival_ratio = num_survived / (num_ran_out_of_money + num_survived)
-    key_quantile_values = [0.1, 0.25, 0.5, 0.75, 0.9]
     quantile_statistics = {}
-    for quantile_value in key_quantile_values:
-        pre_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
+    for quantile_value in KEY_QUANTILE_VALUES:
+        pre_retirement_ror_for_quantile = get_value_of_simulation_param_at_quantile(
             all_simulations=all_simulations,
             field_name='pre_retirement_rate_of_return',
             quantile=quantile_value)
-        post_retirement_ror_for_quantile = get_simulation_value_at_value_quantile(
+        post_retirement_ror_for_quantile = get_value_of_simulation_param_at_quantile(
             all_simulations=all_simulations,
             field_name='post_retirement_rate_of_return',
             quantile=quantile_value)
-        balance_at_eol_for_quantile = get_simulation_value_at_value_quantile(
+        balance_at_eol_for_quantile = get_value_of_simulation_param_at_quantile(
             all_simulations=all_simulations,
             field_name='balance_at_eol',
             quantile=quantile_value)
-        balances = get_simulation_value_at_value_quantile(
+        balances = get_value_of_simulation_param_at_quantile(
             all_simulations=all_simulations,
             field_name='balances',
             quantile=quantile_value)
@@ -356,7 +357,29 @@ def calc_safe_withdrawal_amount_for_simulation(
         should_adjust_contributions_for_income_growth=simulation_set_params_in.adjust_contributions_for_income_growth,
         should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
         should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
-        should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation)
+        should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
+        allow_negative_balances=True)
+    return simulation_output
+
+
+def calc_safe_withdrawal_rates_for_simulation_set(
+        simulation_set_params_in: schemas.RunSimulationIn,
+        years_until_retirement: int,
+        years_from_retirement_until_life_expectancy: int,
+        all_simulations: List):
+    num_simulations_total = len(all_simulations)
+    index_positions_of_simulation_outcome = [
+        round(num_simulations_total * x) for x in KEY_QUANTILE_VALUES]
+    for outcome_position in index_positions_of_simulation_outcome:
+        simulation_at_position = all_simulations[outcome_position]
+        output = calc_safe_withdrawal_amount_for_simulation(
+            simulation_set_params_in=simulation_set_params_in,
+            pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
+            post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
+            years_until_retirement=years_until_retirement,
+            years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy
+        )
+        print(simulation_at_position)
 
 
 def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
@@ -418,6 +441,11 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         all_simulation_results,
         key=lambda i: (i['balance_at_eol'],
                        i['balance_at_retirement']))
+    calc_safe_withdrawal_rates_for_simulation_set(
+        simulation_set_params_in=simulation_set_params_in,
+        years_until_retirement=years_until_retirement,
+        years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+        all_simulations=all_simulation_results_sorted)
     meta_simulation_statistics = calc_meta_simulation_stats(
         all_simulation_results_sorted)
     logger.info(
