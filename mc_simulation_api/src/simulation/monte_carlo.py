@@ -256,10 +256,11 @@ def calculate_retirement_balance(
             len(balances_by_year_after_retirement)
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
+    all_balances = balances_by_year_until_retirement + balances_by_year_after_retirement
     return {
         'ran_out_of_money_before_eol':
             True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
-        'balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
+        'balances': all_balances,
         'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
         'balance_at_eol':
             round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)

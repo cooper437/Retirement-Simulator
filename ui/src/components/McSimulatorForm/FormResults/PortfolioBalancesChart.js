@@ -58,7 +58,7 @@ export const options = {
     y: {
       title: {
         display: true,
-        text: 'Balance'
+        text: 'Balance (Post-Inflation)'
       },
       ticks: {
         // Include a dollar sign and commas in the ticks
@@ -76,6 +76,9 @@ export const options = {
   }
 };
 
+const formatLineLabel = (percentileValue) =>
+  `${percentileValue * 100}th Percentile`;
+
 const constructChartData = (quantileStatistics) => {
   const currentYear = new Date().getFullYear();
   const firstAvailableQuantile = Object.keys(quantileStatistics)[0];
@@ -83,7 +86,7 @@ const constructChartData = (quantileStatistics) => {
   const labels = [...Array(numYears).keys()].map((i) => i + currentYear);
   const datasets = Object.entries(quantileStatistics).map(
     ([key, value], index) => ({
-      label: key,
+      label: formatLineLabel(key),
       data: value.balances,
       borderColor: NAMED_COLORS[index][0],
       backgroundColor: NAMED_COLORS[index][1]

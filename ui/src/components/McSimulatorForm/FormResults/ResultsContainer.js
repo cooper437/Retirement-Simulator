@@ -20,12 +20,12 @@ export default function ResultsContainer({
       true
     );
     return (
-      <Box sx={{ ml: 4, mr: 4, mb: 4 }}>
+      <Box sx={{ ml: 4, mr: 4, mb: 2 }}>
         <Typography sx={{ mb: 2 }} variant="h6">
           Outcome Visualization
         </Typography>
         <Visualizations survivalRate={simulationResults.survivalRate} />
-        <Typography sx={{ mb: 2 }} variant="h6">
+        <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
           Key Insights
         </Typography>
         <KeyFactsList
@@ -33,15 +33,15 @@ export default function ResultsContainer({
           roundedSurvivalRate={roundedSurvivalRate}
           roundedDepletionRate={roundedDepletionRate}
         />
-        <Typography sx={{ mb: 2, mt: 2 }} variant="h6">
+        <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
           Summary Statistics
         </Typography>
         <SummaryStatsTable
           quantileStatistics={simulationResults.quantileStatistics}
           adjustForInflation={adjustForInflation}
         />
-        <Typography sx={{ mb: 2, mt: 2 }} variant="h6">
-          Portfolio Balances
+        <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
+          Lifetime Portfolio Balances
         </Typography>
         <PortfolioBalancesChart
           quantileStatistics={simulationResults.quantileStatistics}
