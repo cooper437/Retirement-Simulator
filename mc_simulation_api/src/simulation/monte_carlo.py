@@ -144,7 +144,8 @@ def calc_balance_from_retirement_to_eol(
         a_post_retirement_tax_rate: Decimal,
         should_adjust_withdrawals_for_inflation: bool,
         should_adjust_withdrawals_for_taxation: bool,
-        should_adjust_portfolio_balance_for_inflation: bool) -> Decimal:
+        should_adjust_portfolio_balance_for_inflation: bool,
+        allow_negative_balances: bool) -> Decimal:
     '''
     Calculate balance at end of life expectancy given that
     the balance at retirement has already been calculated.
@@ -187,7 +188,8 @@ def calc_balance_from_retirement_to_eol(
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance,
                 a_mean_inflation_rate=a_inflation_mean)
-        if compounded_balance <= 0:  # We have depleted our entire portfolio balance
+        # We have depleted our entire portfolio balance
+        if allow_negative_balances is False and compounded_balance <= 0:
             compounded_balance = Decimal(0.0)
             balances_by_year.append(compounded_balance)
             break
@@ -223,7 +225,8 @@ def calculate_retirement_balance(
         should_adjust_contributions_for_income_growth: bool,
         should_adjust_portfolio_balance_for_inflation: bool,
         should_adjust_withdrawals_for_inflation: bool,
-        should_adjust_withdrawals_for_taxation: bool
+        should_adjust_withdrawals_for_taxation: bool,
+        allow_negative_balances: bool
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = \
         calc_balances_from_current_age_to_retirement(
@@ -247,7 +250,8 @@ def calculate_retirement_balance(
             a_post_retirement_tax_rate=a_post_retirement_tax_rate,
             should_adjust_withdrawals_for_inflation=should_adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=should_adjust_withdrawals_for_taxation,
-            should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation)
+            should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation,
+            allow_negative_balances=allow_negative_balances)
     # We check if there are missing years
     # from the list where the balance was zero and pad out if needed
     if num_years_between_retirement_and_eol != len(
@@ -330,12 +334,29 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
     }
 
 
-# def calc_safe_withdrawal_amount_for_simulation(
-#     simulation_set_params_in: schemas.RunSimulationIn,
-#     pre_retirement_ror: Decimal,
-#     post_retirement_ror: Decimal
-# ):
-#     print("hello")
+def calc_safe_withdrawal_amount_for_simulation(
+    simulation_set_params_in: schemas.RunSimulationIn,
+    pre_retirement_ror: Decimal,
+    post_retirement_ror: Decimal,
+    years_until_retirement: int,
+    years_from_retirement_until_life_expectancy: int
+):
+    simulation_output = calculate_retirement_balance(
+        a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
+        a_pre_retirement_annual_rate_of_return=pre_retirement_ror,
+        a_post_retirement_annual_rate_of_return=post_retirement_ror,
+        num_years_until_retirement=years_until_retirement,
+        num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
+        a_pre_retirement_annual_contribution=simulation_set_params_in.pre_retirement_annual_contribution,
+        a_post_retirement_annual_withdrawal=simulation_set_params_in.post_retirement_annual_withdrawal,
+        a_post_retirement_annual_additional_income=simulation_set_params_in.additional_post_retirement_annual_income,
+        a_inflation_mean=simulation_set_params_in.inflation_mean,
+        a_income_growth_mean=simulation_set_params_in.income_growth_mean,
+        a_post_retirement_tax_rate=simulation_set_params_in.post_retirement_tax_rate,
+        should_adjust_contributions_for_income_growth=simulation_set_params_in.adjust_contributions_for_income_growth,
+        should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
+        should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
+        should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation)
 
 
 def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
@@ -382,7 +403,8 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             should_adjust_contributions_for_income_growth=simulation_set_params_in.adjust_contributions_for_income_growth,
             should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
             should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
-            should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation)
+            should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
+            allow_negative_balances=False)
         single_simulation_result = {
             'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
             'balance_at_eol': simulation_output['balance_at_eol'],
