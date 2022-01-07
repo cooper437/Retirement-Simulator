@@ -2,6 +2,8 @@ from decimal import Decimal
 from typing import List
 from tqdm import tqdm
 from loguru import logger
+from sympy.solvers import solve
+from sympy import Symbol, Float
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
@@ -152,7 +154,7 @@ def calc_balance_from_retirement_to_eol(
     Calculate balance at end of life expectancy given that
     the balance at retirement has already been calculated.
     '''
-    if a_post_retirement_annual_withdrawal >= 0:
+    if (isinstance(a_post_retirement_annual_withdrawal, Decimal)) and (a_post_retirement_annual_withdrawal >= 0):
         raise ValueError(
             "a_post_retirement_annual_contribution was a positive "
             "value but it must be a negative value")
@@ -228,7 +230,7 @@ def calculate_retirement_balance(
         should_adjust_portfolio_balance_for_inflation: bool,
         should_adjust_withdrawals_for_inflation: bool,
         should_adjust_withdrawals_for_taxation: bool,
-        allow_negative_balances: bool
+        is_solving_for_safe_withdrawal: bool
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = \
         calc_balances_from_current_age_to_retirement(
@@ -253,7 +255,7 @@ def calculate_retirement_balance(
             should_adjust_withdrawals_for_inflation=should_adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=should_adjust_withdrawals_for_taxation,
             should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation,
-            allow_negative_balances=allow_negative_balances)
+            allow_negative_balances=is_solving_for_safe_withdrawal)
     # We check if there are missing years
     # from the list where the balance was zero and pad out if needed
     if num_years_between_retirement_and_eol != len(
@@ -263,14 +265,17 @@ def calculate_retirement_balance(
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
     all_balances = balances_by_year_until_retirement + balances_by_year_after_retirement
-    return {
-        'ran_out_of_money_before_eol':
-            True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
-        'balances': all_balances,
-        'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
-        'balance_at_eol':
-            round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
-    }
+    if is_solving_for_safe_withdrawal is True:
+        return balance_at_end_of_life_expectancy
+    else:
+        return {
+            'ran_out_of_money_before_eol':
+                True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
+            'balances': all_balances,
+            'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
+            'balance_at_eol':
+                round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
+        }
 
 
 def get_value_of_simulation_param_at_quantile(
@@ -298,7 +303,7 @@ def get_simulation_value_at_outcome_quantile(
     return value_at_simulation_quantile
 
 
-def calc_meta_simulation_stats(all_simulations: List) -> dict:
+def calc_meta_simulation_stats(all_simulations: List, safe_withdrawal_amounts_by_quantile: dict) -> dict:
     num_ran_out_of_money = sum(
         map(lambda i: i['ran_out_of_money_before_eol'] is True, all_simulations))
     num_survived = sum(
@@ -325,8 +330,10 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
         quantile_statistics[quantile_value] = {
             'pre_retirement_rate_of_return': pre_retirement_ror_for_quantile,
             'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
-            'balance_at_eol': balance_at_eol_for_quantile,
-            'balances': balances
+            'balance_at_eol': balance_at_eol_for_quantile, 'balances': balances,
+            'safe_withdrawal_amount':
+                safe_withdrawal_amounts_by_quantile[quantile_value]
+                ['safe_withdrawal_amount']
         }
     return {
         'survival_rate': survival_ratio,
@@ -340,7 +347,8 @@ def calc_safe_withdrawal_amount_for_simulation(
     pre_retirement_ror: Decimal,
     post_retirement_ror: Decimal,
     years_until_retirement: int,
-    years_from_retirement_until_life_expectancy: int
+    years_from_retirement_until_life_expectancy: int,
+    a_post_retirement_annual_withdrawal: Decimal
 ):
     simulation_output = calculate_retirement_balance(
         a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
@@ -349,7 +357,7 @@ def calc_safe_withdrawal_amount_for_simulation(
         num_years_until_retirement=years_until_retirement,
         num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
         a_pre_retirement_annual_contribution=simulation_set_params_in.pre_retirement_annual_contribution,
-        a_post_retirement_annual_withdrawal=simulation_set_params_in.post_retirement_annual_withdrawal,
+        a_post_retirement_annual_withdrawal=a_post_retirement_annual_withdrawal,
         a_post_retirement_annual_additional_income=simulation_set_params_in.additional_post_retirement_annual_income,
         a_inflation_mean=simulation_set_params_in.inflation_mean,
         a_income_growth_mean=simulation_set_params_in.income_growth_mean,
@@ -358,11 +366,11 @@ def calc_safe_withdrawal_amount_for_simulation(
         should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
         should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
         should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
-        allow_negative_balances=True)
+        is_solving_for_safe_withdrawal=True)
     return simulation_output
 
 
-def calc_safe_withdrawal_rates_for_simulation_set(
+def calc_safe_withdrawal_amounts_for_simulation_set(
         simulation_set_params_in: schemas.RunSimulationIn,
         years_until_retirement: int,
         years_from_retirement_until_life_expectancy: int,
@@ -370,16 +378,26 @@ def calc_safe_withdrawal_rates_for_simulation_set(
     num_simulations_total = len(all_simulations)
     index_positions_of_simulation_outcome = [
         round(num_simulations_total * x) for x in KEY_QUANTILE_VALUES]
-    for outcome_position in index_positions_of_simulation_outcome:
+    quantile_statistics = {}
+    for idx, outcome_position in enumerate(
+            index_positions_of_simulation_outcome):
         simulation_at_position = all_simulations[outcome_position]
-        output = calc_safe_withdrawal_amount_for_simulation(
+        x = Symbol('x')
+        safe_withdrawal_amount = solve(calc_safe_withdrawal_amount_for_simulation(
             simulation_set_params_in=simulation_set_params_in,
             pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
             post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
             years_until_retirement=years_until_retirement,
-            years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy
+            years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+            a_post_retirement_annual_withdrawal=x
+        ))
+        safe_withdrawal_amount_as_decimal = round(
+            Decimal(float(safe_withdrawal_amount[0])),
+            DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
         )
-        print(simulation_at_position)
+        quantile_statistics[KEY_QUANTILE_VALUES[idx]] = {
+            'safe_withdrawal_amount': safe_withdrawal_amount_as_decimal}
+    return quantile_statistics
 
 
 def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
@@ -427,7 +445,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
             should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
-            allow_negative_balances=False)
+            is_solving_for_safe_withdrawal=False)
         single_simulation_result = {
             'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
             'balance_at_eol': simulation_output['balance_at_eol'],
@@ -441,13 +459,15 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         all_simulation_results,
         key=lambda i: (i['balance_at_eol'],
                        i['balance_at_retirement']))
-    calc_safe_withdrawal_rates_for_simulation_set(
+    safe_withdrawal_amounts_by_quantile = calc_safe_withdrawal_amounts_for_simulation_set(
         simulation_set_params_in=simulation_set_params_in,
         years_until_retirement=years_until_retirement,
         years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
         all_simulations=all_simulation_results_sorted)
     meta_simulation_statistics = calc_meta_simulation_stats(
-        all_simulation_results_sorted)
+        all_simulations=all_simulation_results_sorted,
+        safe_withdrawal_amounts_by_quantile=safe_withdrawal_amounts_by_quantile
+    )
     logger.info(
         f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")
     logger.info(
