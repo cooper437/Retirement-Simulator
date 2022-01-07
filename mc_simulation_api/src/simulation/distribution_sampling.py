@@ -28,7 +28,7 @@ def get_random_sample_pairs(years_until_retirement: int,
             mean=post_retirement_mean_rate_of_return,
             standard_deviation=post_retirement_rate_of_return_volatility,
             sample_size=years_from_retirement_until_life_expectancy)
-        pre_retirement_ror_random = pre_retirement_rors.mean()
-        post_retirement_ror_random = post_retirement_rors.mean()
+        pre_retirement_ror_random = Decimal(pre_retirement_rors.mean())
+        post_retirement_ror_random = Decimal(post_retirement_rors.mean())
         samples.append((pre_retirement_ror_random, post_retirement_ror_random))
     return samples
