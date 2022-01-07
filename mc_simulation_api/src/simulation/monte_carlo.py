@@ -10,7 +10,7 @@ from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
 from src.simulation import schemas
 from src.simulation.distribution_sampling import get_random_sample_pairs
 
-KEY_QUANTILE_VALUES = (0.1, 0.25, 0.5, 0.75, 0.9)
+KEY_QUANTILE_VALUES = (0.05, 0.25, 0.5, 0.75, 0.95)
 
 
 def format_as_currency(currency_amount: Decimal) -> str:
@@ -391,12 +391,12 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
             years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
             a_post_retirement_annual_withdrawal=x
         ))
-        safe_withdrawal_amount_as_decimal = round(
+        safe_withdrawal_amount_as_positive_decimal = abs(round(
             Decimal(float(safe_withdrawal_amount[0])),
             DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
-        )
+        ))
         quantile_statistics[KEY_QUANTILE_VALUES[idx]] = {
-            'safe_withdrawal_amount': safe_withdrawal_amount_as_decimal}
+            'safe_withdrawal_amount': safe_withdrawal_amount_as_positive_decimal}
     return quantile_statistics
 
 

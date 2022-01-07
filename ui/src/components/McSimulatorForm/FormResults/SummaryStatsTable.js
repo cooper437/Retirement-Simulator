@@ -59,14 +59,14 @@ export default function SummaryStatsTable({
     {
       key: 'balanceAtEol',
       label: adjustForInflation
-        ? 'Wealth Transfer Amount (Post-Inflation)'
+        ? 'Wealth Transfer Amount (Post-Inflation Dollars)'
         : 'Wealth Transfer Amount',
       formatAs: 'dollar'
     },
     {
-      key: 'safeWithdrawalRate',
-      label: 'Post-Retirement Safe Withdrawal Rate',
-      formatAs: 'percent'
+      key: 'safeWithdrawalAmount',
+      label: 'Post-Retirement Safe Withdrawal Amount (Pre-Inflation Dollars)',
+      formatAs: 'dollar'
     }
   ];
   return (
@@ -75,11 +75,11 @@ export default function SummaryStatsTable({
         <TableHead>
           <TableRow>
             <StyledTableCell />
-            <StyledTableCell align="center">10th Percentile</StyledTableCell>
+            <StyledTableCell align="center">5th Percentile</StyledTableCell>
             <StyledTableCell align="center">25th Percentile</StyledTableCell>
             <StyledTableCell align="center">50th Percentile</StyledTableCell>
             <StyledTableCell align="center">75th Percentile</StyledTableCell>
-            <StyledTableCell align="center">90th Percentile</StyledTableCell>
+            <StyledTableCell align="center">95th Percentile</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
