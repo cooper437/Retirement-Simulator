@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from humps import camelize
 from pydantic import (BaseModel,
                       PositiveInt,
@@ -50,6 +50,7 @@ class QuantileStatistic(CamelModel):
     pre_retirement_rate_of_return: decimal_positive
     post_retirement_rate_of_return: decimal_positive
     balance_at_eol: decimal_positive
+    balances: List[decimal_positive]
 
 
 class RunSimulationOut(CamelModel):

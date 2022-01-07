@@ -312,10 +312,15 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
             all_simulations=all_simulations,
             field_name='balance_at_eol',
             quantile=quantile_value)
+        balances = get_simulation_value_at_value_quantile(
+            all_simulations=all_simulations,
+            field_name='balances',
+            quantile=quantile_value)
         quantile_statistics[quantile_value] = {
             'pre_retirement_rate_of_return': pre_retirement_ror_for_quantile,
             'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
-            'balance_at_eol': balance_at_eol_for_quantile
+            'balance_at_eol': balance_at_eol_for_quantile,
+            'balances': balances
         }
     return {
         'survival_rate': survival_ratio,

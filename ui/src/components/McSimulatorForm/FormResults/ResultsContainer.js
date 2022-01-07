@@ -4,6 +4,7 @@ import SummaryStatsTable from './SummaryStatsTable';
 import { decimalToPercent } from '../../../utils/generalUtils';
 import KeyFactsList from './KeyFactsList';
 import Visualizations from './Visualizations';
+import PortfolioBalancesChart from './PortfolioBalancesChart';
 
 export default function ResultsContainer({
   simulationResults,
@@ -38,6 +39,12 @@ export default function ResultsContainer({
         <SummaryStatsTable
           quantileStatistics={simulationResults.quantileStatistics}
           adjustForInflation={adjustForInflation}
+        />
+        <Typography sx={{ mb: 2, mt: 2 }} variant="h6">
+          Portfolio Balances
+        </Typography>
+        <PortfolioBalancesChart
+          quantileStatistics={simulationResults.quantileStatistics}
         />
       </Box>
     );
