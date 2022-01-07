@@ -24,7 +24,12 @@ export default function ResultsContainer({
         <Typography sx={{ mb: 2 }} variant="h6">
           Outcome Visualization
         </Typography>
-        <Visualizations survivalRate={simulationResults.survivalRate} />
+        <Visualizations
+          survivalRate={simulationResults.survivalRate}
+          safeWithdrawalAmount={
+            simulationResults.quantileStatistics['0.05'].safeWithdrawalAmount
+          }
+        />
         <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
           Key Insights
         </Typography>

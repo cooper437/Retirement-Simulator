@@ -28,29 +28,6 @@ const portfolioSurvivalPlugins = [
   }
 ];
 
-const safeWithdrawalPlugins = [
-  {
-    beforeDraw(chart) {
-      const { width } = chart;
-      const { height } = chart;
-      const { ctx } = chart;
-      ctx.restore();
-      const fontSize = (height / 360).toFixed(2);
-      ctx.font = `${fontSize}em sans-serif`;
-      ctx.textBaseline = 'middle';
-      const text1 = 'Portfolio Survival';
-      const text2 = 'on $XXk / year';
-      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
-      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-      const text1Y = height / 2 - 10;
-      const text2Y = height / 2 + 10;
-      ctx.fillText(text1, text1X, text1Y);
-      ctx.fillText(text2, text2X, text2Y);
-      ctx.save();
-    }
-  }
-];
-
 const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
   labels: ['Did Not Run Out of Money', 'Did Run Out of Money'],
   datasets: [
@@ -77,7 +54,44 @@ const safeWithdrawalData = {
   ]
 };
 
-export default function Visualizations({ survivalRate }) {
+const formatToShortDollarAmount = (aDollarAmount) => {
+  const asString = Math.trunc(aDollarAmount).toString();
+  const numOfDigits = asString.length;
+  if (numOfDigits >= 4) {
+    const numDigitsToTruncate = numOfDigits - 3;
+    return asString.substring(0, numDigitsToTruncate);
+  }
+  return 0;
+};
+
+const generateSafeWithdrawalPlugins = (safeWithdrawalAmount) => {
+  const formattedSafeWithdrawalAmount =
+    formatToShortDollarAmount(safeWithdrawalAmount);
+  return [
+    {
+      beforeDraw(chart) {
+        const { width } = chart;
+        const { height } = chart;
+        const { ctx } = chart;
+        ctx.restore();
+        const fontSize = (height / 360).toFixed(2);
+        ctx.font = `${fontSize}em sans-serif`;
+        ctx.textBaseline = 'middle';
+        const text1 = 'Portfolio Survival';
+        const text2 = `on $${formattedSafeWithdrawalAmount}k / year`;
+        const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+        const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+        const text1Y = height / 2 - 10;
+        const text2Y = height / 2 + 10;
+        ctx.fillText(text1, text1X, text1Y);
+        ctx.fillText(text2, text2X, text2Y);
+        ctx.save();
+      }
+    }
+  ];
+};
+
+export default function Visualizations({ survivalRate, safeWithdrawalAmount }) {
   const roundedSurvivalRate = decimalToPercent(survivalRate, false);
   const roundedDepletionRate = decimalToPercent(1 - survivalRate, false);
   return (
@@ -110,7 +124,7 @@ export default function Visualizations({ survivalRate }) {
               }
             }
           }}
-          plugins={safeWithdrawalPlugins}
+          plugins={generateSafeWithdrawalPlugins(safeWithdrawalAmount)}
         />
       </Box>
     </Box>

@@ -48,24 +48,25 @@ export default function SummaryStatsTable({
   const rows = [
     {
       key: 'preRetirementRateOfReturn',
-      label: 'Pre-Retirement Mean Rate Of Return',
+      label: 'Pre-Retirement Annual Mean Rate Of Return',
       formatAs: 'percent'
     },
     {
       key: 'postRetirementRateOfReturn',
-      label: 'Post-Retirement Mean Rate Of Return',
+      label: 'Post-Retirement Annual Mean Rate Of Return',
       formatAs: 'percent'
     },
     {
       key: 'balanceAtEol',
       label: adjustForInflation
-        ? 'Wealth Transfer Amount (Post-Inflation Dollars)'
+        ? 'Wealth Transfer Amount (In Post-Inflation Dollars)'
         : 'Wealth Transfer Amount',
       formatAs: 'dollar'
     },
     {
       key: 'safeWithdrawalAmount',
-      label: 'Post-Retirement Safe Withdrawal Amount (Pre-Inflation Dollars)',
+      label:
+        'Post-Retirement Annual Safe Withdrawal Amount (In Pre-Inflation Dollars)',
       formatAs: 'dollar'
     }
   ];
