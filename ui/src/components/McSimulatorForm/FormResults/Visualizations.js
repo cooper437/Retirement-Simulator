@@ -37,7 +37,7 @@ const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
     {
       label: 'Portfolio Survival',
       data: [roundedSurvivalRate, roundedDepletionRate],
-      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)'],
       borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
@@ -50,7 +50,7 @@ const safeWithdrawalData = {
     {
       label: 'Portfolio Survival',
       data: [95, 5],
-      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)'],
       borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
