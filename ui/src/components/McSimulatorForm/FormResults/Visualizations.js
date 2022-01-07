@@ -5,28 +5,31 @@ import { Doughnut } from 'react-chartjs-2';
 import { decimalToPercent } from '../../../utils/generalUtils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-const portfolioSurvivalPlugins = [
-  {
-    beforeDraw(chart) {
-      const { width } = chart;
-      const { height } = chart;
-      const { ctx } = chart;
-      ctx.restore();
-      const fontSize = (height / 360).toFixed(2);
-      ctx.font = `${fontSize}em sans-serif`;
-      ctx.textBaseline = 'middle';
-      const text1 = 'Overall Portfolio';
-      const text2 = 'Survival Rate';
-      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
-      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-      const text1Y = height / 2 - 10;
-      const text2Y = height / 2 + 10;
-      ctx.fillText(text1, text1X, text1Y);
-      ctx.fillText(text2, text2X, text2Y);
-      ctx.save();
+// eslint-disable-next-line arrow-body-style
+const generatePortfolioSurvivalPlugins = (roundedSurvivalRate) => {
+  return [
+    {
+      beforeDraw(chart) {
+        const { width } = chart;
+        const { height } = chart;
+        const { ctx } = chart;
+        ctx.restore();
+        const fontSize = (height / 360).toFixed(2);
+        ctx.font = `${fontSize}em sans-serif`;
+        ctx.textBaseline = 'middle';
+        const text1 = `${roundedSurvivalRate}% Portfolio`;
+        const text2 = 'Survival Rate';
+        const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+        const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+        const text1Y = height / 2 - 10;
+        const text2Y = height / 2 + 10;
+        ctx.fillText(text1, text1X, text1Y);
+        ctx.fillText(text2, text2X, text2Y);
+        ctx.save();
+      }
     }
-  }
-];
+  ];
+};
 
 const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
   labels: ['Did Not Run Out of Money', 'Did Run Out of Money'],
@@ -110,7 +113,7 @@ export default function Visualizations({ survivalRate, safeWithdrawalAmount }) {
               }
             }
           }}
-          plugins={portfolioSurvivalPlugins}
+          plugins={generatePortfolioSurvivalPlugins(roundedSurvivalRate)}
         />
       </Box>
       <Box sx={{ position: 'relative', width: '50%' }}>

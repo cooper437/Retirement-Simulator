@@ -37,6 +37,9 @@ export default function ResultsContainer({
           simulationResults={simulationResults}
           roundedSurvivalRate={roundedSurvivalRate}
           roundedDepletionRate={roundedDepletionRate}
+          safeWithdrawalAmount={
+            simulationResults.quantileStatistics['0.05'].safeWithdrawalAmount
+          }
         />
         <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
           Summary Statistics

@@ -59,14 +59,14 @@ export default function SummaryStatsTable({
     {
       key: 'balanceAtEol',
       label: adjustForInflation
-        ? 'Wealth Transfer Amount (In Post-Inflation Dollars)'
+        ? 'Wealth Transfer Amount (Inflation Adjusted)'
         : 'Wealth Transfer Amount',
       formatAs: 'dollar'
     },
     {
       key: 'safeWithdrawalAmount',
       label:
-        'Post-Retirement Annual Safe Withdrawal Amount (In Pre-Inflation Dollars)',
+        'Post-Retirement Annual Safe Withdrawal Amount (Non-Inflation Adjusted)',
       formatAs: 'dollar'
     }
   ];
