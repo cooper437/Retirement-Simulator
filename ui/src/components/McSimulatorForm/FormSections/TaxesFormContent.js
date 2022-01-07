@@ -3,69 +3,110 @@ import {
   Box,
   FormControl,
   InputLabel,
-  OutlinedInput,
   InputAdornment,
   Select,
-  MenuItem
+  MenuItem,
+  FormHelperText,
+  Typography,
+  FormGroup,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material';
+import NumberFormat from 'react-number-format';
 
 export default function TaxesFormContent({
   commonFormStyles,
   filingStatus,
-  additionalPostRetirementAnnualIncome,
-  setFilingStatus,
-  setAdditionalPostRetirementAnnualIncome,
+  handleChange,
+  touched,
+  errors,
+  postRetirementAnnualIncome,
+  postRetirementTaxRate,
   adjustWithdrawalsForTaxation
 }) {
   return (
-    <Box display="flex" flexDirection="row" justifyContent="space-between">
-      {adjustWithdrawalsForTaxation && (
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <InputLabel id="filing-status-label">
-            Post-Retirement Filing Status
-          </InputLabel>
-          <Select
-            labelId="filing-status-label"
-            id="filing-status-input"
-            label="Post-Retirement Filing Status"
-            startAdornment={<InputAdornment position="start" />}
-            endAdornment={<InputAdornment position="end" />}
-            value={filingStatus}
-            onChange={(e) => setFilingStatus(e.target.value)}
+    <>
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="flex-end"
+        justifyContent="space-between"
+        height="72px"
+      >
+        <Box sx={{ flex: 1 }}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={adjustWithdrawalsForTaxation}
+                  name="adjustWithdrawalsForTaxation"
+                  onChange={handleChange}
+                />
+              }
+              label="Adjust for Taxes"
+            />
+          </FormGroup>
+        </Box>
+        {adjustWithdrawalsForTaxation && (
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <FormControl
+              sx={commonFormStyles.shortFormInput}
+              error={touched.filingStatus && Boolean(errors.filingStatus)}
+            >
+              <InputLabel id="filing-status-label">
+                Post-Retirement Filing Status
+              </InputLabel>
+              <Select
+                labelId="filing-status-label"
+                id="filing-status-input"
+                label="Post-Retirement Filing Status"
+                startAdornment={<InputAdornment position="start" />}
+                endAdornment={<InputAdornment position="end" />}
+                value={filingStatus}
+                name="filingStatus"
+                onChange={handleChange}
+              >
+                <MenuItem value="singleFiler">Single Filer</MenuItem>
+                <MenuItem value="marriedFilingJointly">
+                  Married Filing Jointly
+                </MenuItem>
+                <MenuItem value="marriedFilingSeparately">
+                  Married Filing Separately
+                </MenuItem>
+              </Select>
+              <FormHelperText>
+                {touched.filingStatus && errors.filingStatus}
+              </FormHelperText>
+            </FormControl>
+          </Box>
+        )}
+        <Box sx={{ flex: 1 }} />
+      </Box>
+      {adjustWithdrawalsForTaxation &&
+        postRetirementAnnualIncome &&
+        !Number.isNaN(postRetirementAnnualIncome) && (
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            sx={{ mt: 2 }}
           >
-            <MenuItem value="single">Single</MenuItem>
-            <MenuItem value="married-filing-jointly">
-              Married Filing Jointly
-            </MenuItem>
-            <MenuItem value="married-filing-separately">
-              Married Filing Separately
-            </MenuItem>
-            <MenuItem value="single-filer">Single Filer</MenuItem>
-          </Select>
-        </FormControl>
-      )}
-      <FormControl sx={commonFormStyles.longFormInput}>
-        <InputLabel htmlFor="additional-annual-income">
-          Post-Retirement Additional Annual Income
-        </InputLabel>
-        <OutlinedInput
-          id="additional-annual-income"
-          inputProps={{
-            style: { textAlign: 'right' }
-          }}
-          type="number"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          endAdornment={<InputAdornment position="end">.00</InputAdornment>}
-          label="Post Retirement Additional Annual Income"
-          value={additionalPostRetirementAnnualIncome}
-          onChange={(e) =>
-            setAdditionalPostRetirementAnnualIncome(
-              parseInt(e.target.value, 10)
-            )
-          }
-        />
-      </FormControl>
-      <Box sx={commonFormStyles.longFormInput} />
-    </Box>
+            <Typography>
+              Based on your expected annual income post retirement of{' '}
+              <NumberFormat
+                thousandsGroupStyle="thousand"
+                value={postRetirementAnnualIncome.toString()}
+                prefix="$"
+                decimalSeparator="."
+                displayType="text"
+                type="text"
+                thousandSeparator
+                allowNegative
+              />{' '}
+              your assumed tax rate is {postRetirementTaxRate}%.
+            </Typography>
+          </Box>
+        )}
+    </>
   );
 }

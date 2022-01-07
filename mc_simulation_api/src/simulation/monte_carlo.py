@@ -256,10 +256,11 @@ def calculate_retirement_balance(
             len(balances_by_year_after_retirement)
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
+    all_balances = balances_by_year_until_retirement + balances_by_year_after_retirement
     return {
         'ran_out_of_money_before_eol':
             True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
-        'balances': balances_by_year_until_retirement + balances_by_year_after_retirement,
+        'balances': all_balances,
         'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
         'balance_at_eol':
             round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
@@ -312,10 +313,15 @@ def calc_meta_simulation_stats(all_simulations: List) -> dict:
             all_simulations=all_simulations,
             field_name='balance_at_eol',
             quantile=quantile_value)
+        balances = get_simulation_value_at_value_quantile(
+            all_simulations=all_simulations,
+            field_name='balances',
+            quantile=quantile_value)
         quantile_statistics[quantile_value] = {
             'pre_retirement_rate_of_return': pre_retirement_ror_for_quantile,
             'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
-            'balance_at_eol': balance_at_eol_for_quantile
+            'balance_at_eol': balance_at_eol_for_quantile,
+            'balances': balances
         }
     return {
         'survival_rate': survival_ratio,
