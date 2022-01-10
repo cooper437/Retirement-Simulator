@@ -58,7 +58,7 @@ export const options = {
     y: {
       title: {
         display: true,
-        text: 'Balance (Post-Inflation)'
+        text: 'Balance (Post-Inflation Dollars)'
       },
       ticks: {
         // Include a dollar sign and commas in the ticks

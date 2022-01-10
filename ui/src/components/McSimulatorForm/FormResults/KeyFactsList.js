@@ -81,8 +81,8 @@ export default function KeyFactsList({
                 thousandSeparator
                 allowNegative
               />{' '}
-              / year (in non-inflation adjusted dollars) there is a 95%
-              probability of not running out of money.
+              / year (in pre-inflation dollars) there is a 95% probability of
+              not running out of money.
             </Typography>
           }
         />
