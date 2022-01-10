@@ -7,11 +7,13 @@ import {
   ListItemIcon,
   ListItemText
 } from '@mui/material';
+import NumberFormat from 'react-number-format';
 
 export default function KeyFactsList({
   simulationResults,
   roundedSurvivalRate,
-  roundedDepletionRate
+  roundedDepletionRate,
+  safeWithdrawalAmount
 }) {
   return (
     <List>
@@ -67,8 +69,20 @@ export default function KeyFactsList({
         <ListItemText
           primary={
             <Typography>
-              Post-retirement if you withdraw less than $XXX / year there is a
-              95% probability of not running out of money.
+              Post-retirement if you withdraw less than{' '}
+              <NumberFormat
+                thousandsGroupStyle="thousand"
+                value={safeWithdrawalAmount}
+                prefix="$"
+                decimalSeparator="."
+                decimalScale={0}
+                displayType="text"
+                type="text"
+                thousandSeparator
+                allowNegative
+              />{' '}
+              / year (in pre-inflation dollars) there is a 95% probability of
+              not running out of money.
             </Typography>
           }
         />

@@ -5,51 +5,31 @@ import { Doughnut } from 'react-chartjs-2';
 import { decimalToPercent } from '../../../utils/generalUtils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-const portfolioSurvivalPlugins = [
-  {
-    beforeDraw(chart) {
-      const { width } = chart;
-      const { height } = chart;
-      const { ctx } = chart;
-      ctx.restore();
-      const fontSize = (height / 360).toFixed(2);
-      ctx.font = `${fontSize}em sans-serif`;
-      ctx.textBaseline = 'middle';
-      const text1 = 'Overall Portfolio';
-      const text2 = 'Survival Rate';
-      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
-      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-      const text1Y = height / 2 - 10;
-      const text2Y = height / 2 + 10;
-      ctx.fillText(text1, text1X, text1Y);
-      ctx.fillText(text2, text2X, text2Y);
-      ctx.save();
+// eslint-disable-next-line arrow-body-style
+const generatePortfolioSurvivalPlugins = (roundedSurvivalRate) => {
+  return [
+    {
+      beforeDraw(chart) {
+        const { width } = chart;
+        const { height } = chart;
+        const { ctx } = chart;
+        ctx.restore();
+        const fontSize = (height / 360).toFixed(2);
+        ctx.font = `${fontSize}em sans-serif`;
+        ctx.textBaseline = 'middle';
+        const text1 = `${roundedSurvivalRate}% Portfolio`;
+        const text2 = 'Survival Rate';
+        const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+        const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+        const text1Y = height / 2 - 10;
+        const text2Y = height / 2 + 10;
+        ctx.fillText(text1, text1X, text1Y);
+        ctx.fillText(text2, text2X, text2Y);
+        ctx.save();
+      }
     }
-  }
-];
-
-const safeWithdrawalPlugins = [
-  {
-    beforeDraw(chart) {
-      const { width } = chart;
-      const { height } = chart;
-      const { ctx } = chart;
-      ctx.restore();
-      const fontSize = (height / 360).toFixed(2);
-      ctx.font = `${fontSize}em sans-serif`;
-      ctx.textBaseline = 'middle';
-      const text1 = 'Portfolio Survival';
-      const text2 = 'on $XXk / year';
-      const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
-      const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-      const text1Y = height / 2 - 10;
-      const text2Y = height / 2 + 10;
-      ctx.fillText(text1, text1X, text1Y);
-      ctx.fillText(text2, text2X, text2Y);
-      ctx.save();
-    }
-  }
-];
+  ];
+};
 
 const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
   labels: ['Did Not Run Out of Money', 'Did Run Out of Money'],
@@ -57,7 +37,7 @@ const portfolioSurvivalData = (roundedSurvivalRate, roundedDepletionRate) => ({
     {
       label: 'Portfolio Survival',
       data: [roundedSurvivalRate, roundedDepletionRate],
-      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)'],
       borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
@@ -70,14 +50,51 @@ const safeWithdrawalData = {
     {
       label: 'Portfolio Survival',
       data: [95, 5],
-      backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+      backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)'],
       borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
       borderWidth: 1
     }
   ]
 };
 
-export default function Visualizations({ survivalRate }) {
+const formatToShortDollarAmount = (aDollarAmount) => {
+  const asString = Math.trunc(aDollarAmount).toString();
+  const numOfDigits = asString.length;
+  if (numOfDigits >= 4) {
+    const numDigitsToTruncate = numOfDigits - 3;
+    return asString.substring(0, numDigitsToTruncate);
+  }
+  return 0;
+};
+
+const generateSafeWithdrawalPlugins = (safeWithdrawalAmount) => {
+  const formattedSafeWithdrawalAmount =
+    formatToShortDollarAmount(safeWithdrawalAmount);
+  return [
+    {
+      beforeDraw(chart) {
+        const { width } = chart;
+        const { height } = chart;
+        const { ctx } = chart;
+        ctx.restore();
+        const fontSize = (height / 360).toFixed(2);
+        ctx.font = `${fontSize}em sans-serif`;
+        ctx.textBaseline = 'middle';
+        const text1 = 'Portfolio Survival';
+        const text2 = `on $${formattedSafeWithdrawalAmount}k / year`;
+        const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
+        const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+        const text1Y = height / 2 - 10;
+        const text2Y = height / 2 + 10;
+        ctx.fillText(text1, text1X, text1Y);
+        ctx.fillText(text2, text2X, text2Y);
+        ctx.save();
+      }
+    }
+  ];
+};
+
+export default function Visualizations({ survivalRate, safeWithdrawalAmount }) {
   const roundedSurvivalRate = decimalToPercent(survivalRate, false);
   const roundedDepletionRate = decimalToPercent(1 - survivalRate, false);
   return (
@@ -96,7 +113,7 @@ export default function Visualizations({ survivalRate }) {
               }
             }
           }}
-          plugins={portfolioSurvivalPlugins}
+          plugins={generatePortfolioSurvivalPlugins(roundedSurvivalRate)}
         />
       </Box>
       <Box sx={{ position: 'relative', width: '50%' }}>
@@ -110,7 +127,7 @@ export default function Visualizations({ survivalRate }) {
               }
             }
           }}
-          plugins={safeWithdrawalPlugins}
+          plugins={generateSafeWithdrawalPlugins(safeWithdrawalAmount)}
         />
       </Box>
     </Box>

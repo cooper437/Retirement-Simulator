@@ -12,6 +12,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 loguru = "*"
 pydantic = "*"
 pyhumps = "*"
+sympy = "*"
 
 [dev-packages]
 autopep8 = "*"
