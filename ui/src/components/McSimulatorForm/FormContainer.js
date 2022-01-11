@@ -332,8 +332,6 @@ export default function FormContainer() {
                     touched={touched}
                     errors={errors}
                     handleChange={handleChange}
-                  />
-                  <MarketConditionsFormSection
                     preRetirementMeanRateOfReturn={
                       formValues.preRetirementMeanRateOfReturn
                     }
@@ -347,12 +345,11 @@ export default function FormContainer() {
                       formValues.postRetirementInvestmentStyle
                     }
                     inflationMean={formValues.inflationMean}
-                    touched={touched}
-                    errors={errors}
-                    handleChange={handleChange}
                     setFieldValue={setFieldValue}
                     adjustForInflation={formValues.adjustForInflation}
                   />
+                  {/* <MarketConditionsFormSection
+                  /> */}
                   <TaxesFormSection
                     filingStatus={formValues.filingStatus}
                     adjustWithdrawalsForTaxation={
