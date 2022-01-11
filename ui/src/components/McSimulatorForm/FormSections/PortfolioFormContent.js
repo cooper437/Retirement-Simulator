@@ -59,7 +59,14 @@ export default function PortfolioFormContent({
             }
           />
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flexWrap="wrap"
+      >
+        <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
           <TextField
             label="Annual Contribution Pre-Retirement"
             variant="outlined"
@@ -87,6 +94,49 @@ export default function PortfolioFormContent({
             }
           />
         </FormControl>
+        <FormGroup sx={{ justifyContent: 'end' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={adjustContributionsForIncomeGrowth}
+                name="adjustContributionsForIncomeGrowth"
+                onChange={handleChange}
+              />
+            }
+            label="Adjust for Income Growth"
+          />
+        </FormGroup>
+        {adjustContributionsForIncomeGrowth ? (
+          <Box>
+            <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
+              <TextField
+                label="Annual Income Growth Mean"
+                variant="outlined"
+                value={incomeGrowthMean}
+                onChange={handleChange}
+                name="incomeGrowthMean"
+                id="income-growth-mean"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                InputProps={{
+                  inputComponent: NumberFormatPercentage,
+                  endAdornment: (
+                    <InputAdornment position="end">%</InputAdornment>
+                  )
+                }}
+                error={
+                  touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
+                }
+                helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
+              />
+            </FormControl>
+          </Box>
+        ) : (
+          <Box sx={{ width: '259px' }} />
+        )}
+      </Box>
+      <Box>
         <FormControl sx={commonFormStyles.shortFormInput}>
           <TextField
             label="Annual Net Withdrawal Post-Retirement"
@@ -157,45 +207,6 @@ export default function PortfolioFormContent({
         alignItems="flex-end"
         height="72px"
       >
-        <FormGroup sx={{ flex: 1 }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={adjustContributionsForIncomeGrowth}
-                name="adjustContributionsForIncomeGrowth"
-                onChange={handleChange}
-              />
-            }
-            label="Adjust for Income Growth"
-          />
-        </FormGroup>
-        {adjustContributionsForIncomeGrowth && (
-          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-            <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
-              <TextField
-                label="Annual Income Growth Mean"
-                variant="outlined"
-                value={incomeGrowthMean}
-                onChange={handleChange}
-                name="incomeGrowthMean"
-                id="income-growth-mean"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                InputProps={{
-                  inputComponent: NumberFormatPercentage,
-                  endAdornment: (
-                    <InputAdornment position="end">%</InputAdornment>
-                  )
-                }}
-                error={
-                  touched.incomeGrowthMean && Boolean(errors.incomeGrowthMean)
-                }
-                helperText={touched.incomeGrowthMean && errors.incomeGrowthMean}
-              />
-            </FormControl>
-          </Box>
-        )}
         <Box sx={{ flex: 1 }} />
       </Stack>
     </>
