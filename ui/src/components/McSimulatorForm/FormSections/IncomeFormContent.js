@@ -42,26 +42,31 @@ export default function IncomeFormContent({
         <Box sx={{ flex: 1 }}>
           <FormControl sx={commonFormStyles.shortFormInput}>
             <TextField
-              label="Post-Retirement Rate of Return"
+              label="Post-Retirement Annual Net Withdrawal"
               variant="outlined"
-              value={postRetirementMeanRateOfReturn}
+              value={postRetirementAnnualWithdrawal}
               onChange={handleChange}
-              name="postRetirementMeanRateOfReturn"
-              id="post-retirement-ror"
+              name="postRetirementAnnualWithdrawal"
+              id="annual-withdrawal-post-retirement"
               InputLabelProps={{
                 shrink: true
               }}
               InputProps={{
-                inputComponent: NumberFormatPercentage,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>
+                inputComponent: NumberFormatDollarAmount,
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">.00</InputAdornment>
+                )
               }}
               error={
-                touched.postRetirementMeanRateOfReturn &&
-                Boolean(errors.postRetirementMeanRateOfReturn)
+                touched.postRetirementAnnualWithdrawal &&
+                Boolean(errors.postRetirementAnnualWithdrawal)
               }
               helperText={
-                touched.postRetirementMeanRateOfReturn &&
-                errors.postRetirementMeanRateOfReturn
+                touched.postRetirementAnnualWithdrawal &&
+                errors.postRetirementAnnualWithdrawal
               }
             />
           </FormControl>
@@ -109,38 +114,6 @@ export default function IncomeFormContent({
         flexWrap="wrap"
       >
         <Box sx={{ flex: 1 }}>
-          <FormControl sx={commonFormStyles.shortFormInput}>
-            <TextField
-              label="Annual Net Withdrawal Post-Retirement"
-              variant="outlined"
-              value={postRetirementAnnualWithdrawal}
-              onChange={handleChange}
-              name="postRetirementAnnualWithdrawal"
-              id="annual-withdrawal-post-retirement"
-              InputLabelProps={{
-                shrink: true
-              }}
-              InputProps={{
-                inputComponent: NumberFormatDollarAmount,
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">.00</InputAdornment>
-                )
-              }}
-              error={
-                touched.postRetirementAnnualWithdrawal &&
-                Boolean(errors.postRetirementAnnualWithdrawal)
-              }
-              helperText={
-                touched.postRetirementAnnualWithdrawal &&
-                errors.postRetirementAnnualWithdrawal
-              }
-            />
-          </FormControl>
-        </Box>
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
           <FormControl
             sx={commonFormStyles.shortFormInput}
             error={
@@ -182,10 +155,37 @@ export default function IncomeFormContent({
             </FormHelperText>
           </FormControl>
         </Box>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <TextField
+              label="Post-Retirement Rate of Return"
+              variant="outlined"
+              value={postRetirementMeanRateOfReturn}
+              onChange={handleChange}
+              name="postRetirementMeanRateOfReturn"
+              id="post-retirement-ror"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
+              error={
+                touched.postRetirementMeanRateOfReturn &&
+                Boolean(errors.postRetirementMeanRateOfReturn)
+              }
+              helperText={
+                touched.postRetirementMeanRateOfReturn &&
+                errors.postRetirementMeanRateOfReturn
+              }
+            />
+          </FormControl>
+        </Box>
         <Box sx={{ flex: 1 }} />
       </Box>
       <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, display: 'flex', alignItems: 'end' }}>
           <FormGroup>
             <FormControlLabel
               control={
