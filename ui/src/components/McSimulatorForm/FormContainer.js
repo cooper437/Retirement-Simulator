@@ -381,17 +381,12 @@ export default function FormContainer() {
                     inflationMean={formValues.inflationMean}
                     setFieldValue={setFieldValue}
                     adjustForInflation={formValues.adjustForInflation}
-                  />
-                  <TaxesFormSection
                     filingStatus={formValues.filingStatus}
                     adjustWithdrawalsForTaxation={
                       formValues.adjustWithdrawalsForTaxation
                     }
                     postRetirementAnnualIncome={postRetirementAnnualIncome}
                     postRetirementTaxRate={postRetirementTaxRate}
-                    handleChange={handleChange}
-                    touched={touched}
-                    errors={errors}
                   />
                 </Box>
                 <Box sx={{ mt: 4, ml: 4, mr: 4 }}>

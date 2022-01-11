@@ -10,8 +10,10 @@ import {
   FormHelperText,
   Checkbox,
   FormControlLabel,
-  FormGroup
+  FormGroup,
+  Typography
 } from '@mui/material';
+import NumberFormat from 'react-number-format';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
 import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 import { INVESTMENT_STYLE_ENUM } from '../../../constants';
@@ -29,7 +31,11 @@ export default function IncomeFormContent({
   touched,
   errors,
   handleChange,
-  setFieldValue
+  setFieldValue,
+  filingStatus,
+  postRetirementAnnualIncome,
+  postRetirementTaxRate,
+  adjustWithdrawalsForTaxation
 }) {
   return (
     <>
@@ -42,7 +48,11 @@ export default function IncomeFormContent({
         <Box sx={{ flex: 1 }}>
           <FormControl sx={commonFormStyles.shortFormInput}>
             <TextField
-              label="Post-Retirement Annual Net Withdrawal"
+              label={
+                adjustWithdrawalsForTaxation
+                  ? 'Post-Retirement Annual Withdrawal (Net)'
+                  : 'Post-Retirement Annual Withdrawal (Gross)'
+              }
               variant="outlined"
               value={postRetirementAnnualWithdrawal}
               onChange={handleChange}
@@ -228,6 +238,89 @@ export default function IncomeFormContent({
           </>
         )}
       </Box>
+      <>
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="flex-end"
+          justifyContent="space-between"
+          height="72px"
+        >
+          <Box sx={{ flex: 1 }}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={adjustWithdrawalsForTaxation}
+                    name="adjustWithdrawalsForTaxation"
+                    onChange={handleChange}
+                  />
+                }
+                label="Use Net Income For Withdrawals"
+              />
+            </FormGroup>
+          </Box>
+          {adjustWithdrawalsForTaxation && (
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+              <FormControl
+                sx={commonFormStyles.shortFormInput}
+                error={touched.filingStatus && Boolean(errors.filingStatus)}
+              >
+                <InputLabel id="filing-status-label">
+                  Post-Retirement Filing Status
+                </InputLabel>
+                <Select
+                  labelId="filing-status-label"
+                  id="filing-status-input"
+                  label="Post-Retirement Filing Status"
+                  startAdornment={<InputAdornment position="start" />}
+                  endAdornment={<InputAdornment position="end" />}
+                  value={filingStatus}
+                  name="filingStatus"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="singleFiler">Single Filer</MenuItem>
+                  <MenuItem value="marriedFilingJointly">
+                    Married Filing Jointly
+                  </MenuItem>
+                  <MenuItem value="marriedFilingSeparately">
+                    Married Filing Separately
+                  </MenuItem>
+                </Select>
+                <FormHelperText>
+                  {touched.filingStatus && errors.filingStatus}
+                </FormHelperText>
+              </FormControl>
+            </Box>
+          )}
+          <Box sx={{ flex: 1 }} />
+        </Box>
+        {adjustWithdrawalsForTaxation &&
+          postRetirementAnnualIncome &&
+          !Number.isNaN(postRetirementAnnualIncome) && (
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="center"
+              sx={{ mt: 2 }}
+            >
+              <Typography>
+                Based on your expected annual income post retirement of{' '}
+                <NumberFormat
+                  thousandsGroupStyle="thousand"
+                  value={postRetirementAnnualIncome.toString()}
+                  prefix="$"
+                  decimalSeparator="."
+                  displayType="text"
+                  type="text"
+                  thousandSeparator
+                  allowNegative
+                />{' '}
+                your assumed tax rate is {postRetirementTaxRate}%.
+              </Typography>
+            </Box>
+          )}
+      </>
     </>
   );
 }
