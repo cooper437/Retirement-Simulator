@@ -118,7 +118,6 @@ export default function IncomeFormContent({
         flexDirection="row"
         justifyContent="space-between"
         alignItems="flex-end"
-        height="72px"
         flexWrap="wrap"
       >
         <Box sx={{ flex: 1 }}>
@@ -192,8 +191,10 @@ export default function IncomeFormContent({
         </Box>
         <Box sx={{ flex: 1 }} />
       </Box>
-      <Box sx={{ display: 'flex', height: '72px' }}>
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'end' }}>
+      <Box sx={{ display: 'flex' }}>
+        <Box
+          sx={{ flex: 1, display: 'flex', alignItems: 'end', height: '72px' }}
+        >
           <FormGroup>
             <FormControlLabel
               control={
@@ -240,11 +241,17 @@ export default function IncomeFormContent({
         <Box
           display="flex"
           flexDirection="row"
-          alignItems="flex-end"
           justifyContent="space-between"
-          height="72px"
+          sx={{ mt: 2 }}
         >
-          <Box sx={{ flex: 1 }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              height: '75px'
+            }}
+          >
             <FormGroup>
               <FormControlLabel
                 control={
