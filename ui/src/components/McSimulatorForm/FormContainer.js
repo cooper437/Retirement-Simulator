@@ -12,7 +12,6 @@ import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import IncomeFormContent from './FormSections/IncomeFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
-import TaxesFormContent from './FormSections/TaxesFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
 import { determineTaxRate } from '../../utils/generalUtils';
@@ -61,11 +60,6 @@ const IncomeFormSection = withFormSection({
 const PortfolioFormSection = withFormSection({
   WrappedComponent: PortfolioFormContent,
   sectionTitle: 'Portfolio'
-});
-
-const TaxesFormSection = withFormSection({
-  WrappedComponent: TaxesFormContent,
-  sectionTitle: 'Taxes'
 });
 
 const INITIAL_STATE = {

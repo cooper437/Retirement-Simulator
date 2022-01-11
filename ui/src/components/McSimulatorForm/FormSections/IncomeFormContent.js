@@ -20,10 +20,8 @@ import { INVESTMENT_STYLE_ENUM } from '../../../constants';
 
 export default function IncomeFormContent({
   commonFormStyles,
-  preRetirementMeanRateOfReturn,
   postRetirementAnnualWithdrawal,
   postRetirementMeanRateOfReturn,
-  preRetirementInvestmentStyle,
   postRetirementInvestmentStyle,
   additionalPostRetirementAnnualIncome,
   inflationMean,

@@ -7,7 +7,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  Stack,
   InputLabel,
   Select,
   MenuItem,
@@ -21,19 +20,13 @@ export default function PortfolioFormContent({
   commonFormStyles,
   initialPortfolioAmount,
   preRetirementAnnualContribution,
-  postRetirementAnnualWithdrawal,
-  additionalPostRetirementAnnualIncome,
   adjustContributionsForIncomeGrowth,
   incomeGrowthMean,
   touched,
   errors,
   handleChange,
   preRetirementMeanRateOfReturn,
-  postRetirementMeanRateOfReturn,
   preRetirementInvestmentStyle,
-  postRetirementInvestmentStyle,
-  inflationMean,
-  adjustForInflation,
   setFieldValue
 }) {
   return (
