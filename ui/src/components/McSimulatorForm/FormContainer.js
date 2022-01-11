@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
-import MarketConditionsFormContent from './FormSections/MarketConditionsFormContent';
+import IncomeFormContent from './FormSections/IncomeFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import TaxesFormContent from './FormSections/TaxesFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
@@ -53,9 +53,9 @@ const LifestyleFormSection = withFormSection({
   sectionTitle: 'Lifestyle'
 });
 
-const MarketConditionsFormSection = withFormSection({
-  WrappedComponent: MarketConditionsFormContent,
-  sectionTitle: 'Market Conditions'
+const IncomeFormSection = withFormSection({
+  WrappedComponent: IncomeFormContent,
+  sectionTitle: 'Income'
 });
 
 const PortfolioFormSection = withFormSection({
@@ -348,8 +348,40 @@ export default function FormContainer() {
                     setFieldValue={setFieldValue}
                     adjustForInflation={formValues.adjustForInflation}
                   />
-                  {/* <MarketConditionsFormSection
-                  /> */}
+                  <IncomeFormSection
+                    initialPortfolioAmount={formValues.initialPortfolioAmount}
+                    preRetirementAnnualContribution={
+                      formValues.preRetirementAnnualContribution
+                    }
+                    postRetirementAnnualWithdrawal={
+                      formValues.postRetirementAnnualWithdrawal
+                    }
+                    additionalPostRetirementAnnualIncome={
+                      formValues.additionalPostRetirementAnnualIncome
+                    }
+                    adjustContributionsForIncomeGrowth={
+                      formValues.adjustContributionsForIncomeGrowth
+                    }
+                    incomeGrowthMean={formValues.incomeGrowthMean}
+                    touched={touched}
+                    errors={errors}
+                    handleChange={handleChange}
+                    preRetirementMeanRateOfReturn={
+                      formValues.preRetirementMeanRateOfReturn
+                    }
+                    postRetirementMeanRateOfReturn={
+                      formValues.postRetirementMeanRateOfReturn
+                    }
+                    preRetirementInvestmentStyle={
+                      formValues.preRetirementInvestmentStyle
+                    }
+                    postRetirementInvestmentStyle={
+                      formValues.postRetirementInvestmentStyle
+                    }
+                    inflationMean={formValues.inflationMean}
+                    setFieldValue={setFieldValue}
+                    adjustForInflation={formValues.adjustForInflation}
+                  />
                   <TaxesFormSection
                     filingStatus={formValues.filingStatus}
                     adjustWithdrawalsForTaxation={
