@@ -194,7 +194,7 @@ export default function IncomeFormContent({
         </Box>
         <Box sx={{ flex: 1 }} />
       </Box>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', height: '72px' }}>
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'end' }}>
           <FormGroup>
             <FormControlLabel
