@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppBar from './components/TopNavBar';
 import FormContainer from './components/McSimulatorForm/FormContainer';
@@ -7,7 +7,7 @@ import PlanningStyleChooser from './components/PlanningQuestionnaire/PlanningSty
 
 export default function App() {
   return (
-    <div className="App">
+    <Box className="App">
       <AppBar />
       <Container>
         <Routes>
@@ -16,6 +16,6 @@ export default function App() {
           <Route path="/mc-input-form" element={<FormContainer />} />
         </Routes>
       </Container>
-    </div>
+    </Box>
   );
 }
