@@ -7,22 +7,27 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  Stack
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText
 } from '@mui/material';
 import NumberFormatDollarAmount from '../../NumberFormatDollarAmount';
 import NumberFormatPercentage from '../../NumberFormatPercentage';
+import { INVESTMENT_STYLE_ENUM } from '../../../constants';
 
 export default function PortfolioFormContent({
   commonFormStyles,
   initialPortfolioAmount,
   preRetirementAnnualContribution,
-  postRetirementAnnualWithdrawal,
-  additionalPostRetirementAnnualIncome,
   adjustContributionsForIncomeGrowth,
   incomeGrowthMean,
   touched,
   errors,
-  handleChange
+  handleChange,
+  preRetirementMeanRateOfReturn,
+  preRetirementInvestmentStyle,
+  setFieldValue
 }) {
   return (
     <>
@@ -59,7 +64,14 @@ export default function PortfolioFormContent({
             }
           />
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flexWrap="wrap"
+      >
+        <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
           <TextField
             label="Annual Contribution Pre-Retirement"
             variant="outlined"
@@ -87,77 +99,7 @@ export default function PortfolioFormContent({
             }
           />
         </FormControl>
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <TextField
-            label="Annual Net Withdrawal Post-Retirement"
-            variant="outlined"
-            value={postRetirementAnnualWithdrawal}
-            onChange={handleChange}
-            name="postRetirementAnnualWithdrawal"
-            id="annual-withdrawal-post-retirement"
-            InputLabelProps={{
-              shrink: true
-            }}
-            InputProps={{
-              inputComponent: NumberFormatDollarAmount,
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-              endAdornment: <InputAdornment position="end">.00</InputAdornment>
-            }}
-            error={
-              touched.postRetirementAnnualWithdrawal &&
-              Boolean(errors.postRetirementAnnualWithdrawal)
-            }
-            helperText={
-              touched.postRetirementAnnualWithdrawal &&
-              errors.postRetirementAnnualWithdrawal
-            }
-          />
-        </FormControl>
-      </Box>
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="space-between"
-        flexWrap="wrap"
-      >
-        <FormControl sx={commonFormStyles.shortFormInput}>
-          <TextField
-            label="Post-Retirement Additional Annual Income"
-            variant="outlined"
-            value={additionalPostRetirementAnnualIncome}
-            onChange={handleChange}
-            name="additionalPostRetirementAnnualIncome"
-            id="additional-annual-income"
-            InputLabelProps={{
-              shrink: true
-            }}
-            InputProps={{
-              inputComponent: NumberFormatDollarAmount,
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-              endAdornment: <InputAdornment position="end">.00</InputAdornment>
-            }}
-            error={
-              touched.additionalPostRetirementAnnualIncome &&
-              Boolean(errors.additionalPostRetirementAnnualIncome)
-            }
-            helperText={
-              touched.additionalPostRetirementAnnualIncome &&
-              errors.additionalPostRetirementAnnualIncome
-            }
-          />
-        </FormControl>
-      </Box>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-end"
-        height="72px"
-      >
-        <FormGroup sx={{ flex: 1 }}>
+        <FormGroup sx={{ justifyContent: 'center' }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -169,8 +111,8 @@ export default function PortfolioFormContent({
             label="Adjust for Income Growth"
           />
         </FormGroup>
-        {adjustContributionsForIncomeGrowth && (
-          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        {adjustContributionsForIncomeGrowth ? (
+          <Box>
             <FormControl sx={{ ...commonFormStyles.shortFormInput }}>
               <TextField
                 label="Annual Income Growth Mean"
@@ -195,9 +137,87 @@ export default function PortfolioFormContent({
               />
             </FormControl>
           </Box>
+        ) : (
+          <Box sx={{ width: '259px' }} />
         )}
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flexWrap="wrap"
+      >
+        <Box sx={{ flex: 1 }}>
+          <FormControl
+            sx={commonFormStyles.shortFormInput}
+            error={
+              touched.preRetirementInvestmentStyle &&
+              Boolean(errors.preRetirementInvestmentStyle)
+            }
+          >
+            <InputLabel id="pre-retirement-investment-style-label">
+              Pre-Retirement Investment Style
+            </InputLabel>
+            <Select
+              labelId="pre-retirement-investment-style-label"
+              id="pre-retirement-investment-style"
+              label="Pre-Retirement Investment Style"
+              startAdornment={<InputAdornment position="start" />}
+              endAdornment={<InputAdornment position="end" />}
+              value={preRetirementInvestmentStyle}
+              name="preRetirementInvestmentStyle"
+              onChange={async (e) => {
+                const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
+                  (i) => i.label === e.target.value
+                );
+                await handleChange(e);
+                setFieldValue(
+                  'preRetirementMeanRateOfReturn',
+                  selection.preRetirementMeanRateOfReturn
+                );
+              }}
+            >
+              {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                <MenuItem key={i.value} value={i.label}>
+                  {i.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>
+              {touched.preRetirementInvestmentStyle &&
+                errors.preRetirementInvestmentStyle}
+            </FormHelperText>
+          </FormControl>
+        </Box>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <FormControl sx={commonFormStyles.shortFormInput}>
+            <TextField
+              label="Pre-Retirement Rate of Return"
+              variant="outlined"
+              value={preRetirementMeanRateOfReturn}
+              onChange={handleChange}
+              name="preRetirementMeanRateOfReturn"
+              id="pre-retirement-ror"
+              InputLabelProps={{
+                shrink: true
+              }}
+              InputProps={{
+                inputComponent: NumberFormatPercentage,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>
+              }}
+              error={
+                touched.preRetirementMeanRateOfReturn &&
+                Boolean(errors.preRetirementMeanRateOfReturn)
+              }
+              helperText={
+                touched.preRetirementMeanRateOfReturn &&
+                errors.preRetirementMeanRateOfReturn
+              }
+            />
+          </FormControl>
+        </Box>
         <Box sx={{ flex: 1 }} />
-      </Stack>
+      </Box>
     </>
   );
 }
