@@ -1,5 +1,10 @@
 import React from 'react';
+import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 
 export default function QuestionnaireStepOne() {
-  return <div>QuestionnaireStepOne</div>;
+  return (
+    <QuestionnaireStepScaffolding>
+      QuestionnaireStepOne
+    </QuestionnaireStepScaffolding>
+  );
 }
