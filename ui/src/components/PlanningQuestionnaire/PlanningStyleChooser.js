@@ -34,12 +34,18 @@ export default function PlanningStyleChooser() {
               component={Link}
               to="/mc-input-form"
               sx={{ width: '50%', textAlign: 'center' }}
-              variant="outlined"
+              variant="contained"
               size="large"
             >
               I&apos;m a Retirement Planning Expert
             </Button>
-            <Button sx={{ width: '50%' }} variant="outlined" size="large">
+            <Button
+              component={Link}
+              to="/retirement-questionnaire"
+              sx={{ width: '50%', textAlign: 'center' }}
+              variant="contained"
+              size="large"
+            >
               I&apos;m new to planning for my retirement
             </Button>
           </Stack>
