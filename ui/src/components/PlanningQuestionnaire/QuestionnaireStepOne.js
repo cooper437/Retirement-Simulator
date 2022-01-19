@@ -67,6 +67,13 @@ export default function QuestionnaireStepOne() {
                 display: 'flex',
                 flexDirection: 'column'
               }}
+              component="form"
+              noValidate
+              autoComplete="off"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+              }}
             >
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
                 Step 1: Lifestyle Planning
@@ -159,11 +166,10 @@ export default function QuestionnaireStepOne() {
                       Back
                     </Button>
                     <Button
-                      component={Link}
-                      to="/retirement-questionnaire"
                       sx={{ width: '10em', textAlign: 'center' }}
                       variant="contained"
                       size="medium"
+                      type="submit"
                     >
                       Next
                     </Button>
