@@ -18,7 +18,8 @@ const commonFormStyles = {
   }
 };
 
-export default function QuestionnaireStepOne() {
+// eslint-disable-next-line no-unused-vars
+export default function QuestionnaireStepOne({ currentStep, setCurrentStep }) {
   return (
     <QuestionnaireStepScaffolding>
       <Formik
@@ -51,14 +52,10 @@ export default function QuestionnaireStepOne() {
         {({
           values: formValues,
           handleChange,
-          // eslint-disable-next-line no-unused-vars
-          setValues,
           handleSubmit,
           touched,
           errors,
-          setFieldValue,
           resetForm
-          // eslint-disable-next-line arrow-body-style
         }) => {
           const handleClickResetButton = () => {
             resetForm(); // Reset the input form state in Formik

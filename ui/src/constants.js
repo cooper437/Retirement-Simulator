@@ -63,3 +63,22 @@ export const TAX_BRACKETS_ENUM = {
     { rangeBottom: 323926, rangeTop: null, taxRate: 0.37 }
   ]
 };
+
+export const QUESTIONNAIRE_STEPS = {
+  lifestylePlanning: {
+    stepNumber: 1,
+    stepName: 'lifestylePlanning'
+  },
+  currentLifestyle: {
+    stepNumber: 2,
+    stepName: 'currentLifestyle'
+  },
+  currentPortfolioAndIncome: {
+    stepNumber: 3,
+    stepName: 'currentPortfolioAndIncome'
+  },
+  retirementExpectations: {
+    stepNumber: 4,
+    stepName: 'retirementExpectations'
+  }
+};

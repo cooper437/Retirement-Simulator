@@ -5,6 +5,7 @@ import AppBar from './components/TopNavBar';
 import FormContainer from './components/McSimulatorForm/FormContainer';
 import PlanningStyleChooser from './components/PlanningQuestionnaire/PlanningStyleChooser';
 import QuestionnaireStepOne from './components/PlanningQuestionnaire/QuestionnaireStepOne';
+import QuestionnaireStateManager from './components/PlanningQuestionnaire/QuestionnaireStateManager';
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
           <Route path="/mc-input-form" element={<FormContainer />} />
           <Route
             path="/retirement-questionnaire"
-            element={<QuestionnaireStepOne />}
+            element={<QuestionnaireStateManager />}
           />
         </Routes>
       </Container>
