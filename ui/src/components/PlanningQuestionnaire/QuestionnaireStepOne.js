@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Stack, Typography, TextField } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box, Button, Stack, Typography, TextField } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
@@ -122,6 +123,53 @@ export default function QuestionnaireStepOne() {
                   helperText={touched.lifeExpectancy && errors.lifeExpectancy}
                 />
               </Stack>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  mb: 4
+                }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  sx={{ ml: 4, mr: 4 }}
+                >
+                  <Box>
+                    <Button
+                      component={Link}
+                      to="/mc-input-form"
+                      sx={{ width: '10em', textAlign: 'center' }}
+                      variant="outlined"
+                      size="medium"
+                    >
+                      Reset
+                    </Button>
+                  </Box>
+                  <Stack direction="row" spacing={2}>
+                    <Button
+                      component={Link}
+                      to="/retirement-questionnaire"
+                      sx={{ width: '10em', textAlign: 'center' }}
+                      variant="outlined"
+                      size="medium"
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      component={Link}
+                      to="/retirement-questionnaire"
+                      sx={{ width: '10em', textAlign: 'center' }}
+                      variant="contained"
+                      size="medium"
+                    >
+                      Next
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Box>
             </Box>
           );
         }}
