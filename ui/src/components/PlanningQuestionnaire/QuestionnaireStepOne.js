@@ -60,6 +60,9 @@ export default function QuestionnaireStepOne() {
           resetForm
           // eslint-disable-next-line arrow-body-style
         }) => {
+          const handleClickResetButton = () => {
+            resetForm(); // Reset the input form state in Formik
+          };
           return (
             <Box
               sx={{
@@ -146,11 +149,10 @@ export default function QuestionnaireStepOne() {
                 >
                   <Box>
                     <Button
-                      component={Link}
-                      to="/mc-input-form"
                       sx={{ width: '10em', textAlign: 'center' }}
                       variant="outlined"
                       size="medium"
+                      onClick={handleClickResetButton}
                     >
                       Reset
                     </Button>
