@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
+import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   Stack,
   CircularProgress
 } from '@mui/material';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import IncomeFormContent from './FormSections/IncomeFormContent';
@@ -290,7 +292,18 @@ export default function FormContainer() {
                 }}
               >
                 <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
-                  <Typography variant="h6">Monte Carlo Simulator</Typography>
+                  <Button
+                    component={Link}
+                    to="/home"
+                    variant="outlined"
+                    onClick={() => null}
+                    startIcon={<KeyboardBackspaceIcon />}
+                  >
+                    Back
+                  </Button>
+                  <Typography sx={{ mt: 2 }} variant="h6">
+                    Monte Carlo Simulator
+                  </Typography>
                   <Typography variant="p">
                     Input the information below and then run the simulation to
                     see the likelihood that you will meet your retirement goals

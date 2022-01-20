@@ -14,7 +14,7 @@ export default function PlanningStyleChooser() {
           justifyContent: 'space-around'
         }}
       >
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>
+        <Typography variant="h4" sx={{ textAlign: 'center', ml: 10, mr: 10 }}>
           Which of the following options best describes you?
         </Typography>
         <Stack direction="row" spacing={2} sx={{ ml: 6, mr: 6 }}>
