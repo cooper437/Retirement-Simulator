@@ -14,7 +14,10 @@ export default function App() {
   };
   return (
     <Box
-      sx={{ backgroundColor: getBackgroundColor(location.pathname) }}
+      sx={{
+        backgroundColor: getBackgroundColor(location.pathname),
+        height: '100%'
+      }}
       className="App"
     >
       <AppBar />
