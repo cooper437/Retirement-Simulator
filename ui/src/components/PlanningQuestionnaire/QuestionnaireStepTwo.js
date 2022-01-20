@@ -12,7 +12,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText
+  FormHelperText,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio
 } from '@mui/material';
 import { Formik } from 'formik';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
@@ -25,6 +29,7 @@ const EMPTY_FORM_VALUES = {
   discretionaryIncome: '',
   contributionStyle: '',
   annualizedPercentIncomeContribution: '3.5',
+  isFixedContributionTypicalGrowthExpected: undefined,
   annualizedFixedIncomeContribution: ''
 };
 
@@ -256,6 +261,43 @@ export default function QuestionnaireStepTwo({
                       }
                     />
                   )}
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Do you expect your contributions to adjust in accordance
+                    with typical income growth?
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-label="gender"
+                    name="isFixedContributionTypicalGrowthExpected"
+                    value={formValues.isFixedContributionTypicalGrowthExpected}
+                    onChange={(e) => {
+                      if (e.target.value === 'true')
+                        setFieldValue(
+                          'isFixedContributionTypicalGrowthExpected',
+                          true
+                        );
+                      if (e.target.value === 'false')
+                        setFieldValue(
+                          'isFixedContributionTypicalGrowthExpected',
+                          false
+                        );
+                      // eslint-disable-next-line no-console
+                      console.log(e);
+                    }}
+                  >
+                    <FormControlLabel
+                      value={Boolean(true)}
+                      control={<Radio />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value={Boolean(false)}
+                      control={<Radio />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                </FormControl>
                 {formValues.contributionStyle &&
                   formValues.contributionStyle ===
                     CONTRIBUTION_STYLES.fixedAmount.value && (
