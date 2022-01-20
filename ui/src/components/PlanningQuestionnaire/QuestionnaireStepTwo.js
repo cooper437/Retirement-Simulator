@@ -29,7 +29,7 @@ const EMPTY_FORM_VALUES = {
   discretionaryIncome: '',
   contributionStyle: '',
   annualizedPercentIncomeContribution: '3.5',
-  isFixedContributionTypicalGrowthExpected: undefined,
+  isFixedContributionTypicalGrowthExpected: null,
   annualizedFixedIncomeContribution: ''
 };
 
@@ -216,7 +216,7 @@ export default function QuestionnaireStepTwo({
                     name="contributionStyle"
                     onChange={async (e) => {
                       const selection = Object.values(CONTRIBUTION_STYLES).find(
-                        (i) => i.label === e.target.value
+                        (i) => i.value === e.target.value
                       );
                       await handleChange(e);
                       setFieldValue('contributionStyle', selection.value);
@@ -335,8 +335,6 @@ export default function QuestionnaireStepTwo({
                                 'isFixedContributionTypicalGrowthExpected',
                                 false
                               );
-                            // eslint-disable-next-line no-console
-                            console.log(e);
                           }}
                         >
                           <FormControlLabel

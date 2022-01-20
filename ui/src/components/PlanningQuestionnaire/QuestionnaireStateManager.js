@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 import QuestionnaireStepOne from './QuestionnaireStepOne';
 import QuestionnaireStepTwo from './QuestionnaireStepTwo';
+import QuestionaireStepThree from './QuestionaireStepThree';
 
 export default function QuestionnaireStateManager() {
   // Initialize our state
@@ -34,6 +35,8 @@ export default function QuestionnaireStateManager() {
         return QuestionnaireStepOne;
       case QUESTIONNAIRE_STEPS.currentLifestyle.stepName:
         return QuestionnaireStepTwo;
+      case QUESTIONNAIRE_STEPS.currentPortfolioAndIncome.stepName:
+        return QuestionaireStepThree;
       default:
         console.error('Invalid currentStep');
         return null;
