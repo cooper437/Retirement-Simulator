@@ -83,7 +83,9 @@ export default function QuestionnaireStepTwo({
               is: CONTRIBUTION_STYLES.fixedAmount.value,
               then: Yup.string().required('Required')
             }
-          )
+          ),
+          isFixedContributionTypicalGrowthExpected:
+            Yup.boolean().required('Required')
         })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepTwo', formValues });
@@ -261,43 +263,6 @@ export default function QuestionnaireStepTwo({
                       }
                     />
                   )}
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    Do you expect your contributions to adjust in accordance
-                    with typical income growth?
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-label="gender"
-                    name="isFixedContributionTypicalGrowthExpected"
-                    value={formValues.isFixedContributionTypicalGrowthExpected}
-                    onChange={(e) => {
-                      if (e.target.value === 'true')
-                        setFieldValue(
-                          'isFixedContributionTypicalGrowthExpected',
-                          true
-                        );
-                      if (e.target.value === 'false')
-                        setFieldValue(
-                          'isFixedContributionTypicalGrowthExpected',
-                          false
-                        );
-                      // eslint-disable-next-line no-console
-                      console.log(e);
-                    }}
-                  >
-                    <FormControlLabel
-                      value={Boolean(true)}
-                      control={<Radio />}
-                      label="Yes"
-                    />
-                    <FormControlLabel
-                      value={Boolean(false)}
-                      control={<Radio />}
-                      label="No"
-                    />
-                  </RadioGroup>
-                </FormControl>
                 {formValues.contributionStyle &&
                   formValues.contributionStyle ===
                     CONTRIBUTION_STYLES.fixedAmount.value && (
@@ -330,6 +295,59 @@ export default function QuestionnaireStepTwo({
                         errors.annualizedFixedIncomeContribution
                       }
                     />
+                  )}
+                {formValues.contributionStyle &&
+                  formValues.contributionStyle ===
+                    CONTRIBUTION_STYLES.fixedAmount.value && (
+                    <FormControl
+                      error={
+                        touched.isFixedContributionTypicalGrowthExpected &&
+                        Boolean(errors.isFixedContributionTypicalGrowthExpected)
+                      }
+                      component="fieldset"
+                    >
+                      <FormLabel component="legend">
+                        Do you expect your annual contributions to adjust in
+                        accordance with typical income growth?
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-label="gender"
+                        name="isFixedContributionTypicalGrowthExpected"
+                        value={
+                          formValues.isFixedContributionTypicalGrowthExpected
+                        }
+                        onChange={(e) => {
+                          if (e.target.value === 'true')
+                            setFieldValue(
+                              'isFixedContributionTypicalGrowthExpected',
+                              true
+                            );
+                          if (e.target.value === 'false')
+                            setFieldValue(
+                              'isFixedContributionTypicalGrowthExpected',
+                              false
+                            );
+                          // eslint-disable-next-line no-console
+                          console.log(e);
+                        }}
+                      >
+                        <FormControlLabel
+                          value={Boolean(true)}
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value={Boolean(false)}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                      <FormHelperText>
+                        {touched.isFixedContributionTypicalGrowthExpected &&
+                          errors.isFixedContributionTypicalGrowthExpected}
+                      </FormHelperText>
+                    </FormControl>
                   )}
               </Stack>
               <Box

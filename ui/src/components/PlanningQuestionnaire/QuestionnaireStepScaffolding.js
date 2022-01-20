@@ -15,8 +15,8 @@ export default function QuestionnaireStepScaffolding({ children }) {
         flexWrap: 'wrap',
         '& > :not(style)': {
           m: 1,
-          width: '40em',
-          height: '40em'
+          width: '50em',
+          minHeight: '40em'
         }
       }}
     >
