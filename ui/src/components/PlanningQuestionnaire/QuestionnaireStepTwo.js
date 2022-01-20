@@ -18,12 +18,14 @@ import { Formik } from 'formik';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
+import NumberFormatPercentage from '../NumberFormatPercentage';
 
 const EMPTY_FORM_VALUES = {
   annualHouseHoldIncome: '',
   discretionaryIncome: '',
   contributionStyle: '',
-  annualizedPercentIncomeContribution: ''
+  annualizedPercentIncomeContribution: '3.5',
+  annualizedFixedIncomeContribution: ''
 };
 
 const CONTRIBUTION_STYLES = {
@@ -205,6 +207,69 @@ export default function QuestionnaireStepTwo({
                     {touched.contributionStyle && errors.contributionStyle}
                   </FormHelperText>
                 </FormControl>
+                {formValues.contributionStyle &&
+                  formValues.contributionStyle ===
+                    CONTRIBUTION_STYLES.percentage.value && (
+                    <TextField
+                      sx={commonFormStyles.shortFormInput}
+                      label="Income Contribution To Retirement"
+                      variant="outlined"
+                      value={formValues.annualizedPercentIncomeContribution}
+                      name="annualizedPercentIncomeContribution"
+                      onChange={handleChange}
+                      id="annualized-percent-income-contribution"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      InputProps={{
+                        inputComponent: NumberFormatPercentage,
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.annualizedPercentIncomeContribution &&
+                        Boolean(errors.annualizedPercentIncomeContribution)
+                      }
+                      helperText={
+                        touched.annualizedPercentIncomeContribution &&
+                        errors.annualizedPercentIncomeContribution
+                      }
+                    />
+                  )}
+                {formValues.contributionStyle &&
+                  formValues.contributionStyle ===
+                    CONTRIBUTION_STYLES.fixedAmount.value && (
+                    <TextField
+                      label="Income Contribution To Retirement"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.annualizedFixedIncomeContribution}
+                      onChange={handleChange}
+                      name="annualizedFixedIncomeContribution"
+                      id="annualized-fixed-income-contribution"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.annualizedFixedIncomeContribution &&
+                        Boolean(errors.annualizedFixedIncomeContribution)
+                      }
+                      helperText={
+                        touched.annualizedFixedIncomeContribution &&
+                        errors.annualizedFixedIncomeContribution
+                      }
+                    />
+                  )}
               </Stack>
               <Box
                 sx={{
