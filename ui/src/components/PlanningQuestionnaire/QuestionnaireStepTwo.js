@@ -7,7 +7,12 @@ import {
   Stack,
   Typography,
   TextField,
-  InputAdornment
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText
 } from '@mui/material';
 import { Formik } from 'formik';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
@@ -19,6 +24,17 @@ const EMPTY_FORM_VALUES = {
   discretionaryIncome: '',
   contributionStyle: '',
   annualizedPercentIncomeContribution: ''
+};
+
+const CONTRIBUTION_STYLES = {
+  percentage: {
+    label: 'Percentage',
+    value: 'percentage'
+  },
+  fixedAmount: {
+    label: 'Fixed Amount',
+    value: 'fixed_amount'
+  }
 };
 
 const commonFormStyles = {
@@ -55,7 +71,8 @@ export default function QuestionnaireStepTwo({
           handleSubmit,
           touched,
           errors,
-          resetForm
+          resetForm,
+          setFieldValue
         }) => {
           const handleClickResetButton = () => {
             setCompletedValuesForStep({
@@ -124,6 +141,70 @@ export default function QuestionnaireStepTwo({
                     errors.annualHouseHoldIncome
                   }
                 />
+                <TextField
+                  label="Discretionary Income"
+                  sx={commonFormStyles.shortFormInput}
+                  variant="outlined"
+                  value={formValues.discretionaryIncome}
+                  onChange={handleChange}
+                  name="discretionaryIncome"
+                  id="discretionary-income"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  InputProps={{
+                    inputComponent: NumberFormatDollarAmount,
+                    startAdornment: (
+                      <InputAdornment position="start">$</InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">.00</InputAdornment>
+                    )
+                  }}
+                  error={
+                    touched.discretionaryIncome &&
+                    Boolean(errors.annualHouseHoldIncome)
+                  }
+                  helperText={
+                    touched.discretionaryIncome && errors.discretionaryIncome
+                  }
+                />
+                <FormControl
+                  sx={commonFormStyles.shortFormInput}
+                  error={
+                    touched.contributionStyle &&
+                    Boolean(errors.contributionStyle)
+                  }
+                >
+                  <InputLabel id="contribution-style-label">
+                    Contribution Style
+                  </InputLabel>
+                  <Select
+                    labelId="contribution-style-label"
+                    id="contribution-style"
+                    label="Contribution Style"
+                    startAdornment={<InputAdornment position="start" />}
+                    endAdornment={<InputAdornment position="end" />}
+                    value={formValues.contributionStyle}
+                    name="contributionStyle"
+                    onChange={async (e) => {
+                      const selection = Object.values(CONTRIBUTION_STYLES).find(
+                        (i) => i.label === e.target.value
+                      );
+                      await handleChange(e);
+                      setFieldValue('contributionStyle', selection.value);
+                    }}
+                  >
+                    {Object.values(CONTRIBUTION_STYLES).map((i) => (
+                      <MenuItem key={i.value} value={i.value}>
+                        {i.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>
+                    {touched.contributionStyle && errors.contributionStyle}
+                  </FormHelperText>
+                </FormControl>
               </Stack>
               <Box
                 sx={{
