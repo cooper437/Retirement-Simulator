@@ -233,122 +233,131 @@ export default function QuestionnaireStepTwo({
                     {touched.contributionStyle && errors.contributionStyle}
                   </FormHelperText>
                 </FormControl>
-                {formValues.contributionStyle &&
-                  formValues.contributionStyle ===
-                    CONTRIBUTION_STYLES.percentage.value && (
-                    <TextField
-                      sx={commonFormStyles.shortFormInput}
-                      label="Income Contribution To Retirement"
-                      variant="outlined"
-                      value={formValues.annualizedPercentIncomeContribution}
-                      name="annualizedPercentIncomeContribution"
-                      onChange={handleChange}
-                      id="annualized-percent-income-contribution"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      InputProps={{
-                        inputComponent: NumberFormatPercentage,
-                        endAdornment: (
-                          <InputAdornment position="end">%</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.annualizedPercentIncomeContribution &&
-                        Boolean(errors.annualizedPercentIncomeContribution)
-                      }
-                      helperText={
-                        touched.annualizedPercentIncomeContribution &&
-                        errors.annualizedPercentIncomeContribution
-                      }
-                    />
-                  )}
-                {formValues.contributionStyle &&
-                  formValues.contributionStyle ===
-                    CONTRIBUTION_STYLES.fixedAmount.value && (
-                    <TextField
-                      label="Income Contribution To Retirement"
-                      sx={commonFormStyles.shortFormInput}
-                      variant="outlined"
-                      value={formValues.annualizedFixedIncomeContribution}
-                      onChange={handleChange}
-                      name="annualizedFixedIncomeContribution"
-                      id="annualized-fixed-income-contribution"
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      InputProps={{
-                        inputComponent: NumberFormatDollarAmount,
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">.00</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.annualizedFixedIncomeContribution &&
-                        Boolean(errors.annualizedFixedIncomeContribution)
-                      }
-                      helperText={
-                        touched.annualizedFixedIncomeContribution &&
-                        errors.annualizedFixedIncomeContribution
-                      }
-                    />
-                  )}
-                {formValues.contributionStyle &&
-                  formValues.contributionStyle ===
-                    CONTRIBUTION_STYLES.fixedAmount.value && (
-                    <FormControl
-                      error={
-                        touched.isFixedContributionTypicalGrowthExpected &&
-                        Boolean(errors.isFixedContributionTypicalGrowthExpected)
-                      }
-                      component="fieldset"
-                    >
-                      <FormLabel component="legend">
-                        Do you expect your annual contributions to adjust in
-                        accordance with typical income growth?
-                      </FormLabel>
-                      <RadioGroup
-                        row
-                        aria-label="gender"
-                        name="isFixedContributionTypicalGrowthExpected"
-                        value={
-                          formValues.isFixedContributionTypicalGrowthExpected
-                        }
-                        onChange={(e) => {
-                          if (e.target.value === 'true')
-                            setFieldValue(
-                              'isFixedContributionTypicalGrowthExpected',
-                              true
-                            );
-                          if (e.target.value === 'false')
-                            setFieldValue(
-                              'isFixedContributionTypicalGrowthExpected',
-                              false
-                            );
-                          // eslint-disable-next-line no-console
-                          console.log(e);
+                <Box style={{ marginLeft: '32px' }}>
+                  {formValues.contributionStyle &&
+                    formValues.contributionStyle ===
+                      CONTRIBUTION_STYLES.percentage.value && (
+                      <TextField
+                        sx={{
+                          width: commonFormStyles.shortFormInput.width
                         }}
+                        label="Income Contribution To Retirement"
+                        variant="outlined"
+                        value={formValues.annualizedPercentIncomeContribution}
+                        name="annualizedPercentIncomeContribution"
+                        onChange={handleChange}
+                        id="annualized-percent-income-contribution"
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          inputComponent: NumberFormatPercentage,
+                          endAdornment: (
+                            <InputAdornment position="end">%</InputAdornment>
+                          )
+                        }}
+                        error={
+                          touched.annualizedPercentIncomeContribution &&
+                          Boolean(errors.annualizedPercentIncomeContribution)
+                        }
+                        helperText={
+                          touched.annualizedPercentIncomeContribution &&
+                          errors.annualizedPercentIncomeContribution
+                        }
+                      />
+                    )}
+                  {formValues.contributionStyle &&
+                    formValues.contributionStyle ===
+                      CONTRIBUTION_STYLES.fixedAmount.value && (
+                      <TextField
+                        label="Income Contribution To Retirement"
+                        sx={{
+                          width: commonFormStyles.shortFormInput.width
+                        }}
+                        variant="outlined"
+                        value={formValues.annualizedFixedIncomeContribution}
+                        onChange={handleChange}
+                        name="annualizedFixedIncomeContribution"
+                        id="annualized-fixed-income-contribution"
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          inputComponent: NumberFormatDollarAmount,
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">.00</InputAdornment>
+                          )
+                        }}
+                        error={
+                          touched.annualizedFixedIncomeContribution &&
+                          Boolean(errors.annualizedFixedIncomeContribution)
+                        }
+                        helperText={
+                          touched.annualizedFixedIncomeContribution &&
+                          errors.annualizedFixedIncomeContribution
+                        }
+                      />
+                    )}
+                  {formValues.contributionStyle &&
+                    formValues.contributionStyle ===
+                      CONTRIBUTION_STYLES.fixedAmount.value && (
+                      <FormControl
+                        sx={{ mt: 4 }}
+                        error={
+                          touched.isFixedContributionTypicalGrowthExpected &&
+                          Boolean(
+                            errors.isFixedContributionTypicalGrowthExpected
+                          )
+                        }
+                        component="fieldset"
                       >
-                        <FormControlLabel
-                          value={Boolean(true)}
-                          control={<Radio />}
-                          label="Yes"
-                        />
-                        <FormControlLabel
-                          value={Boolean(false)}
-                          control={<Radio />}
-                          label="No"
-                        />
-                      </RadioGroup>
-                      <FormHelperText>
-                        {touched.isFixedContributionTypicalGrowthExpected &&
-                          errors.isFixedContributionTypicalGrowthExpected}
-                      </FormHelperText>
-                    </FormControl>
-                  )}
+                        <FormLabel component="legend">
+                          Do you expect your annual contributions to adjust in
+                          accordance with typical income growth?
+                        </FormLabel>
+                        <RadioGroup
+                          row
+                          aria-label="gender"
+                          name="isFixedContributionTypicalGrowthExpected"
+                          value={
+                            formValues.isFixedContributionTypicalGrowthExpected
+                          }
+                          onChange={(e) => {
+                            if (e.target.value === 'true')
+                              setFieldValue(
+                                'isFixedContributionTypicalGrowthExpected',
+                                true
+                              );
+                            if (e.target.value === 'false')
+                              setFieldValue(
+                                'isFixedContributionTypicalGrowthExpected',
+                                false
+                              );
+                            // eslint-disable-next-line no-console
+                            console.log(e);
+                          }}
+                        >
+                          <FormControlLabel
+                            value={Boolean(true)}
+                            control={<Radio />}
+                            label="Yes"
+                          />
+                          <FormControlLabel
+                            value={Boolean(false)}
+                            control={<Radio />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                        <FormHelperText>
+                          {touched.isFixedContributionTypicalGrowthExpected &&
+                            errors.isFixedContributionTypicalGrowthExpected}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                </Box>
               </Stack>
               <Box
                 sx={{
