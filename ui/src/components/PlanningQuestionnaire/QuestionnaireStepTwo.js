@@ -35,7 +35,7 @@ const EMPTY_FORM_VALUES = {
 
 const CONTRIBUTION_STYLES = {
   percentage: {
-    label: 'Percentage',
+    label: 'Percentage of Income',
     value: 'percentage'
   },
   fixedAmount: {
@@ -89,8 +89,7 @@ export default function QuestionnaireStepTwo({
         })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepTwo', formValues });
-          // eslint-disable-next-line no-console
-          console.log('Submitting...');
+          setCurrentStep(QUESTIONNAIRE_STEPS.currentPortfolioAndIncome);
         }}
       >
         {({
@@ -241,7 +240,7 @@ export default function QuestionnaireStepTwo({
                         sx={{
                           width: commonFormStyles.shortFormInput.width
                         }}
-                        label="Income Contribution To Retirement"
+                        label="Contribution To Retirement (Annual)"
                         variant="outlined"
                         value={formValues.annualizedPercentIncomeContribution}
                         name="annualizedPercentIncomeContribution"
@@ -270,7 +269,7 @@ export default function QuestionnaireStepTwo({
                     formValues.contributionStyle ===
                       CONTRIBUTION_STYLES.fixedAmount.value && (
                       <TextField
-                        label="Income Contribution To Retirement"
+                        label="Contribution To Retirement (Annual)"
                         sx={{
                           width: commonFormStyles.shortFormInput.width
                         }}
