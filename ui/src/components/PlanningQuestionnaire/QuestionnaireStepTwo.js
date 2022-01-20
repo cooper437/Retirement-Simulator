@@ -61,6 +61,25 @@ export default function QuestionnaireStepTwo({
     <QuestionnaireStepScaffolding>
       <Formik
         initialValues={stepInitialValues}
+        validationSchema={Yup.object({
+          annualHouseHoldIncome: Yup.string().required('Required'),
+          discretionaryIncome: Yup.string().required('Required'),
+          contributionStyle: Yup.string().required('Required'),
+          annualizedPercentIncomeContribution: Yup.string().when(
+            'contributionStyle',
+            {
+              is: CONTRIBUTION_STYLES.percentage.value,
+              then: Yup.string().required('Required')
+            }
+          ),
+          annualizedFixedIncomeContribution: Yup.string().when(
+            'contributionStyle',
+            {
+              is: CONTRIBUTION_STYLES.fixedAmount.value,
+              then: Yup.string().required('Required')
+            }
+          )
+        })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepTwo', formValues });
           // eslint-disable-next-line no-console
@@ -111,7 +130,7 @@ export default function QuestionnaireStepTwo({
                 Step 2: Current Lifestyle
               </Typography>
               <Typography variant="h5" sx={{ m: 4 }}>
-                Tell Us About Your Current Income
+                Tell us about your current income
               </Typography>
               <Stack sx={{ m: 4 }} spacing={4}>
                 <TextField
@@ -165,7 +184,7 @@ export default function QuestionnaireStepTwo({
                   }}
                   error={
                     touched.discretionaryIncome &&
-                    Boolean(errors.annualHouseHoldIncome)
+                    Boolean(errors.discretionaryIncome)
                   }
                   helperText={
                     touched.discretionaryIncome && errors.discretionaryIncome
@@ -292,7 +311,7 @@ export default function QuestionnaireStepTwo({
                       size="medium"
                       onClick={handleClickResetButton}
                     >
-                      Reset
+                      Reset Step
                     </Button>
                   </Box>
                   <Stack direction="row" spacing={2}>

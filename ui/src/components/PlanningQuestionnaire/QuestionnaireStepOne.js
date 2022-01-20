@@ -168,7 +168,7 @@ export default function QuestionnaireStepOne({
                       size="medium"
                       onClick={handleClickResetButton}
                     >
-                      Reset
+                      Reset Step
                     </Button>
                   </Box>
                   <Stack direction="row" spacing={2}>
