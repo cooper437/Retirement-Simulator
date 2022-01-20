@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { Box, Button, Stack, Typography, TextField } from '@mui/material';
 import { Formik } from 'formik';
@@ -6,7 +7,7 @@ import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 
-const INITIAL_FORM_VALUES = {
+const EMPTY_FORM_VALUES = {
   currentAge: '',
   retirementAge: '',
   lifeExpectancy: ''
@@ -20,11 +21,20 @@ const commonFormStyles = {
 };
 
 // eslint-disable-next-line no-unused-vars
-export default function QuestionnaireStepOne({ currentStep, setCurrentStep }) {
+export default function QuestionnaireStepOne({
+  currentStep,
+  setCurrentStep,
+  completedStepValues,
+  setCompletedValuesForStep
+}) {
+  const completedStepOneValues = completedStepValues.stepOne;
+  const stepInitialValues = _.isEmpty(completedStepOneValues)
+    ? EMPTY_FORM_VALUES
+    : completedStepOneValues;
   return (
     <QuestionnaireStepScaffolding>
       <Formik
-        initialValues={INITIAL_FORM_VALUES}
+        initialValues={stepInitialValues}
         validationSchema={Yup.object({
           currentAge: Yup.number()
             .integer()
@@ -46,6 +56,7 @@ export default function QuestionnaireStepOne({ currentStep, setCurrentStep }) {
             .required('Required')
         })}
         onSubmit={(formValues) => {
+          setCompletedValuesForStep({ stepName: 'stepOne', formValues });
           setCurrentStep(QUESTIONNAIRE_STEPS.currentLifestyle);
         }}
       >
@@ -58,7 +69,13 @@ export default function QuestionnaireStepOne({ currentStep, setCurrentStep }) {
           resetForm
         }) => {
           const handleClickResetButton = () => {
-            resetForm(); // Reset the input form state in Formik
+            setCompletedValuesForStep({
+              stepName: 'stepOne',
+              formValues: {}
+            });
+            resetForm({
+              values: EMPTY_FORM_VALUES
+            });
           };
           return (
             <Box

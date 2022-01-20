@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import * as Yup from 'yup';
 import {
   Box,
@@ -13,7 +14,7 @@ import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 
-const INITIAL_FORM_VALUES = {
+const EMPTY_FORM_VALUES = {
   annualHouseHoldIncome: '',
   discretionaryIncome: '',
   contributionStyle: '',
@@ -28,12 +29,22 @@ const commonFormStyles = {
 };
 
 // eslint-disable-next-line no-unused-vars
-export default function QuestionnaireStepTwo({ currentStep, setCurrentStep }) {
+export default function QuestionnaireStepTwo({
+  currentStep,
+  setCurrentStep,
+  completedStepValues,
+  setCompletedValuesForStep
+}) {
+  const completedStepTwoValues = completedStepValues.stepTwo;
+  const stepInitialValues = _.isEmpty(completedStepTwoValues)
+    ? EMPTY_FORM_VALUES
+    : completedStepTwoValues;
   return (
     <QuestionnaireStepScaffolding>
       <Formik
-        initialValues={INITIAL_FORM_VALUES}
+        initialValues={stepInitialValues}
         onSubmit={(formValues) => {
+          setCompletedValuesForStep({ stepName: 'stepTwo', formValues });
           // eslint-disable-next-line no-console
           console.log('Submitting...');
         }}
@@ -47,7 +58,20 @@ export default function QuestionnaireStepTwo({ currentStep, setCurrentStep }) {
           resetForm
         }) => {
           const handleClickResetButton = () => {
-            resetForm(); // Reset the input form state in Formik
+            setCompletedValuesForStep({
+              stepName: 'stepTwo',
+              formValues: {}
+            });
+            resetForm({
+              values: EMPTY_FORM_VALUES
+            });
+          };
+          const handleClickBack = () => {
+            setCompletedValuesForStep({
+              stepName: 'stepTwo',
+              formValues
+            });
+            setCurrentStep(QUESTIONNAIRE_STEPS.lifestylePlanning);
           };
           return (
             <Box
@@ -73,6 +97,7 @@ export default function QuestionnaireStepTwo({ currentStep, setCurrentStep }) {
               <Stack sx={{ m: 4 }} spacing={4}>
                 <TextField
                   label="Annual Household Income"
+                  sx={commonFormStyles.shortFormInput}
                   variant="outlined"
                   value={formValues.annualHouseHoldIncome}
                   onChange={handleChange}
@@ -129,9 +154,7 @@ export default function QuestionnaireStepTwo({ currentStep, setCurrentStep }) {
                       sx={{ width: '10em', textAlign: 'center' }}
                       variant="outlined"
                       size="medium"
-                      onClick={() =>
-                        setCurrentStep(QUESTIONNAIRE_STEPS.lifestylePlanning)
-                      }
+                      onClick={handleClickBack}
                     >
                       Back
                     </Button>
