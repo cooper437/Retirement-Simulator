@@ -101,6 +101,16 @@ export default function QuestionaireStepThree({
             });
             setCurrentStep(QUESTIONNAIRE_STEPS.currentLifestyle);
           };
+          const handleClickAddAccount = async ({
+            portfolioBalance,
+            accountType,
+            investingStyle
+          }) => {
+            const updatedaccounts = formValues.accounts.concat([
+              { portfolioBalance, accountType, investingStyle }
+            ]);
+            await setFieldValue('accounts', updatedaccounts);
+          };
           return (
             <Box
               sx={{
@@ -294,7 +304,13 @@ export default function QuestionaireStepThree({
                       sx={{ width: '16em', textAlign: 'center' }}
                       variant="outlined"
                       size="medium"
-                      onClick={() => null}
+                      onClick={() =>
+                        handleClickAddAccount({
+                          portfolioBalance: formValues.portfolioBalance,
+                          accountType: formValues.accountType,
+                          investingStyle: formValues.investingStyle
+                        })
+                      }
                     >
                       Add Another Account
                     </Button>
