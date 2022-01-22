@@ -84,8 +84,12 @@ export default function QuestionnaireStepTwo({
               then: Yup.string().required('Required')
             }
           ),
-          isFixedContributionTypicalGrowthExpected:
-            Yup.boolean().required('Required')
+          isFixedContributionTypicalGrowthExpected: Yup.boolean()
+            .nullable()
+            .when('contributionStyle', {
+              is: CONTRIBUTION_STYLES.fixedAmount.value,
+              then: Yup.boolean().required('Required').nullable()
+            })
         })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepTwo', formValues });
