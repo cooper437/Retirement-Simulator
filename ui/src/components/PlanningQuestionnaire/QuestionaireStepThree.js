@@ -124,7 +124,7 @@ export default function QuestionaireStepThree({
                 <RetirementAccountTable />
                 <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
                   <Typography sx={{ flex: 1 }}>
-                    <Box sx={{ ml: '8em' }}>Portfolio Balance</Box>
+                    <Box sx={{ ml: 4 }}>Portfolio Balance</Box>
                   </Typography>
                   <Box sx={{ flex: 1 }}>
                     <TextField
@@ -155,7 +155,7 @@ export default function QuestionaireStepThree({
                 </Stack>
                 <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
                   <Typography sx={{ flex: 1 }}>
-                    <Box sx={{ ml: '8em' }}>Account Type</Box>
+                    <Box sx={{ ml: 4 }}>Account Type</Box>
                   </Typography>
                   <Box sx={{ flex: 1 }}>
                     <FormControl
@@ -188,6 +188,57 @@ export default function QuestionaireStepThree({
                     </FormControl>
                   </Box>
                 </Stack>
+                <FormControl
+                  sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}
+                  error={
+                    touched.isFixedContributionTypicalGrowthExpected &&
+                    Boolean(errors.isFixedContributionTypicalGrowthExpected)
+                  }
+                  component="fieldset"
+                >
+                  <Box sx={{ flex: 1 }}>
+                    <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
+                      Are you invested entirely in stocks and/or stock funds?
+                    </FormLabel>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <RadioGroup
+                      row
+                      aria-label="gender"
+                      name="isFixedContributionTypicalGrowthExpected"
+                      value={
+                        formValues.isFixedContributionTypicalGrowthExpected
+                      }
+                      onChange={(e) => {
+                        if (e.target.value === 'true')
+                          setFieldValue(
+                            'isFixedContributionTypicalGrowthExpected',
+                            true
+                          );
+                        if (e.target.value === 'false')
+                          setFieldValue(
+                            'isFixedContributionTypicalGrowthExpected',
+                            false
+                          );
+                      }}
+                    >
+                      <FormControlLabel
+                        value={Boolean(true)}
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value={Boolean(false)}
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText>
+                      {touched.isFixedContributionTypicalGrowthExpected &&
+                        errors.isFixedContributionTypicalGrowthExpected}
+                    </FormHelperText>
+                  </Box>
+                </FormControl>
               </Box>
               <Box
                 sx={{
