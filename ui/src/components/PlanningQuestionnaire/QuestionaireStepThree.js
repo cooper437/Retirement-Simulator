@@ -29,12 +29,26 @@ const EMPTY_FORM_VALUES = {
   accounts: [],
   isPlanningOnSellingHome: undefined,
   expectToSellDate: '',
-  currentHomeValue: ''
+  currentHomeValue: '',
+  portfolioBalance: '',
+  accountType: '',
+  isInvestedInStocks: null,
+  investingStyle: ''
+};
+
+const ACCOUNT_TYPES = {
+  '401k': {
+    label: '401k',
+    value: '401k'
+  },
+  ira: {
+    label: 'IRA',
+    value: 'ira'
+  }
 };
 
 const commonFormStyles = {
   shortFormInput: {
-    mt: 2,
     width: '30ch'
   }
 };
@@ -103,11 +117,77 @@ export default function QuestionaireStepThree({
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
                 Step 3: Current Portfolio & Income
               </Typography>
-              <Box sx={{ m: 4 }}>
+              <Box sx={{ m: 4, ml: 8, mr: 8 }}>
                 <Typography variant="h5">
                   Tell us about your current retirement savings
                 </Typography>
                 <RetirementAccountTable />
+                <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                  <Typography sx={{ flex: 1 }}>
+                    <Box sx={{ ml: '8em' }}>Portfolio Balance</Box>
+                  </Typography>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.portfolioBalance}
+                      onChange={handleChange}
+                      name="portfolioBalance"
+                      id="portfolio-balance"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.portfolioBalance &&
+                        Boolean(errors.portfolioBalance)
+                      }
+                      helperText={
+                        touched.portfolioBalance && errors.portfolioBalance
+                      }
+                    />
+                  </Box>
+                </Stack>
+                <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                  <Typography sx={{ flex: 1 }}>
+                    <Box sx={{ ml: '8em' }}>Account Type</Box>
+                  </Typography>
+                  <Box sx={{ flex: 1 }}>
+                    <FormControl
+                      sx={commonFormStyles.shortFormInput}
+                      error={touched.accountType && Boolean(errors.accountType)}
+                    >
+                      <Select
+                        id="account-type"
+                        startAdornment={<InputAdornment position="start" />}
+                        endAdornment={<InputAdornment position="end" />}
+                        value={formValues.accountType}
+                        name="accountType"
+                        onChange={async (e) => {
+                          const selection = Object.values(ACCOUNT_TYPES).find(
+                            (i) => i.value === e.target.value
+                          );
+                          await handleChange(e);
+                          setFieldValue('accountType', selection.value);
+                        }}
+                      >
+                        {Object.values(ACCOUNT_TYPES).map((i) => (
+                          <MenuItem key={i.value} value={i.value}>
+                            {i.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>
+                        {touched.accountType && errors.accountType}
+                      </FormHelperText>
+                    </FormControl>
+                  </Box>
+                </Stack>
               </Box>
               <Box
                 sx={{

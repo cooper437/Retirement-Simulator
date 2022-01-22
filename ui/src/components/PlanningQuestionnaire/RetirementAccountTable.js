@@ -31,7 +31,7 @@ const rows = [
 
 export default function RetirementAccountTable() {
   return (
-    <Box sx={{ mt: 4, ml: 8, mr: 8 }}>
+    <Box sx={{ mt: 4 }}>
       <TableContainer component={Paper}>
         <Table
           sx={{ minWidth: 500 }}
