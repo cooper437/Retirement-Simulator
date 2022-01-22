@@ -24,6 +24,7 @@ import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 import NumberFormatPercentage from '../NumberFormatPercentage';
 import RetirementAccountTable from './RetirementAccountTable';
+import { INVESTMENT_STYLE_ENUM } from '../../constants';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -204,22 +205,14 @@ export default function QuestionaireStepThree({
                   <Box sx={{ flex: 1 }}>
                     <RadioGroup
                       row
-                      aria-label="gender"
-                      name="isFixedContributionTypicalGrowthExpected"
-                      value={
-                        formValues.isFixedContributionTypicalGrowthExpected
-                      }
+                      aria-label="is-invested-in-stocks-btn"
+                      name="isInvestedInStocks"
+                      value={formValues.isInvestedInStocks}
                       onChange={(e) => {
                         if (e.target.value === 'true')
-                          setFieldValue(
-                            'isFixedContributionTypicalGrowthExpected',
-                            true
-                          );
+                          setFieldValue('isInvestedInStocks', true);
                         if (e.target.value === 'false')
-                          setFieldValue(
-                            'isFixedContributionTypicalGrowthExpected',
-                            false
-                          );
+                          setFieldValue('isInvestedInStocks', false);
                       }}
                     >
                       <FormControlLabel
@@ -239,6 +232,46 @@ export default function QuestionaireStepThree({
                     </FormHelperText>
                   </Box>
                 </FormControl>
+                {formValues.isInvestedInStocks === false && (
+                  <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                    <Typography sx={{ flex: 1 }}>
+                      <Box sx={{ ml: 4 }}>Style Of Investing</Box>
+                    </Typography>
+                    <Box sx={{ flex: 1 }}>
+                      <FormControl
+                        sx={commonFormStyles.shortFormInput}
+                        error={
+                          touched.investingStyle &&
+                          Boolean(errors.investingStyle)
+                        }
+                      >
+                        <Select
+                          id="investing-style"
+                          startAdornment={<InputAdornment position="start" />}
+                          endAdornment={<InputAdornment position="end" />}
+                          value={formValues.investingStyle}
+                          name="investingStyle"
+                          onChange={async (e) => {
+                            const selection = Object.values(
+                              INVESTMENT_STYLE_ENUM
+                            ).find((i) => i.value === e.target.value);
+                            await handleChange(e);
+                            setFieldValue('investingStyle', selection.value);
+                          }}
+                        >
+                          {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                            <MenuItem key={i.value} value={i.value}>
+                              {i.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {touched.investingStyle && errors.investingStyle}
+                        </FormHelperText>
+                      </FormControl>
+                    </Box>
+                  </Stack>
+                )}
               </Box>
               <Box
                 sx={{
