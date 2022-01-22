@@ -25,6 +25,7 @@ import { QUESTIONNAIRE_STEPS } from '../../constants';
 import NumberFormatPercentage from '../NumberFormatPercentage';
 import RetirementAccountTable from './RetirementAccountTable';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
+import { SECTION_BORDER_COLOR } from '../../colors';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -118,160 +119,187 @@ export default function QuestionaireStepThree({
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
                 Step 3: Current Portfolio & Income
               </Typography>
-              <Box sx={{ m: 4, ml: 8, mr: 8 }}>
+              <Box sx={{ m: 4 }}>
                 <Typography variant="h5">
                   Tell us about your current retirement savings
                 </Typography>
-                <RetirementAccountTable />
-                <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                  <Typography sx={{ flex: 1 }}>
-                    <Box sx={{ ml: 4 }}>Portfolio Balance</Box>
-                  </Typography>
-                  <Box sx={{ flex: 1 }}>
-                    <TextField
-                      sx={commonFormStyles.shortFormInput}
-                      variant="outlined"
-                      value={formValues.portfolioBalance}
-                      onChange={handleChange}
-                      name="portfolioBalance"
-                      id="portfolio-balance"
-                      InputProps={{
-                        inputComponent: NumberFormatDollarAmount,
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">.00</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.portfolioBalance &&
-                        Boolean(errors.portfolioBalance)
-                      }
-                      helperText={
-                        touched.portfolioBalance && errors.portfolioBalance
-                      }
-                    />
-                  </Box>
-                </Stack>
-                <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                  <Typography sx={{ flex: 1 }}>
-                    <Box sx={{ ml: 4 }}>Account Type</Box>
-                  </Typography>
-                  <Box sx={{ flex: 1 }}>
-                    <FormControl
-                      sx={commonFormStyles.shortFormInput}
-                      error={touched.accountType && Boolean(errors.accountType)}
-                    >
-                      <Select
-                        id="account-type"
-                        startAdornment={<InputAdornment position="start" />}
-                        endAdornment={<InputAdornment position="end" />}
-                        value={formValues.accountType}
-                        name="accountType"
-                        onChange={async (e) => {
-                          const selection = Object.values(ACCOUNT_TYPES).find(
-                            (i) => i.value === e.target.value
-                          );
-                          await handleChange(e);
-                          setFieldValue('accountType', selection.value);
-                        }}
-                      >
-                        {Object.values(ACCOUNT_TYPES).map((i) => (
-                          <MenuItem key={i.value} value={i.value}>
-                            {i.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText>
-                        {touched.accountType && errors.accountType}
-                      </FormHelperText>
-                    </FormControl>
-                  </Box>
-                </Stack>
-                <FormControl
-                  sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}
-                  error={
-                    touched.isFixedContributionTypicalGrowthExpected &&
-                    Boolean(errors.isFixedContributionTypicalGrowthExpected)
-                  }
-                  component="fieldset"
+                <Box
+                  sx={{
+                    mt: 4,
+                    ml: 4,
+                    mr: 4,
+                    p: 4,
+                    border: `1px solid ${SECTION_BORDER_COLOR}`,
+                    borderRadius: '20px'
+                  }}
                 >
-                  <Box sx={{ flex: 1 }}>
-                    <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
-                      Are you invested entirely in stocks and/or stock funds?
-                    </FormLabel>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <RadioGroup
-                      row
-                      aria-label="is-invested-in-stocks-btn"
-                      name="isInvestedInStocks"
-                      value={formValues.isInvestedInStocks}
-                      onChange={(e) => {
-                        if (e.target.value === 'true')
-                          setFieldValue('isInvestedInStocks', true);
-                        if (e.target.value === 'false')
-                          setFieldValue('isInvestedInStocks', false);
-                      }}
-                    >
-                      <FormControlLabel
-                        value={Boolean(true)}
-                        control={<Radio />}
-                        label="Yes"
-                      />
-                      <FormControlLabel
-                        value={Boolean(false)}
-                        control={<Radio />}
-                        label="No"
-                      />
-                    </RadioGroup>
-                    <FormHelperText>
-                      {touched.isFixedContributionTypicalGrowthExpected &&
-                        errors.isFixedContributionTypicalGrowthExpected}
-                    </FormHelperText>
-                  </Box>
-                </FormControl>
-                {formValues.isInvestedInStocks === false && (
+                  <RetirementAccountTable />
                   <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
                     <Typography sx={{ flex: 1 }}>
-                      <Box sx={{ ml: 4 }}>Style Of Investing</Box>
+                      <Box sx={{ ml: 4 }}>Portfolio Balance</Box>
+                    </Typography>
+                    <Box sx={{ flex: 1 }}>
+                      <TextField
+                        sx={commonFormStyles.shortFormInput}
+                        variant="outlined"
+                        value={formValues.portfolioBalance}
+                        onChange={handleChange}
+                        name="portfolioBalance"
+                        id="portfolio-balance"
+                        InputProps={{
+                          inputComponent: NumberFormatDollarAmount,
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">.00</InputAdornment>
+                          )
+                        }}
+                        error={
+                          touched.portfolioBalance &&
+                          Boolean(errors.portfolioBalance)
+                        }
+                        helperText={
+                          touched.portfolioBalance && errors.portfolioBalance
+                        }
+                      />
+                    </Box>
+                  </Stack>
+                  <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                    <Typography sx={{ flex: 1 }}>
+                      <Box sx={{ ml: 4 }}>Account Type</Box>
                     </Typography>
                     <Box sx={{ flex: 1 }}>
                       <FormControl
                         sx={commonFormStyles.shortFormInput}
                         error={
-                          touched.investingStyle &&
-                          Boolean(errors.investingStyle)
+                          touched.accountType && Boolean(errors.accountType)
                         }
                       >
                         <Select
-                          id="investing-style"
+                          id="account-type"
                           startAdornment={<InputAdornment position="start" />}
                           endAdornment={<InputAdornment position="end" />}
-                          value={formValues.investingStyle}
-                          name="investingStyle"
+                          value={formValues.accountType}
+                          name="accountType"
                           onChange={async (e) => {
-                            const selection = Object.values(
-                              INVESTMENT_STYLE_ENUM
-                            ).find((i) => i.value === e.target.value);
+                            const selection = Object.values(ACCOUNT_TYPES).find(
+                              (i) => i.value === e.target.value
+                            );
                             await handleChange(e);
-                            setFieldValue('investingStyle', selection.value);
+                            setFieldValue('accountType', selection.value);
                           }}
                         >
-                          {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                          {Object.values(ACCOUNT_TYPES).map((i) => (
                             <MenuItem key={i.value} value={i.value}>
                               {i.label}
                             </MenuItem>
                           ))}
                         </Select>
                         <FormHelperText>
-                          {touched.investingStyle && errors.investingStyle}
+                          {touched.accountType && errors.accountType}
                         </FormHelperText>
                       </FormControl>
                     </Box>
                   </Stack>
-                )}
+                  <FormControl
+                    sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}
+                    error={
+                      touched.isFixedContributionTypicalGrowthExpected &&
+                      Boolean(errors.isFixedContributionTypicalGrowthExpected)
+                    }
+                    component="fieldset"
+                  >
+                    <Box sx={{ flex: 1 }}>
+                      <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
+                        Are you invested entirely in stocks and/or stock funds?
+                      </FormLabel>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <RadioGroup
+                        row
+                        aria-label="is-invested-in-stocks-btn"
+                        name="isInvestedInStocks"
+                        value={formValues.isInvestedInStocks}
+                        onChange={(e) => {
+                          if (e.target.value === 'true')
+                            setFieldValue('isInvestedInStocks', true);
+                          if (e.target.value === 'false')
+                            setFieldValue('isInvestedInStocks', false);
+                        }}
+                      >
+                        <FormControlLabel
+                          value={Boolean(true)}
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value={Boolean(false)}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                      <FormHelperText>
+                        {touched.isFixedContributionTypicalGrowthExpected &&
+                          errors.isFixedContributionTypicalGrowthExpected}
+                      </FormHelperText>
+                    </Box>
+                  </FormControl>
+                  {formValues.isInvestedInStocks === false && (
+                    <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                      <Typography sx={{ flex: 1 }}>
+                        <Box sx={{ ml: 4 }}>Style Of Investing</Box>
+                      </Typography>
+                      <Box sx={{ flex: 1 }}>
+                        <FormControl
+                          sx={commonFormStyles.shortFormInput}
+                          error={
+                            touched.investingStyle &&
+                            Boolean(errors.investingStyle)
+                          }
+                        >
+                          <Select
+                            id="investing-style"
+                            startAdornment={<InputAdornment position="start" />}
+                            endAdornment={<InputAdornment position="end" />}
+                            value={formValues.investingStyle}
+                            name="investingStyle"
+                            onChange={async (e) => {
+                              const selection = Object.values(
+                                INVESTMENT_STYLE_ENUM
+                              ).find((i) => i.value === e.target.value);
+                              await handleChange(e);
+                              setFieldValue('investingStyle', selection.value);
+                            }}
+                          >
+                            {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                              <MenuItem key={i.value} value={i.value}>
+                                {i.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <FormHelperText>
+                            {touched.investingStyle && errors.investingStyle}
+                          </FormHelperText>
+                        </FormControl>
+                      </Box>
+                    </Stack>
+                  )}
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-end"
+                    marginTop={4}
+                  >
+                    <Button
+                      sx={{ width: '16em', textAlign: 'center' }}
+                      variant="outlined"
+                      size="medium"
+                      onClick={() => null}
+                    >
+                      Add Another Account
+                    </Button>
+                  </Stack>
+                </Box>
               </Box>
               <Box
                 sx={{
