@@ -23,6 +23,7 @@ import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 import NumberFormatPercentage from '../NumberFormatPercentage';
+import RetirementAccountTable from './RetirementAccountTable';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -102,9 +103,12 @@ export default function QuestionaireStepThree({
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
                 Step 3: Current Portfolio & Income
               </Typography>
-              <Typography variant="h5" sx={{ m: 4 }}>
-                Tell us about your current retirement savings
-              </Typography>
+              <Box sx={{ m: 4 }}>
+                <Typography variant="h5">
+                  Tell us about your current retirement savings
+                </Typography>
+                <RetirementAccountTable />
+              </Box>
               <Box
                 sx={{
                   flexGrow: 1,
