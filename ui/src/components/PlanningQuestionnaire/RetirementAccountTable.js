@@ -9,7 +9,8 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Box
+  Box,
+  Typography
 } from '@mui/material';
 import NumberFormat from 'react-number-format';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,6 +35,16 @@ const getAccountTypeLabel = (value) => {
   return selection.label;
 };
 
+const renderEmptyTable = () => (
+  <TableBody>
+    <TableRow>
+      <TableCell colSpan={4} sx={{ textAlign: 'center' }}>
+        <Typography>Add some accounts using the form below.</Typography>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+);
+
 export default function RetirementAccountTable({
   accounts,
   onClickRemoveAccount
@@ -54,47 +65,51 @@ export default function RetirementAccountTable({
               <StyledTableCell align="center" />
             </TableRow>
           </TableHead>
-          <TableBody>
-            {accounts.map((row, index) => (
-              <TableRow
-                key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                style={
-                  index % 2
-                    ? { background: SECTION_BACKGROUND_COLOR }
-                    : { background: 'white' }
-                }
-              >
-                <TableCell align="center">
-                  {getAccountTypeLabel(row.accountType)}
-                </TableCell>
-                <TableCell align="center">
-                  <NumberFormat
-                    thousandsGroupStyle="thousand"
-                    value={row.portfolioBalance}
-                    prefix="$"
-                    decimalSeparator="."
-                    decimalScale={0}
-                    displayType="text"
-                    type="text"
-                    thousandSeparator
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  {getInvestingStyleLabel(row.investingStyle)}
-                </TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    aria-label="delete"
-                    size="small"
-                    onClick={() => onClickRemoveAccount(row.id)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {accounts.length ? (
+            <TableBody>
+              {accounts.map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  style={
+                    index % 2
+                      ? { background: SECTION_BACKGROUND_COLOR }
+                      : { background: 'white' }
+                  }
+                >
+                  <TableCell align="center">
+                    {getAccountTypeLabel(row.accountType)}
+                  </TableCell>
+                  <TableCell align="center">
+                    <NumberFormat
+                      thousandsGroupStyle="thousand"
+                      value={row.portfolioBalance}
+                      prefix="$"
+                      decimalSeparator="."
+                      decimalScale={0}
+                      displayType="text"
+                      type="text"
+                      thousandSeparator
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    {getInvestingStyleLabel(row.investingStyle)}
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => onClickRemoveAccount(row.id)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          ) : (
+            renderEmptyTable()
+          )}
         </Table>
       </TableContainer>
     </Box>
