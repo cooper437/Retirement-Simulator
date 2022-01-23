@@ -54,7 +54,7 @@ export default function RetirementAccountTable({ accounts }) {
           <TableBody>
             {accounts.map((row, index) => (
               <TableRow
-                key={row.accountType}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 style={
                   index % 2
@@ -66,7 +66,6 @@ export default function RetirementAccountTable({ accounts }) {
                   {getAccountTypeLabel(row.accountType)}
                 </TableCell>
                 <TableCell align="center">
-                  {' '}
                   <NumberFormat
                     thousandsGroupStyle="thousand"
                     value={row.portfolioBalance}

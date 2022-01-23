@@ -1,30 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import * as Yup from 'yup';
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio
-} from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { Formik } from 'formik';
-import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
-import NumberFormatPercentage from '../NumberFormatPercentage';
 import RetirementAccountTable from './RetirementAccountTable';
-import { INVESTMENT_STYLE_ENUM } from '../../constants';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
 
@@ -93,7 +75,7 @@ export default function QuestionaireStepThree({
             investingStyle
           }) => {
             const updatedaccounts = formValues.accounts.concat([
-              { portfolioBalance, accountType, investingStyle }
+              { portfolioBalance, accountType, investingStyle, id: uuidv4() }
             ]);
             await setFieldValue('accounts', updatedaccounts);
           };
