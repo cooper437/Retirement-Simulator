@@ -158,20 +158,20 @@ export default function AddAccountForm({ onClickAddAccount }) {
                   </FormControl>
                 </Box>
               </Stack>
-              <FormControl
-                sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}
-                error={
-                  touched.isFixedContributionTypicalGrowthExpected &&
-                  Boolean(errors.isFixedContributionTypicalGrowthExpected)
-                }
-                component="fieldset"
-              >
+              <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}>
                 <Box sx={{ flex: 1 }}>
                   <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
                     Are you invested entirely in stocks and/or stock funds?
                   </FormLabel>
                 </Box>
-                <Box sx={{ flex: 1 }}>
+                <FormControl
+                  error={
+                    touched.isInvestedInStocks &&
+                    Boolean(errors.isInvestedInStocks)
+                  }
+                  component="fieldset"
+                  sx={{ flex: 1 }}
+                >
                   <RadioGroup
                     row
                     aria-label="is-invested-in-stocks-btn"
@@ -196,11 +196,10 @@ export default function AddAccountForm({ onClickAddAccount }) {
                     />
                   </RadioGroup>
                   <FormHelperText>
-                    {touched.isFixedContributionTypicalGrowthExpected &&
-                      errors.isFixedContributionTypicalGrowthExpected}
+                    {touched.isInvestedInStocks && errors.isInvestedInStocks}
                   </FormHelperText>
-                </Box>
-              </FormControl>
+                </FormControl>
+              </Box>
               {formValues.isInvestedInStocks === false && (
                 <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
                   <Typography sx={{ flex: 1 }}>
