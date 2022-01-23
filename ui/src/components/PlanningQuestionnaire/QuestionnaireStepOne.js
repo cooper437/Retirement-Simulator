@@ -15,7 +15,6 @@ const EMPTY_FORM_VALUES = {
 
 const commonFormStyles = {
   shortFormInput: {
-    mt: 2,
     width: '30ch'
   }
 };
@@ -98,54 +97,74 @@ export default function QuestionnaireStepOne({
               <Typography variant="h5" sx={{ m: 4 }}>
                 Tell Us About Yourself
               </Typography>
-              <Stack sx={{ m: 4 }} spacing={4}>
-                <TextField
-                  sx={commonFormStyles.shortFormInput}
-                  id="current-age-input"
-                  label="Current Age"
-                  variant="outlined"
-                  type="number"
-                  name="currentAge"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  value={formValues.currentAge}
-                  onChange={handleChange}
-                  error={touched.currentAge && Boolean(errors.currentAge)}
-                  helperText={touched.currentAge && errors.currentAge}
-                />
-                <TextField
-                  sx={commonFormStyles.shortFormInput}
-                  id="retirement-age-input"
-                  label="Retirement Age"
-                  variant="outlined"
-                  type="number"
-                  name="retirementAge"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  value={formValues.retirementAge}
-                  onChange={handleChange}
-                  error={touched.retirementAge && Boolean(errors.retirementAge)}
-                  helperText={touched.retirementAge && errors.retirementAge}
-                />
-                <TextField
-                  sx={commonFormStyles.shortFormInput}
-                  id="life-expectancy-input"
-                  label="Life Expectancy"
-                  variant="outlined"
-                  type="number"
-                  name="lifeExpectancy"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  value={formValues.lifeExpectancy}
-                  onChange={handleChange}
-                  error={
-                    touched.lifeExpectancy && Boolean(errors.lifeExpectancy)
-                  }
-                  helperText={touched.lifeExpectancy && errors.lifeExpectancy}
-                />
+              <Stack sx={{ m: 4 }} spacing={6}>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 8 }}>How old are you?</Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      sx={commonFormStyles.shortFormInput}
+                      id="current-age-input"
+                      variant="outlined"
+                      label="Current Age"
+                      type="number"
+                      name="currentAge"
+                      value={formValues.currentAge}
+                      onChange={handleChange}
+                      error={touched.currentAge && Boolean(errors.currentAge)}
+                      helperText={touched.currentAge && errors.currentAge}
+                    />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 8 }}>
+                      When do you plan to retire?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      sx={commonFormStyles.shortFormInput}
+                      id="retirement-age-input"
+                      label="Retirement Age"
+                      variant="outlined"
+                      type="number"
+                      name="retirementAge"
+                      value={formValues.retirementAge}
+                      onChange={handleChange}
+                      error={
+                        touched.retirementAge && Boolean(errors.retirementAge)
+                      }
+                      helperText={touched.retirementAge && errors.retirementAge}
+                    />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 8 }}>
+                      How far out would you like to plan?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      sx={commonFormStyles.shortFormInput}
+                      id="life-expectancy-input"
+                      label="Life Expectancy"
+                      variant="outlined"
+                      type="number"
+                      name="lifeExpectancy"
+                      value={formValues.lifeExpectancy}
+                      onChange={handleChange}
+                      error={
+                        touched.lifeExpectancy && Boolean(errors.lifeExpectancy)
+                      }
+                      helperText={
+                        touched.lifeExpectancy && errors.lifeExpectancy
+                      }
+                    />
+                  </Box>
+                </Stack>
               </Stack>
               <Box
                 sx={{
