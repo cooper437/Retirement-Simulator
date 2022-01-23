@@ -34,7 +34,10 @@ const getAccountTypeLabel = (value) => {
   return selection.label;
 };
 
-export default function RetirementAccountTable({ accounts }) {
+export default function RetirementAccountTable({
+  accounts,
+  onClickRemoveAccount
+}) {
   return (
     <Box sx={{ mt: 4 }}>
       <TableContainer component={Paper}>
@@ -81,7 +84,11 @@ export default function RetirementAccountTable({ accounts }) {
                   {getInvestingStyleLabel(row.investingStyle)}
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton aria-label="delete" size="small">
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => onClickRemoveAccount(row.id)}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </TableCell>

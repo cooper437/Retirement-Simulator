@@ -69,15 +69,22 @@ export default function QuestionaireStepThree({
             });
             setCurrentStep(QUESTIONNAIRE_STEPS.currentLifestyle);
           };
-          const handleClickAddAccount = async ({
+          const handleAddAccount = async ({
             portfolioBalance,
             accountType,
             investingStyle
           }) => {
-            const updatedaccounts = formValues.accounts.concat([
+            const updatedAccounts = formValues.accounts.concat([
               { portfolioBalance, accountType, investingStyle, id: uuidv4() }
             ]);
-            await setFieldValue('accounts', updatedaccounts);
+            await setFieldValue('accounts', updatedAccounts);
+          };
+          const handleRemoveAccount = async (id) => {
+            const updatedAccounts = _.filter(
+              formValues.accounts,
+              (i) => i.id !== id
+            );
+            await setFieldValue('accounts', updatedAccounts);
           };
           return (
             <Box
@@ -104,8 +111,11 @@ export default function QuestionaireStepThree({
                     borderRadius: '20px'
                   }}
                 >
-                  <RetirementAccountTable accounts={formValues.accounts} />
-                  <AddAccountForm onClickAddAccount={handleClickAddAccount} />
+                  <RetirementAccountTable
+                    accounts={formValues.accounts}
+                    onClickRemoveAccount={handleRemoveAccount}
+                  />
+                  <AddAccountForm onClickAddAccount={handleAddAccount} />
                 </Box>
               </Box>
               <Box
