@@ -12,7 +12,10 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
-  FormHelperText
+  FormHelperText,
+  Select,
+  InputAdornment,
+  MenuItem
 } from '@mui/material';
 import { Formik } from 'formik';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
@@ -20,6 +23,7 @@ import { QUESTIONNAIRE_STEPS } from '../../constants';
 import RetirementAccountTable from './RetirementAccountTable';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
+import { INVESTMENT_STYLE_ENUM } from '../../constants';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -174,6 +178,46 @@ export default function QuestionaireStepThree({
                     </FormHelperText>
                   </FormControl>
                 </Box>
+                {formValues.isPlanningOnSellingHome === true && (
+                  <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                    <Typography sx={{ flex: 1 }}>
+                      <Box sx={{ ml: 4 }}>When do you expect to sell?</Box>
+                    </Typography>
+                    <Box sx={{ flex: 1 }}>
+                      <FormControl
+                        sx={commonFormStyles.shortFormInput}
+                        error={
+                          touched.expectToSellDate &&
+                          Boolean(errors.expectToSellDate)
+                        }
+                      >
+                        <Select
+                          id="investing-style"
+                          startAdornment={<InputAdornment position="start" />}
+                          endAdornment={<InputAdornment position="end" />}
+                          value={formValues.expectToSellDate}
+                          name="expectToSellDate"
+                          onChange={async (e) => {
+                            const selection = Object.values(
+                              INVESTMENT_STYLE_ENUM
+                            ).find((i) => i.value === e.target.value);
+                            await handleChange(e);
+                            setFieldValue('expectToSellDate', selection.value);
+                          }}
+                        >
+                          {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                            <MenuItem key={i.value} value={i.value}>
+                              {i.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {touched.expectToSellDate && errors.expectToSellDate}
+                        </FormHelperText>
+                      </FormControl>
+                    </Box>
+                  </Stack>
+                )}
               </Box>
               <Box
                 sx={{
