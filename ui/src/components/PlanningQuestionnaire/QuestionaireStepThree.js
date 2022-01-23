@@ -15,7 +15,8 @@ import {
   FormHelperText,
   Select,
   InputAdornment,
-  MenuItem
+  MenuItem,
+  TextField
 } from '@mui/material';
 import { Formik } from 'formik';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
@@ -23,6 +24,7 @@ import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
 import RetirementAccountTable from './RetirementAccountTable';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
+import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -203,38 +205,78 @@ export default function QuestionaireStepThree({
                   </FormControl>
                 </Box>
                 {formValues.isPlanningOnSellingHome === true && (
-                  <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                    <Typography sx={{ flex: 1 }}>
-                      <Box sx={{ ml: 4 }}>When do you expect to sell?</Box>
-                    </Typography>
-                    <Box sx={{ flex: 1 }}>
-                      <FormControl
-                        sx={commonFormStyles.shortFormInput}
-                        error={
-                          touched.expectToSellDate &&
-                          Boolean(errors.expectToSellDate)
-                        }
-                      >
-                        <Select
-                          id="expect-to-sell-date-select"
-                          startAdornment={<InputAdornment position="start" />}
-                          endAdornment={<InputAdornment position="end" />}
-                          value={formValues.expectToSellDate}
-                          name="expectToSellDate"
-                          onChange={handleChange}
+                  <>
+                    <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                      <Typography sx={{ flex: 1 }}>
+                        <Box sx={{ ml: 4 }}>When do you expect to sell?</Box>
+                      </Typography>
+                      <Box sx={{ flex: 1 }}>
+                        <FormControl
+                          sx={commonFormStyles.shortFormInput}
+                          error={
+                            touched.expectToSellDate &&
+                            Boolean(errors.expectToSellDate)
+                          }
                         >
-                          {expectToSellDropDownOptions.map((i) => (
-                            <MenuItem key={i.value} value={i.value}>
-                              {i.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        <FormHelperText>
-                          {touched.expectToSellDate && errors.expectToSellDate}
-                        </FormHelperText>
-                      </FormControl>
-                    </Box>
-                  </Stack>
+                          <Select
+                            id="expect-to-sell-date-select"
+                            startAdornment={<InputAdornment position="start" />}
+                            endAdornment={<InputAdornment position="end" />}
+                            value={formValues.expectToSellDate}
+                            name="expectToSellDate"
+                            onChange={handleChange}
+                          >
+                            {expectToSellDropDownOptions.map((i) => (
+                              <MenuItem key={i.value} value={i.value}>
+                                {i.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          <FormHelperText>
+                            {touched.expectToSellDate &&
+                              errors.expectToSellDate}
+                          </FormHelperText>
+                        </FormControl>
+                      </Box>
+                    </Stack>
+                    <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                      <Typography sx={{ flex: 1 }}>
+                        <Box sx={{ ml: 4 }}>
+                          What is the current value of your home?
+                        </Box>
+                      </Typography>
+                      <Box sx={{ flex: 1 }}>
+                        <TextField
+                          sx={commonFormStyles.shortFormInput}
+                          variant="outlined"
+                          value={formValues.currentHomeValue}
+                          onChange={handleChange}
+                          name="currentHomeValue"
+                          id="current-home-value-input"
+                          InputProps={{
+                            inputComponent: NumberFormatDollarAmount,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                .00
+                              </InputAdornment>
+                            )
+                          }}
+                          error={
+                            touched.currentHomeValue &&
+                            Boolean(errors.currentHomeValue)
+                          }
+                          helperText={
+                            touched.currentHomeValue && errors.currentHomeValue
+                          }
+                        />
+                      </Box>
+                    </Stack>
+                  </>
                 )}
               </Box>
               <Box
