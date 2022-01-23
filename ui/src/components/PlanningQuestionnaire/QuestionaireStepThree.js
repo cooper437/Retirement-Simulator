@@ -122,7 +122,7 @@ export default function QuestionaireStepThree({
                     borderRadius: '20px'
                   }}
                 >
-                  <RetirementAccountTable />
+                  <RetirementAccountTable accounts={formValues.accounts} />
                   <AddAccountForm onClickAddAccount={handleClickAddAccount} />
                 </Box>
               </Box>

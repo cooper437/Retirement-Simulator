@@ -82,3 +82,14 @@ export const QUESTIONNAIRE_STEPS = {
     stepName: 'retirementExpectations'
   }
 };
+
+export const ACCOUNT_TYPES_ENUM = {
+  '401k': {
+    label: '401k',
+    value: '401k'
+  },
+  ira: {
+    label: 'IRA',
+    value: 'ira'
+  }
+};

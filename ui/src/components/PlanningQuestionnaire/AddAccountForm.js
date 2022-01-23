@@ -19,24 +19,13 @@ import {
 } from '@mui/material';
 import { Formik } from 'formik';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
-import { INVESTMENT_STYLE_ENUM } from '../../constants';
+import { INVESTMENT_STYLE_ENUM, ACCOUNT_TYPES_ENUM } from '../../constants';
 
 const EMPTY_FORM_VALUES = {
   portfolioBalance: '',
   accountType: '',
   isInvestedInStocks: null,
   investingStyle: ''
-};
-
-const ACCOUNT_TYPES = {
-  '401k': {
-    label: '401k',
-    value: '401k'
-  },
-  ira: {
-    label: 'IRA',
-    value: 'ira'
-  }
 };
 
 const commonFormStyles = {
@@ -139,14 +128,14 @@ export default function AddAccountForm({ onClickAddAccount }) {
                       value={formValues.accountType}
                       name="accountType"
                       onChange={async (e) => {
-                        const selection = Object.values(ACCOUNT_TYPES).find(
-                          (i) => i.value === e.target.value
-                        );
+                        const selection = Object.values(
+                          ACCOUNT_TYPES_ENUM
+                        ).find((i) => i.value === e.target.value);
                         await handleChange(e);
                         setFieldValue('accountType', selection.value);
                       }}
                     >
-                      {Object.values(ACCOUNT_TYPES).map((i) => (
+                      {Object.values(ACCOUNT_TYPES_ENUM).map((i) => (
                         <MenuItem key={i.value} value={i.value}>
                           {i.label}
                         </MenuItem>
@@ -177,11 +166,18 @@ export default function AddAccountForm({ onClickAddAccount }) {
                     aria-label="is-invested-in-stocks-btn"
                     name="isInvestedInStocks"
                     value={formValues.isInvestedInStocks}
-                    onChange={(e) => {
-                      if (e.target.value === 'true')
-                        setFieldValue('isInvestedInStocks', true);
-                      if (e.target.value === 'false')
-                        setFieldValue('isInvestedInStocks', false);
+                    onChange={async (e) => {
+                      if (e.target.value === 'true') {
+                        await setFieldValue('isInvestedInStocks', true);
+                        await setFieldValue(
+                          'investingStyle',
+                          INVESTMENT_STYLE_ENUM.aggresive.value
+                        );
+                      }
+                      if (e.target.value === 'false') {
+                        await setFieldValue('isInvestedInStocks', false);
+                        await setFieldValue('investingStyle', '');
+                      }
                     }}
                   >
                     <FormControlLabel

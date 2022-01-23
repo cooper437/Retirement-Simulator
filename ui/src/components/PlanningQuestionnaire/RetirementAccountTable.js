@@ -14,22 +14,27 @@ import {
 import NumberFormat from 'react-number-format';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SECTION_BACKGROUND_COLOR } from '../../colors';
+import { INVESTMENT_STYLE_ENUM, ACCOUNT_TYPES_ENUM } from '../../constants';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold'
 }));
 
-function createData(accountType, balance, investingStyle) {
-  return { accountType, balance, investingStyle };
-}
+const getInvestingStyleLabel = (value) => {
+  const selection = Object.values(INVESTMENT_STYLE_ENUM).find(
+    (i) => i.value === value
+  );
+  return selection.label;
+};
 
-const rows = [
-  createData('401k', 1590000, 'Aggressive'),
-  createData('IRA', 237000, 'Aggressive'),
-  createData('401k', 262000, 'Conservative')
-];
+const getAccountTypeLabel = (value) => {
+  const selection = Object.values(ACCOUNT_TYPES_ENUM).find(
+    (i) => i.value === value
+  );
+  return selection.label;
+};
 
-export default function RetirementAccountTable() {
+export default function RetirementAccountTable({ accounts }) {
   return (
     <Box sx={{ mt: 4 }}>
       <TableContainer component={Paper}>
@@ -47,7 +52,7 @@ export default function RetirementAccountTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
+            {accounts.map((row, index) => (
               <TableRow
                 key={row.accountType}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -57,12 +62,14 @@ export default function RetirementAccountTable() {
                     : { background: 'white' }
                 }
               >
-                <TableCell align="center">{row.accountType}</TableCell>
+                <TableCell align="center">
+                  {getAccountTypeLabel(row.accountType)}
+                </TableCell>
                 <TableCell align="center">
                   {' '}
                   <NumberFormat
                     thousandsGroupStyle="thousand"
-                    value={row.balance}
+                    value={row.portfolioBalance}
                     prefix="$"
                     decimalSeparator="."
                     decimalScale={0}
@@ -71,7 +78,9 @@ export default function RetirementAccountTable() {
                     thousandSeparator
                   />
                 </TableCell>
-                <TableCell align="center">{row.investingStyle}</TableCell>
+                <TableCell align="center">
+                  {getInvestingStyleLabel(row.investingStyle)}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton aria-label="delete" size="small">
                     <DeleteIcon fontSize="small" />
