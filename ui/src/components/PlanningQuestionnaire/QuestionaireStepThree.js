@@ -2,7 +2,18 @@ import React from 'react';
 import _ from 'lodash';
 import * as Yup from 'yup';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  FormHelperText
+} from '@mui/material';
 import { Formik } from 'formik';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
@@ -40,8 +51,6 @@ export default function QuestionaireStepThree({
         initialValues={stepInitialValues}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepThree', formValues });
-          // eslint-disable-next-line no-console
-          console.log('Submitting...');
         }}
       >
         {({
@@ -115,7 +124,55 @@ export default function QuestionaireStepThree({
                     accounts={formValues.accounts}
                     onClickRemoveAccount={handleRemoveAccount}
                   />
-                  <AddAccountForm onClickAddAccount={handleAddAccount} />
+                  <AddAccountForm
+                    accounts={formValues.accounts}
+                    onClickAddAccount={handleAddAccount}
+                  />
+                </Box>
+                <Box sx={{ mt: 8, display: 'flex', flexDirection: 'row' }}>
+                  <Box sx={{ flex: 1 }}>
+                    <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
+                      Do you plan on selling your home?
+                    </FormLabel>
+                  </Box>
+                  <FormControl
+                    error={
+                      touched.isPlanningOnSellingHome &&
+                      Boolean(errors.isPlanningOnSellingHome)
+                    }
+                    component="fieldset"
+                    sx={{ flex: 1 }}
+                  >
+                    <RadioGroup
+                      row
+                      aria-label="is-planning-on-selling-home-btn-group"
+                      name="isPlanningOnSellingHome"
+                      value={formValues.isPlanningOnSellingHome}
+                      onChange={async (e) => {
+                        if (e.target.value === 'true') {
+                          await setFieldValue('isPlanningOnSellingHome', true);
+                        }
+                        if (e.target.value === 'false') {
+                          await setFieldValue('isPlanningOnSellingHome', false);
+                        }
+                      }}
+                    >
+                      <FormControlLabel
+                        value={Boolean(true)}
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value={Boolean(false)}
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText>
+                      {touched.isPlanningOnSellingHome &&
+                        errors.isPlanningOnSellingHome}
+                    </FormHelperText>
+                  </FormControl>
                 </Box>
               </Box>
               <Box

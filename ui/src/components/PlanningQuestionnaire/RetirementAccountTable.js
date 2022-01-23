@@ -39,7 +39,9 @@ const renderEmptyTable = () => (
   <TableBody>
     <TableRow>
       <TableCell colSpan={4} sx={{ textAlign: 'center' }}>
-        <Typography>Add some accounts using the form below.</Typography>
+        <Typography>
+          Add your retirement accounts using the form below.
+        </Typography>
       </TableCell>
     </TableRow>
   </TableBody>

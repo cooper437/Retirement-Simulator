@@ -91,5 +91,13 @@ export const ACCOUNT_TYPES_ENUM = {
   ira: {
     label: 'IRA',
     value: 'ira'
+  },
+  rothIra: {
+    label: 'Roth IRA',
+    value: 'rothIra'
+  },
+  brokerage: {
+    label: 'Brokerage',
+    value: 'brokerage'
   }
 };

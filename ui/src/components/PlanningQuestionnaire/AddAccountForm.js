@@ -35,7 +35,7 @@ const commonFormStyles = {
 };
 
 // eslint-disable-next-line no-unused-vars
-export default function AddAccountForm({ onClickAddAccount }) {
+export default function AddAccountForm({ onClickAddAccount, accounts }) {
   return (
     <Formik
       initialValues={EMPTY_FORM_VALUES}
@@ -46,8 +46,6 @@ export default function AddAccountForm({ onClickAddAccount }) {
         investingStyle: Yup.string().required('Required')
       })}
       onSubmit={(formValues, actions) => {
-        // eslint-disable-next-line no-console
-        console.log(actions);
         onClickAddAccount({
           portfolioBalance: formValues.portfolioBalance,
           accountType: formValues.accountType,
@@ -242,7 +240,7 @@ export default function AddAccountForm({ onClickAddAccount }) {
                   size="medium"
                   type="submit"
                 >
-                  Add Another Account
+                  {accounts.length ? 'Add ANother Account' : 'Add Account'}
                 </Button>
               </Stack>
             </Box>
