@@ -20,8 +20,8 @@ const commonFormStyles = {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 export default function QuestionnaireStepOne({
+  // eslint-disable-next-line no-unused-vars
   currentStep,
   setCurrentStep,
   completedStepValues,

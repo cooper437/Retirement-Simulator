@@ -17,7 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { SECTION_BACKGROUND_COLOR } from '../../colors';
 import { INVESTMENT_STYLE_ENUM, ACCOUNT_TYPES_ENUM } from '../../constants';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   fontWeight: 'bold'
 }));
 

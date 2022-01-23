@@ -51,8 +51,8 @@ const commonFormStyles = {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 export default function QuestionnaireStepTwo({
+  // eslint-disable-next-line no-unused-vars
   currentStep,
   setCurrentStep,
   completedStepValues,

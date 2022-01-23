@@ -8,7 +8,6 @@ import {
   Stack,
   Typography,
   FormControl,
-  FormLabel,
   RadioGroup,
   Radio,
   FormControlLabel,
@@ -20,7 +19,7 @@ import {
 } from '@mui/material';
 import { Formik } from 'formik';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
-import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
+import { QUESTIONNAIRE_STEPS } from '../../constants';
 import RetirementAccountTable from './RetirementAccountTable';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
@@ -57,8 +56,8 @@ const getExpectToSellDropdownOptions = ({
   return selectionOptions;
 };
 
-// eslint-disable-next-line no-unused-vars
 export default function QuestionaireStepThree({
+  // eslint-disable-next-line no-unused-vars
   currentStep,
   setCurrentStep,
   completedStepValues,
@@ -145,13 +144,6 @@ export default function QuestionaireStepThree({
                 display: 'flex',
                 flexDirection: 'column'
               }}
-              component="form"
-              noValidate
-              autoComplete="off"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(e);
-              }}
             >
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
                 Step 3: Current Portfolio & Income
@@ -179,169 +171,197 @@ export default function QuestionaireStepThree({
                     onClickAddAccount={handleAddAccount}
                   />
                 </Box>
-                <Box sx={{ mt: 8, display: 'flex', flexDirection: 'row' }}>
-                  <Box sx={{ flex: 1 }}>
-                    <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
-                      Do you plan on selling your home?
-                    </FormLabel>
-                  </Box>
-                  <FormControl
-                    error={
-                      touched.isPlanningOnSellingHome &&
-                      Boolean(errors.isPlanningOnSellingHome)
-                    }
-                    component="fieldset"
-                    sx={{ flex: 1 }}
-                  >
-                    <RadioGroup
-                      row
-                      aria-label="is-planning-on-selling-home-btn-group"
-                      name="isPlanningOnSellingHome"
-                      value={formValues.isPlanningOnSellingHome}
-                      onChange={async (e) => {
-                        if (e.target.value === 'true') {
-                          await setFieldValue('isPlanningOnSellingHome', true);
-                        }
-                        if (e.target.value === 'false') {
-                          await setFieldValue('isPlanningOnSellingHome', false);
-                        }
-                      }}
-                    >
-                      <FormControlLabel
-                        value={Boolean(true)}
-                        control={<Radio />}
-                        label="Yes"
-                      />
-                      <FormControlLabel
-                        value={Boolean(false)}
-                        control={<Radio />}
-                        label="No"
-                      />
-                    </RadioGroup>
-                    <FormHelperText>
-                      {touched.isPlanningOnSellingHome &&
-                        errors.isPlanningOnSellingHome}
-                    </FormHelperText>
-                  </FormControl>
-                </Box>
-                {formValues.isPlanningOnSellingHome === true && (
-                  <>
-                    <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                      <Typography sx={{ flex: 1 }}>
-                        <Box sx={{ ml: 4 }}>When do you expect to sell?</Box>
-                      </Typography>
-                      <Box sx={{ flex: 1 }}>
-                        <FormControl
-                          sx={commonFormStyles.shortFormInput}
-                          error={
-                            touched.expectToSellDate &&
-                            Boolean(errors.expectToSellDate)
-                          }
-                        >
-                          <Select
-                            id="expect-to-sell-date-select"
-                            startAdornment={<InputAdornment position="start" />}
-                            endAdornment={<InputAdornment position="end" />}
-                            value={formValues.expectToSellDate}
-                            name="expectToSellDate"
-                            onChange={handleChange}
-                          >
-                            {expectToSellDropDownOptions.map((i) => (
-                              <MenuItem key={i.value} value={i.value}>
-                                {i.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText>
-                            {touched.expectToSellDate &&
-                              errors.expectToSellDate}
-                          </FormHelperText>
-                        </FormControl>
-                      </Box>
-                    </Stack>
-                    <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                      <Typography sx={{ flex: 1 }}>
-                        <Box sx={{ ml: 4 }}>
-                          What is the current value of your home?
-                        </Box>
-                      </Typography>
-                      <Box sx={{ flex: 1 }}>
-                        <TextField
-                          sx={commonFormStyles.shortFormInput}
-                          variant="outlined"
-                          value={formValues.currentHomeValue}
-                          onChange={handleChange}
-                          name="currentHomeValue"
-                          id="current-home-value-input"
-                          InputProps={{
-                            inputComponent: NumberFormatDollarAmount,
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                $
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                .00
-                              </InputAdornment>
-                            )
-                          }}
-                          error={
-                            touched.currentHomeValue &&
-                            Boolean(errors.currentHomeValue)
-                          }
-                          helperText={
-                            touched.currentHomeValue && errors.currentHomeValue
-                          }
-                        />
-                      </Box>
-                    </Stack>
-                  </>
-                )}
               </Box>
               <Box
-                sx={{
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  mb: 4
+                component="form"
+                noValidate
+                autoComplete="off"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit(e);
                 }}
               >
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  sx={{ ml: 4, mr: 4 }}
-                >
-                  <Box>
-                    <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
-                      variant="outlined"
-                      size="medium"
-                      onClick={handleClickResetButton}
+                <Box sx={{ m: 4 }}>
+                  <Box sx={{ mt: 8, display: 'flex', flexDirection: 'row' }}>
+                    <Box
+                      sx={{ flex: 1, display: 'flex', alignItems: 'center' }}
                     >
-                      Reset Step
-                    </Button>
+                      <Box
+                        sx={{
+                          ml: 4,
+                          mr: 4
+                        }}
+                      >
+                        Do you plan on selling your home?
+                      </Box>
+                    </Box>
+                    <FormControl
+                      error={
+                        touched.isPlanningOnSellingHome &&
+                        Boolean(errors.isPlanningOnSellingHome)
+                      }
+                      component="fieldset"
+                      sx={{ flex: 1 }}
+                    >
+                      <RadioGroup
+                        row
+                        aria-label="is-planning-on-selling-home-btn-group"
+                        name="isPlanningOnSellingHome"
+                        value={formValues.isPlanningOnSellingHome}
+                        onChange={async (e) => {
+                          if (e.target.value === 'true') {
+                            await setFieldValue(
+                              'isPlanningOnSellingHome',
+                              true
+                            );
+                          }
+                          if (e.target.value === 'false') {
+                            await setFieldValue(
+                              'isPlanningOnSellingHome',
+                              false
+                            );
+                          }
+                        }}
+                      >
+                        <FormControlLabel
+                          value={Boolean(true)}
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value={Boolean(false)}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                      <FormHelperText>
+                        {touched.isPlanningOnSellingHome &&
+                          errors.isPlanningOnSellingHome}
+                      </FormHelperText>
+                    </FormControl>
                   </Box>
-                  <Stack direction="row" spacing={2}>
-                    <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
-                      variant="outlined"
-                      size="medium"
-                      onClick={handleClickBack}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
-                      variant="contained"
-                      size="medium"
-                      type="submit"
-                    >
-                      Next
-                    </Button>
+                  {formValues.isPlanningOnSellingHome === true && (
+                    <>
+                      <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                        <Typography component="div" sx={{ flex: 1 }}>
+                          <Box sx={{ ml: 4 }}>When do you expect to sell?</Box>
+                        </Typography>
+                        <Box sx={{ flex: 1 }}>
+                          <FormControl
+                            sx={commonFormStyles.shortFormInput}
+                            error={
+                              touched.expectToSellDate &&
+                              Boolean(errors.expectToSellDate)
+                            }
+                          >
+                            <Select
+                              id="expect-to-sell-date-select"
+                              startAdornment={
+                                <InputAdornment position="start" />
+                              }
+                              endAdornment={<InputAdornment position="end" />}
+                              value={formValues.expectToSellDate}
+                              name="expectToSellDate"
+                              onChange={handleChange}
+                            >
+                              {expectToSellDropDownOptions.map((i) => (
+                                <MenuItem key={i.value} value={i.value}>
+                                  {i.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <FormHelperText>
+                              {touched.expectToSellDate &&
+                                errors.expectToSellDate}
+                            </FormHelperText>
+                          </FormControl>
+                        </Box>
+                      </Stack>
+                      <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                        <Typography component="div" sx={{ flex: 1 }}>
+                          <Box sx={{ ml: 4 }}>
+                            What is the current value of your home?
+                          </Box>
+                        </Typography>
+                        <Box sx={{ flex: 1 }}>
+                          <TextField
+                            sx={commonFormStyles.shortFormInput}
+                            variant="outlined"
+                            value={formValues.currentHomeValue}
+                            onChange={handleChange}
+                            name="currentHomeValue"
+                            id="current-home-value-input"
+                            InputProps={{
+                              inputComponent: NumberFormatDollarAmount,
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  $
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  .00
+                                </InputAdornment>
+                              )
+                            }}
+                            error={
+                              touched.currentHomeValue &&
+                              Boolean(errors.currentHomeValue)
+                            }
+                            helperText={
+                              touched.currentHomeValue &&
+                              errors.currentHomeValue
+                            }
+                          />
+                        </Box>
+                      </Stack>
+                    </>
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    mb: 4
+                  }}
+                >
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    sx={{ ml: 4, mr: 4 }}
+                  >
+                    <Box>
+                      <Button
+                        sx={{ width: '10em', textAlign: 'center' }}
+                        variant="outlined"
+                        size="medium"
+                        onClick={handleClickResetButton}
+                      >
+                        Reset Step
+                      </Button>
+                    </Box>
+                    <Stack direction="row" spacing={2}>
+                      <Button
+                        sx={{ width: '10em', textAlign: 'center' }}
+                        variant="outlined"
+                        size="medium"
+                        onClick={handleClickBack}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        sx={{ width: '10em', textAlign: 'center' }}
+                        variant="contained"
+                        size="medium"
+                        type="submit"
+                      >
+                        Next
+                      </Button>
+                    </Stack>
                   </Stack>
-                </Stack>
+                </Box>
               </Box>
             </Box>
           );

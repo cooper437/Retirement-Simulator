@@ -9,7 +9,8 @@ export default function QuestionnaireStepScaffolding({ children }) {
   return (
     <Box
       sx={{
-        mt: '10em',
+        mt: 10,
+        mb: 10,
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',

@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import * as Yup from 'yup';
 import {
   Box,
@@ -12,7 +11,6 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio
@@ -80,7 +78,7 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
           >
             <Box sx={{ m: 4 }}>
               <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                <Typography sx={{ flex: 1 }}>
+                <Typography component="div" sx={{ flex: 1 }}>
                   <Box sx={{ ml: 4 }}>Portfolio Balance</Box>
                 </Typography>
                 <Box sx={{ flex: 1 }}>
@@ -111,7 +109,7 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
                 </Box>
               </Stack>
               <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
-                <Typography sx={{ flex: 1 }}>
+                <Typography component="div" sx={{ flex: 1 }}>
                   <Box sx={{ ml: 4 }}>Account Type</Box>
                 </Typography>
                 <Box sx={{ flex: 1 }}>
@@ -147,9 +145,9 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
               </Stack>
               <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}>
                 <Box sx={{ flex: 1 }}>
-                  <FormLabel sx={{ ml: 4, mr: 4 }} component="legend">
+                  <Box sx={{ ml: 4, mr: 4 }}>
                     Are you invested entirely in stocks and/or stock funds?
-                  </FormLabel>
+                  </Box>
                 </Box>
                 <FormControl
                   error={
@@ -240,7 +238,7 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
                   size="medium"
                   type="submit"
                 >
-                  {accounts.length ? 'Add ANother Account' : 'Add Account'}
+                  {accounts.length ? 'Add Another Account' : 'Add Account'}
                 </Button>
               </Stack>
             </Box>
