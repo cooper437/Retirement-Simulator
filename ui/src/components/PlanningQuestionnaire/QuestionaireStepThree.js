@@ -19,11 +19,10 @@ import {
 } from '@mui/material';
 import { Formik } from 'formik';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
-import { QUESTIONNAIRE_STEPS } from '../../constants';
+import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
 import RetirementAccountTable from './RetirementAccountTable';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
-import { INVESTMENT_STYLE_ENUM } from '../../constants';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -38,6 +37,24 @@ const commonFormStyles = {
   }
 };
 
+const getExpectToSellDropdownOptions = ({
+  currentAge,
+  lifeExpectancy,
+  retirementAge
+}) => {
+  const yearsUntilLifeExpectancy = lifeExpectancy - currentAge;
+  const currentYear = new Date().getFullYear();
+  const selectionOptions = Array.from(
+    { length: yearsUntilLifeExpectancy },
+    (item, index) => {
+      const aFutureYear = currentYear + index;
+      return { label: `In ${aFutureYear}`, value: aFutureYear.toString() };
+    }
+  );
+  selectionOptions.unshift({ label: 'At Retirement', value: 'at_retirement' });
+  return selectionOptions;
+};
+
 // eslint-disable-next-line no-unused-vars
 export default function QuestionaireStepThree({
   currentStep,
@@ -45,10 +62,17 @@ export default function QuestionaireStepThree({
   completedStepValues,
   setCompletedValuesForStep
 }) {
+  const { currentAge, lifeExpectancy, retirementAge } =
+    completedStepValues.stepOne;
   const completedStepThreeValues = completedStepValues.stepThree;
   const stepInitialValues = _.isEmpty(completedStepThreeValues)
     ? EMPTY_FORM_VALUES
     : completedStepThreeValues;
+  const expectToSellDropDownOptions = getExpectToSellDropdownOptions({
+    currentAge,
+    lifeExpectancy,
+    retirementAge
+  });
   return (
     <QuestionnaireStepScaffolding>
       <Formik
@@ -192,20 +216,14 @@ export default function QuestionaireStepThree({
                         }
                       >
                         <Select
-                          id="investing-style"
+                          id="expect-to-sell-date-select"
                           startAdornment={<InputAdornment position="start" />}
                           endAdornment={<InputAdornment position="end" />}
                           value={formValues.expectToSellDate}
                           name="expectToSellDate"
-                          onChange={async (e) => {
-                            const selection = Object.values(
-                              INVESTMENT_STYLE_ENUM
-                            ).find((i) => i.value === e.target.value);
-                            await handleChange(e);
-                            setFieldValue('expectToSellDate', selection.value);
-                          }}
+                          onChange={handleChange}
                         >
-                          {Object.values(INVESTMENT_STYLE_ENUM).map((i) => (
+                          {expectToSellDropDownOptions.map((i) => (
                             <MenuItem key={i.value} value={i.value}>
                               {i.label}
                             </MenuItem>
