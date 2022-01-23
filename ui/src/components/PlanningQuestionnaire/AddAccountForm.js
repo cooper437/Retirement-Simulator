@@ -50,12 +50,21 @@ export default function AddAccountForm({ onClickAddAccount }) {
   return (
     <Formik
       initialValues={EMPTY_FORM_VALUES}
-      onSubmit={(formValues) => {
+      validationSchema={Yup.object({
+        portfolioBalance: Yup.string().required('Required'),
+        accountType: Yup.string().required('Required'),
+        isInvestedInStocks: Yup.boolean().required('Required').nullable(),
+        investingStyle: Yup.string().required('Required')
+      })}
+      onSubmit={(formValues, actions) => {
+        // eslint-disable-next-line no-console
+        console.log(actions);
         onClickAddAccount({
           portfolioBalance: formValues.portfolioBalance,
           accountType: formValues.accountType,
           investingStyle: formValues.investingStyle
         });
+        actions.resetForm();
       }}
     >
       {({
@@ -64,7 +73,6 @@ export default function AddAccountForm({ onClickAddAccount }) {
         handleSubmit,
         touched,
         errors,
-        resetForm,
         setFieldValue
         // eslint-disable-next-line arrow-body-style
       }) => {
