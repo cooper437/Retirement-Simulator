@@ -28,7 +28,7 @@ import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
-  isPlanningOnSellingHome: undefined,
+  isPlanningOnSellingHome: null,
   expectToSellDate: '',
   currentHomeValue: ''
 };
@@ -79,6 +79,19 @@ export default function QuestionaireStepThree({
     <QuestionnaireStepScaffolding>
       <Formik
         initialValues={stepInitialValues}
+        validationSchema={Yup.object({
+          isPlanningOnSellingHome: Yup.boolean()
+            .required('Required')
+            .nullable(),
+          expectToSellDate: Yup.string().when('isPlanningOnSellingHome', {
+            is: true,
+            then: Yup.string().required('Required')
+          }),
+          currentHomeValue: Yup.string().when('isPlanningOnSellingHome', {
+            is: true,
+            then: Yup.string().required('Required')
+          })
+        })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepThree', formValues });
         }}
@@ -131,6 +144,13 @@ export default function QuestionaireStepThree({
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column'
+              }}
+              component="form"
+              noValidate
+              autoComplete="off"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
               }}
             >
               <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
