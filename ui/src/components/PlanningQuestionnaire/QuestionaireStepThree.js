@@ -94,6 +94,7 @@ export default function QuestionaireStepThree({
         })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepThree', formValues });
+          setCurrentStep(QUESTIONNAIRE_STEPS.retirementExpectations);
         }}
       >
         {({

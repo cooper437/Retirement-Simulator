@@ -3,6 +3,7 @@ import { QUESTIONNAIRE_STEPS } from '../../constants';
 import QuestionnaireStepOne from './QuestionnaireStepOne';
 import QuestionnaireStepTwo from './QuestionnaireStepTwo';
 import QuestionaireStepThree from './QuestionaireStepThree';
+import QuestionnaireStepFour from './QuestionnaireStepFour';
 
 export default function QuestionnaireStateManager() {
   // Initialize our state
@@ -37,6 +38,8 @@ export default function QuestionnaireStateManager() {
         return QuestionnaireStepTwo;
       case QUESTIONNAIRE_STEPS.currentPortfolioAndIncome.stepName:
         return QuestionaireStepThree;
+      case QUESTIONNAIRE_STEPS.retirementExpectations.stepName:
+        return QuestionnaireStepFour;
       default:
         console.error('Invalid currentStep');
         return null;
