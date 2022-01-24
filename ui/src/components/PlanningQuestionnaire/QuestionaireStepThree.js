@@ -41,6 +41,7 @@ const commonFormStyles = {
 const getExpectToSellDropdownOptions = ({
   currentAge,
   lifeExpectancy,
+  // eslint-disable-next-line no-unused-vars
   retirementAge
 }) => {
   const yearsUntilLifeExpectancy = lifeExpectancy - currentAge;
