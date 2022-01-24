@@ -76,7 +76,7 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
               handleSubmit(e);
             }}
           >
-            <Box sx={{ m: 4 }}>
+            <Box sx={{ ml: 4, mr: 4 }}>
               <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
                 <Typography component="div" sx={{ flex: 1 }}>
                   <Box sx={{ ml: 4 }}>Portfolio Balance</Box>
