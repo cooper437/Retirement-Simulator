@@ -182,7 +182,7 @@ export default function QuestionaireStepThree({
                 }}
               >
                 <Box sx={{ m: 4 }}>
-                  <Box sx={{ mt: 8, display: 'flex', flexDirection: 'row' }}>
+                  <Box sx={{ mt: 4, display: 'flex', flexDirection: 'row' }}>
                     <Box
                       sx={{ flex: 1, display: 'flex', alignItems: 'center' }}
                     >

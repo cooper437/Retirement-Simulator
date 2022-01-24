@@ -231,7 +231,7 @@ export default function AddAccountForm({ onClickAddAccount, accounts }) {
                   </Box>
                 </Stack>
               )}
-              <Stack direction="row" justifyContent="flex-end" marginTop={4}>
+              <Stack direction="row" justifyContent="center" marginTop={8}>
                 <Button
                   sx={{ width: '16em', textAlign: 'center' }}
                   variant="outlined"

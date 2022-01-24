@@ -10,7 +10,8 @@ import {
   Paper,
   IconButton,
   Box,
-  Typography
+  Typography,
+  Tooltip
 } from '@mui/material';
 import NumberFormat from 'react-number-format';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -98,13 +99,15 @@ export default function RetirementAccountTable({
                     {getInvestingStyleLabel(row.investingStyle)}
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton
-                      aria-label="delete"
-                      size="small"
-                      onClick={() => onClickRemoveAccount(row.id)}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title="Delete Account">
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={() => onClickRemoveAccount(row.id)}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}

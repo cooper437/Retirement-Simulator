@@ -160,14 +160,14 @@ export default function FormContainer() {
           .required('Required'),
         retirementAge: Yup.number()
           .integer()
-          .moreThan(Yup.ref('currentAge'), 'Must be greater than Current Age')
+          .moreThan(Yup.ref('currentAge'), 'Must be greater than current age')
           .max(150, 'Cannot exceed 150')
           .required('Required'),
         lifeExpectancy: Yup.number()
           .integer()
           .moreThan(
             Yup.ref('retirementAge'),
-            'Must be greater than Retirement Age'
+            'Must be greater than retirement age'
           )
           .max(150, 'Cannot exceed 150')
           .required('Required'),
