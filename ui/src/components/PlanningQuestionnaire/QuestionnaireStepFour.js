@@ -316,6 +316,44 @@ export default function QuestionnaireStepFour({
                     </Box>
                   </Stack>
                 )}
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
+                      Other discretionary income?
+                    </Typography>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
+                      (Pension, Part-Time Work, etc)
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      label="Other Discretionary Income"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.otherDiscretionaryIncome}
+                      onChange={handleChange}
+                      name="otherDiscretionaryIncome"
+                      id="other-discretionary-income-input"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.otherDiscretionaryIncome &&
+                        Boolean(errors.otherDiscretionaryIncome)
+                      }
+                      helperText={
+                        touched.otherDiscretionaryIncome &&
+                        errors.otherDiscretionaryIncome
+                      }
+                    />
+                  </Box>
+                </Stack>
               </Stack>
               <Box
                 sx={{
