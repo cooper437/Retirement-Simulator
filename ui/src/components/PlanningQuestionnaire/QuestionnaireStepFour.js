@@ -29,6 +29,53 @@ const BASE_INCOME_TYPES_ENUM = {
   }
 };
 
+const PERCENTAGE_INCOME_ENUM = {
+  0.0: {
+    label: '0%',
+    value: 0.0
+  },
+  0.1: {
+    label: '10%',
+    value: 0.1
+  },
+  0.2: {
+    label: '20%',
+    value: 0.2
+  },
+  0.3: {
+    label: '30%',
+    value: 0.3
+  },
+  0.4: {
+    label: '40%',
+    value: 0.4
+  },
+  0.5: {
+    label: '50%',
+    value: 0.5
+  },
+  0.6: {
+    label: '60%',
+    value: 0.6
+  },
+  0.7: {
+    label: '70%',
+    value: 0.7
+  },
+  0.8: {
+    label: '80%',
+    value: 0.8
+  },
+  0.9: {
+    label: '90%',
+    value: 0.9
+  },
+  1.0: {
+    label: '100%',
+    value: 1.0
+  }
+};
+
 const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
   desiredBaseIncomePerecentage: '',
@@ -54,7 +101,7 @@ export default function QuestionnaireStepFour({
   completedStepValues,
   setCompletedValuesForStep
 }) {
-  const completedStepFourValues = completedStepValues.stepOne;
+  const completedStepFourValues = completedStepValues.stepFour;
   const stepInitialValues = _.isEmpty(completedStepFourValues)
     ? EMPTY_FORM_VALUES
     : completedStepFourValues;
@@ -118,7 +165,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 6, mr: 2 }}>
-                      What is your desired base income?
+                      How would you like to withdraw your annual base income?
                     </Typography>
                   </Box>
                   <Box sx={{ flex: 1 }}>
@@ -129,15 +176,13 @@ export default function QuestionnaireStepFour({
                         Boolean(errors.desiredBaseIncomeType)
                       }
                     >
-                      <InputLabel id="contribution-style-label">
+                      <InputLabel id="desired-base-income-type-label">
                         Base Income Type
                       </InputLabel>
                       <Select
-                        labelId="contribution-style-label"
-                        id="contribution-style"
-                        label="Contribution Style"
-                        startAdornment={<InputAdornment position="start" />}
-                        endAdornment={<InputAdornment position="end" />}
+                        labelId="desired-base-income-type-label"
+                        id="desired-base-income-type"
+                        label="Base Income Type"
                         value={formValues.desiredBaseIncomeType}
                         name="desiredBaseIncomeType"
                         onChange={async (e) => {
@@ -160,6 +205,55 @@ export default function QuestionnaireStepFour({
                       <FormHelperText>
                         {touched.desiredBaseIncomeType &&
                           errors.desiredBaseIncomeType}
+                      </FormHelperText>
+                    </FormControl>
+                  </Box>
+                </Stack>
+              </Stack>
+              <Stack sx={{ m: 4 }} spacing={6}>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 18, mr: 2 }}>
+                      What percentage?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <FormControl
+                      sx={commonFormStyles.shortFormInput}
+                      error={
+                        touched.desiredBaseIncomePerecentage &&
+                        Boolean(errors.desiredBaseIncomePerecentage)
+                      }
+                    >
+                      <InputLabel id="desired-base-income-percentage-label">
+                        Percentage Withdrawal
+                      </InputLabel>
+                      <Select
+                        labelId="desired-base-income-percentage-label"
+                        id="desired-base-income-percentage"
+                        label="Percentage Withdrawal"
+                        value={formValues.desiredBaseIncomePerecentage}
+                        name="desiredBaseIncomePerecentage"
+                        onChange={async (e) => {
+                          const selection = Object.values(
+                            PERCENTAGE_INCOME_ENUM
+                          ).find((i) => i.value === e.target.value);
+                          await handleChange(e);
+                          setFieldValue(
+                            'desiredBaseIncomePerecentage',
+                            selection.value
+                          );
+                        }}
+                      >
+                        {Object.values(PERCENTAGE_INCOME_ENUM).map((i) => (
+                          <MenuItem key={i.value} value={i.value}>
+                            {i.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>
+                        {touched.desiredBaseIncomePerecentage &&
+                          errors.desiredBaseIncomePerecentage}
                       </FormHelperText>
                     </FormControl>
                   </Box>
