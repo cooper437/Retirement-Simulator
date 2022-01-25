@@ -17,6 +17,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
+import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 
 const BASE_INCOME_TYPES_ENUM = {
   percentage: {
@@ -79,7 +80,7 @@ const PERCENTAGE_INCOME_ENUM = {
 const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
   desiredBaseIncomePerecentage: '',
-  desiredBasedIncomeFixedAmount: '',
+  desiredBaseIncomeFixedAmount: '',
   otherDiscretionaryIncome: '',
   socialSecurityIncome: '',
   isPlanningOnRentingRealEstate: null,
@@ -209,8 +210,6 @@ export default function QuestionnaireStepFour({
                     </FormControl>
                   </Box>
                 </Stack>
-              </Stack>
-              <Stack sx={{ m: 4 }} spacing={6}>
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 18, mr: 2 }}>
@@ -226,12 +225,12 @@ export default function QuestionnaireStepFour({
                       }
                     >
                       <InputLabel id="desired-base-income-percentage-label">
-                        Percentage Withdrawal
+                        Withdrawal Percentage
                       </InputLabel>
                       <Select
                         labelId="desired-base-income-percentage-label"
                         id="desired-base-income-percentage"
-                        label="Percentage Withdrawal"
+                        label="Withdrawal Percentage"
                         value={formValues.desiredBaseIncomePerecentage}
                         name="desiredBaseIncomePerecentage"
                         onChange={async (e) => {
@@ -256,6 +255,39 @@ export default function QuestionnaireStepFour({
                           errors.desiredBaseIncomePerecentage}
                       </FormHelperText>
                     </FormControl>
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 18, mr: 2 }}>What Amount?</Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      label="Withdrawal Amount"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.desiredBaseIncomeFixedAmount}
+                      onChange={handleChange}
+                      name="desiredBaseIncomeFixedAmount"
+                      id="desired-base-income-fixed-amount"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.desiredBaseIncomeFixedAmount &&
+                        Boolean(errors.desiredBaseIncomeFixedAmount)
+                      }
+                      helperText={
+                        touched.desiredBaseIncomeFixedAmount &&
+                        errors.desiredBaseIncomeFixedAmount
+                      }
+                    />
                   </Box>
                 </Stack>
               </Stack>
