@@ -1,11 +1,33 @@
 import React from 'react';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
-import { Box, Button, Stack, Typography, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  TextField,
+  FormHelperText,
+  FormControl,
+  InputAdornment,
+  MenuItem,
+  InputLabel,
+  Select
+} from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
+
+const CONTRIBUTION_STYLES = {
+  percentage: {
+    label: 'Percentage of Income',
+    value: 'percentage'
+  },
+  fixedAmount: {
+    label: 'Fixed Amount',
+    value: 'fixed_amount'
+  }
+};
 
 const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
@@ -52,7 +74,8 @@ export default function QuestionnaireStepFour({
           handleSubmit,
           touched,
           errors,
-          resetForm
+          resetForm,
+          setFieldValue
         }) => {
           const handleClickResetButton = () => {
             setCompletedValuesForStep({
@@ -89,10 +112,55 @@ export default function QuestionnaireStepFour({
                 Step 4: Retirement Income and Expenses
               </Typography>
               <Typography variant="h5" sx={{ m: 4 }}>
-                Tell us about your annual post-retirement income and expenses
+                What is your desired base income?
               </Typography>
               <Stack sx={{ m: 4 }} spacing={6}>
-                <Typography>Some content....</Typography>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 6, mr: 2 }}>
+                      How would like to contribute to your retirement every
+                      year?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <FormControl
+                      sx={commonFormStyles.shortFormInput}
+                      error={
+                        touched.contributionStyle &&
+                        Boolean(errors.contributionStyle)
+                      }
+                    >
+                      <InputLabel id="contribution-style-label">
+                        Contribution Style
+                      </InputLabel>
+                      <Select
+                        labelId="contribution-style-label"
+                        id="contribution-style"
+                        label="Contribution Style"
+                        startAdornment={<InputAdornment position="start" />}
+                        endAdornment={<InputAdornment position="end" />}
+                        value={formValues.contributionStyle}
+                        name="contributionStyle"
+                        onChange={async (e) => {
+                          const selection = Object.values(
+                            CONTRIBUTION_STYLES
+                          ).find((i) => i.value === e.target.value);
+                          await handleChange(e);
+                          setFieldValue('contributionStyle', selection.value);
+                        }}
+                      >
+                        {Object.values(CONTRIBUTION_STYLES).map((i) => (
+                          <MenuItem key={i.value} value={i.value}>
+                            {i.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>
+                        {touched.contributionStyle && errors.contributionStyle}
+                      </FormHelperText>
+                    </FormControl>
+                  </Box>
+                </Stack>
               </Stack>
               <Box
                 sx={{
