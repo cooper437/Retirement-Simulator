@@ -11,7 +11,8 @@ import {
   InputAdornment,
   MenuItem,
   InputLabel,
-  Select
+  Select,
+  Link
 } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -350,6 +351,50 @@ export default function QuestionnaireStepFour({
                       helperText={
                         touched.otherDiscretionaryIncome &&
                         errors.otherDiscretionaryIncome
+                      }
+                    />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
+                      Social Security Income?
+                    </Typography>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
+                      <Link
+                        target="_blank"
+                        href="https://www.ssa.gov/OACT/quickcalc/"
+                        rel="noreferrer"
+                      >
+                        Benefits Calculator
+                      </Link>
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      label="Social Security Income"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.socialSecurityIncome}
+                      onChange={handleChange}
+                      name="socialSecurityIncome"
+                      id="social-security-income-input"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.socialSecurityIncome &&
+                        Boolean(errors.socialSecurityIncome)
+                      }
+                      helperText={
+                        touched.socialSecurityIncome &&
+                        errors.socialSecurityIncome
                       }
                     />
                   </Box>
