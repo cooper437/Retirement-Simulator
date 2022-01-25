@@ -79,7 +79,7 @@ const PERCENTAGE_INCOME_ENUM = {
 
 const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
-  desiredBaseIncomePerecentage: '',
+  desiredBaseIncomePercentage: '',
   desiredBaseIncomeFixedAmount: '',
   otherDiscretionaryIncome: '',
   socialSecurityIncome: '',
@@ -191,10 +191,28 @@ export default function QuestionnaireStepFour({
                             BASE_INCOME_TYPES_ENUM
                           ).find((i) => i.value === e.target.value);
                           await handleChange(e);
-                          setFieldValue(
+                          await setFieldValue(
                             'desiredBaseIncomeType',
                             selection.value
                           );
+                          if (
+                            selection.value ===
+                            BASE_INCOME_TYPES_ENUM.fixedAmount.value
+                          ) {
+                            await setFieldValue(
+                              'desiredBaseIncomePercentage',
+                              ''
+                            );
+                          }
+                          if (
+                            selection.value ===
+                            BASE_INCOME_TYPES_ENUM.percentage.value
+                          ) {
+                            await setFieldValue(
+                              'desiredBaseIncomeFixedAmount',
+                              ''
+                            );
+                          }
                         }}
                       >
                         {Object.values(BASE_INCOME_TYPES_ENUM).map((i) => (
@@ -210,86 +228,94 @@ export default function QuestionnaireStepFour({
                     </FormControl>
                   </Box>
                 </Stack>
-                <Stack direction="row" alignItems="center">
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ ml: 18, mr: 2 }}>
-                      What percentage?
-                    </Typography>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <FormControl
-                      sx={commonFormStyles.shortFormInput}
-                      error={
-                        touched.desiredBaseIncomePerecentage &&
-                        Boolean(errors.desiredBaseIncomePerecentage)
-                      }
-                    >
-                      <InputLabel id="desired-base-income-percentage-label">
-                        Withdrawal Percentage
-                      </InputLabel>
-                      <Select
-                        labelId="desired-base-income-percentage-label"
-                        id="desired-base-income-percentage"
-                        label="Withdrawal Percentage"
-                        value={formValues.desiredBaseIncomePerecentage}
-                        name="desiredBaseIncomePerecentage"
-                        onChange={async (e) => {
-                          const selection = Object.values(
-                            PERCENTAGE_INCOME_ENUM
-                          ).find((i) => i.value === e.target.value);
-                          await handleChange(e);
-                          setFieldValue(
-                            'desiredBaseIncomePerecentage',
-                            selection.value
-                          );
-                        }}
+                {formValues.desiredBaseIncomeType ===
+                  BASE_INCOME_TYPES_ENUM.percentage.value && (
+                  <Stack direction="row" alignItems="center">
+                    <Box sx={{ flex: 1 }}>
+                      <Typography sx={{ ml: 18, mr: 2 }}>
+                        What percentage?
+                      </Typography>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <FormControl
+                        sx={commonFormStyles.shortFormInput}
+                        error={
+                          touched.desiredBaseIncomePercentage &&
+                          Boolean(errors.desiredBaseIncomePercentage)
+                        }
                       >
-                        {Object.values(PERCENTAGE_INCOME_ENUM).map((i) => (
-                          <MenuItem key={i.value} value={i.value}>
-                            {i.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText>
-                        {touched.desiredBaseIncomePerecentage &&
-                          errors.desiredBaseIncomePerecentage}
-                      </FormHelperText>
-                    </FormControl>
-                  </Box>
-                </Stack>
-                <Stack direction="row" alignItems="center">
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ ml: 18, mr: 2 }}>What Amount?</Typography>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <TextField
-                      label="Withdrawal Amount"
-                      sx={commonFormStyles.shortFormInput}
-                      variant="outlined"
-                      value={formValues.desiredBaseIncomeFixedAmount}
-                      onChange={handleChange}
-                      name="desiredBaseIncomeFixedAmount"
-                      id="desired-base-income-fixed-amount"
-                      InputProps={{
-                        inputComponent: NumberFormatDollarAmount,
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">.00</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.desiredBaseIncomeFixedAmount &&
-                        Boolean(errors.desiredBaseIncomeFixedAmount)
-                      }
-                      helperText={
-                        touched.desiredBaseIncomeFixedAmount &&
-                        errors.desiredBaseIncomeFixedAmount
-                      }
-                    />
-                  </Box>
-                </Stack>
+                        <InputLabel id="desired-base-income-percentage-label">
+                          Withdrawal Percentage
+                        </InputLabel>
+                        <Select
+                          labelId="desired-base-income-percentage-label"
+                          id="desired-base-income-percentage"
+                          label="Withdrawal Percentage"
+                          value={formValues.desiredBaseIncomePercentage}
+                          name="desiredBaseIncomePercentage"
+                          onChange={async (e) => {
+                            const selection = Object.values(
+                              PERCENTAGE_INCOME_ENUM
+                            ).find((i) => i.value === e.target.value);
+                            await handleChange(e);
+                            setFieldValue(
+                              'desiredBaseIncomePercentage',
+                              selection.value
+                            );
+                          }}
+                        >
+                          {Object.values(PERCENTAGE_INCOME_ENUM).map((i) => (
+                            <MenuItem key={i.value} value={i.value}>
+                              {i.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {touched.desiredBaseIncomePercentage &&
+                            errors.desiredBaseIncomePercentage}
+                        </FormHelperText>
+                      </FormControl>
+                    </Box>
+                  </Stack>
+                )}
+                {formValues.desiredBaseIncomeType ===
+                  BASE_INCOME_TYPES_ENUM.fixedAmount.value && (
+                  <Stack direction="row" alignItems="center">
+                    <Box sx={{ flex: 1 }}>
+                      <Typography sx={{ ml: 18, mr: 2 }}>
+                        What Amount?
+                      </Typography>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <TextField
+                        label="Withdrawal Amount"
+                        sx={commonFormStyles.shortFormInput}
+                        variant="outlined"
+                        value={formValues.desiredBaseIncomeFixedAmount}
+                        onChange={handleChange}
+                        name="desiredBaseIncomeFixedAmount"
+                        id="desired-base-income-fixed-amount"
+                        InputProps={{
+                          inputComponent: NumberFormatDollarAmount,
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">.00</InputAdornment>
+                          )
+                        }}
+                        error={
+                          touched.desiredBaseIncomeFixedAmount &&
+                          Boolean(errors.desiredBaseIncomeFixedAmount)
+                        }
+                        helperText={
+                          touched.desiredBaseIncomeFixedAmount &&
+                          errors.desiredBaseIncomeFixedAmount
+                        }
+                      />
+                    </Box>
+                  </Stack>
+                )}
               </Stack>
               <Box
                 sx={{
