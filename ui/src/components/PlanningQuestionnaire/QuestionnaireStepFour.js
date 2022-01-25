@@ -18,13 +18,13 @@ import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS } from '../../constants';
 
-const CONTRIBUTION_STYLES = {
+const BASE_INCOME_TYPES_ENUM = {
   percentage: {
-    label: 'Percentage of Income',
+    label: 'As % of Current Income',
     value: 'percentage'
   },
   fixedAmount: {
-    label: 'Fixed Amount',
+    label: 'As Fixed Amount',
     value: 'fixed_amount'
   }
 };
@@ -112,26 +112,25 @@ export default function QuestionnaireStepFour({
                 Step 4: Retirement Income and Expenses
               </Typography>
               <Typography variant="h5" sx={{ m: 4 }}>
-                What is your desired base income?
+                Tell us about your annual post-retiremnent income and expenses:
               </Typography>
               <Stack sx={{ m: 4 }} spacing={6}>
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 6, mr: 2 }}>
-                      How would like to contribute to your retirement every
-                      year?
+                      What is your desired base income?
                     </Typography>
                   </Box>
                   <Box sx={{ flex: 1 }}>
                     <FormControl
                       sx={commonFormStyles.shortFormInput}
                       error={
-                        touched.contributionStyle &&
-                        Boolean(errors.contributionStyle)
+                        touched.desiredBaseIncomeType &&
+                        Boolean(errors.desiredBaseIncomeType)
                       }
                     >
                       <InputLabel id="contribution-style-label">
-                        Contribution Style
+                        Base Income Type
                       </InputLabel>
                       <Select
                         labelId="contribution-style-label"
@@ -139,24 +138,28 @@ export default function QuestionnaireStepFour({
                         label="Contribution Style"
                         startAdornment={<InputAdornment position="start" />}
                         endAdornment={<InputAdornment position="end" />}
-                        value={formValues.contributionStyle}
-                        name="contributionStyle"
+                        value={formValues.desiredBaseIncomeType}
+                        name="desiredBaseIncomeType"
                         onChange={async (e) => {
                           const selection = Object.values(
-                            CONTRIBUTION_STYLES
+                            BASE_INCOME_TYPES_ENUM
                           ).find((i) => i.value === e.target.value);
                           await handleChange(e);
-                          setFieldValue('contributionStyle', selection.value);
+                          setFieldValue(
+                            'desiredBaseIncomeType',
+                            selection.value
+                          );
                         }}
                       >
-                        {Object.values(CONTRIBUTION_STYLES).map((i) => (
+                        {Object.values(BASE_INCOME_TYPES_ENUM).map((i) => (
                           <MenuItem key={i.value} value={i.value}>
                             {i.label}
                           </MenuItem>
                         ))}
                       </Select>
                       <FormHelperText>
-                        {touched.contributionStyle && errors.contributionStyle}
+                        {touched.desiredBaseIncomeType &&
+                          errors.desiredBaseIncomeType}
                       </FormHelperText>
                     </FormControl>
                   </Box>
