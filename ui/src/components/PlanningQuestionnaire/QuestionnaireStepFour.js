@@ -12,12 +12,15 @@ import {
   MenuItem,
   InputLabel,
   Select,
-  Link
+  Link,
+  RadioGroup,
+  Radio,
+  FormControlLabel
 } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
-import { QUESTIONNAIRE_STEPS } from '../../constants';
+import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 
 const BASE_INCOME_TYPES_ENUM = {
@@ -397,6 +400,172 @@ export default function QuestionnaireStepFour({
                         errors.socialSecurityIncome
                       }
                     />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Box sx={{ ml: 4, mr: 4 }}>
+                      Do you plan on renting real-estate or a vacation home?
+                    </Box>
+                  </Box>
+                  <FormControl
+                    error={
+                      touched.isPlanningOnRentingRealEstate &&
+                      Boolean(errors.isPlanningOnRentingRealEstate)
+                    }
+                    component="fieldset"
+                    sx={{ flex: 1 }}
+                  >
+                    <RadioGroup
+                      row
+                      aria-label="is-planning-on-renting-real-estate-btn"
+                      name="isPlanningOnRentingRealEstate"
+                      value={formValues.isPlanningOnRentingRealEstate}
+                      onChange={async (e) => {
+                        if (e.target.value === 'true') {
+                          await setFieldValue(
+                            'isPlanningOnRentingRealEstate',
+                            true
+                          );
+                        }
+                        if (e.target.value === 'false') {
+                          await setFieldValue(
+                            'isPlanningOnRentingRealEstate',
+                            false
+                          );
+                        }
+                      }}
+                    >
+                      <FormControlLabel
+                        value={Boolean(true)}
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value={Boolean(false)}
+                        control={<Radio />}
+                        label="No"
+                      />
+                    </RadioGroup>
+                    <FormHelperText>
+                      {touched.isPlanningOnRentingRealEstate &&
+                        errors.isPlanningOnRentingRealEstate}
+                    </FormHelperText>
+                  </FormControl>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 18, mr: 2 }}>
+                      Expected Rental Income?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      label="Rental Income"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.expectedRentalIncome}
+                      onChange={handleChange}
+                      name="expectedRentalIncome"
+                      id="expected-rental-income-input"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.expectedRentalIncome &&
+                        Boolean(errors.expectedRentalIncome)
+                      }
+                      helperText={
+                        touched.expectedRentalIncome &&
+                        errors.expectedRentalIncome
+                      }
+                    />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 18, mr: 2 }}>
+                      Expected Rental Expenses?
+                    </Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <TextField
+                      label="Rental Expenses"
+                      sx={commonFormStyles.shortFormInput}
+                      variant="outlined"
+                      value={formValues.expectedRentalExpenses}
+                      onChange={handleChange}
+                      name="expectedRentalExpenses"
+                      id="expected-rental-income-input"
+                      InputProps={{
+                        inputComponent: NumberFormatDollarAmount,
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">.00</InputAdornment>
+                        )
+                      }}
+                      error={
+                        touched.expectedRentalExpenses &&
+                        Boolean(errors.expectedRentalExpenses)
+                      }
+                      helperText={
+                        touched.expectedRentalExpenses &&
+                        errors.expectedRentalExpenses
+                      }
+                    />
+                  </Box>
+                </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
+                      Tax Filing Status
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      flex: 1
+                    }}
+                  >
+                    <FormControl
+                      sx={commonFormStyles.shortFormInput}
+                      error={
+                        touched.taxFilingStatus &&
+                        Boolean(errors.taxFilingStatus)
+                      }
+                    >
+                      <InputLabel id="filing-status-label">
+                        Tax Filing Status
+                      </InputLabel>
+                      <Select
+                        labelId="filing-status-label"
+                        id="filing-status-input"
+                        label="Tax Filing Status"
+                        startAdornment={<InputAdornment position="start" />}
+                        endAdornment={<InputAdornment position="end" />}
+                        value={formValues.taxFilingStatus}
+                        name="taxFilingStatus"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="singleFiler">Single Filer</MenuItem>
+                        <MenuItem value="marriedFilingJointly">
+                          Married Filing Jointly
+                        </MenuItem>
+                        <MenuItem value="marriedFilingSeparately">
+                          Married Filing Separately
+                        </MenuItem>
+                      </Select>
+                      <FormHelperText>
+                        {touched.taxFilingStatus && errors.taxFilingStatus}
+                      </FormHelperText>
+                    </FormControl>
                   </Box>
                 </Stack>
               </Stack>
