@@ -125,7 +125,7 @@ const calcTotalCurrentIncome = ({
   discretionaryIncome
 }) => parseInt(annualHouseHoldIncome, 10) + parseInt(discretionaryIncome, 10);
 
-const calculateIncome = ({
+const calculateIncomeForTaxes = ({
   formValues,
   discretionaryIncome,
   annualHouseHoldIncome
@@ -279,7 +279,7 @@ export default function QuestionnaireStepFour({
             setCurrentStep(QUESTIONNAIRE_STEPS.currentPortfolioAndIncome);
           };
           const { postRetirementAnnualIncome, postRetirementTaxRate } =
-            calculateIncome({
+            calculateIncomeForTaxes({
               formValues,
               discretionaryIncome,
               annualHouseHoldIncome
@@ -724,9 +724,8 @@ export default function QuestionnaireStepFour({
                     display="flex"
                     flexDirection="row"
                     justifyContent="center"
-                    sx={{ mt: 2 }}
                   >
-                    <Typography>
+                    <Typography sx={{ ml: 12, mr: 12, textAlign: 'center' }}>
                       Based on your expected annual income post retirement of{' '}
                       <NumberFormat
                         thousandsGroupStyle="thousand"
@@ -749,6 +748,7 @@ export default function QuestionnaireStepFour({
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
+                  mt: 4,
                   mb: 4
                 }}
               >
