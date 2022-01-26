@@ -99,6 +99,17 @@ const commonFormStyles = {
   }
 };
 
+const reorderNthArrayElementToLast = (anArray, elementToMove) => {
+  const aCopy = [...anArray];
+  aCopy.push(
+    aCopy.splice(
+      aCopy.findIndex((i) => i.value === elementToMove.value),
+      1
+    )[0]
+  );
+  return aCopy;
+};
+
 export default function QuestionnaireStepFour({
   // eslint-disable-next-line no-unused-vars
   currentStep,
@@ -110,6 +121,11 @@ export default function QuestionnaireStepFour({
   const stepInitialValues = _.isEmpty(completedStepFourValues)
     ? EMPTY_FORM_VALUES
     : completedStepFourValues;
+  const percentageIncomeValues = Object.values(PERCENTAGE_INCOME_ENUM);
+  const sortedPercentageIncomeValues = reorderNthArrayElementToLast(
+    percentageIncomeValues,
+    { label: '100%', value: 1 }
+  );
   return (
     <QuestionnaireStepScaffolding>
       <Formik
@@ -305,7 +321,7 @@ export default function QuestionnaireStepFour({
                             );
                           }}
                         >
-                          {Object.values(PERCENTAGE_INCOME_ENUM).map((i) => (
+                          {sortedPercentageIncomeValues.map((i) => (
                             <MenuItem key={i.value} value={i.value}>
                               {i.label}
                             </MenuItem>
