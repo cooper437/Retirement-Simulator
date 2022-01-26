@@ -27,3 +27,38 @@ export const decimalToPercent = (aDecimal, returnAsString) => {
 // Replace a number with a version of it that has commas every 3 digits
 export const numberWithCommas = (aNumber) =>
   aNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+/**
+ * Determine the Total Post Retirement Annual Income Amount and effective tax rate
+ * given the filing status, post retirement withdrawal amount amd addtiontional post retirement
+ * annual income
+ */
+export const calcPostRetirementAnnualIncomeAndTaxRate = ({
+  filingStatus,
+  postRetirementAnnualWithdrawal,
+  additionalPostRetirementAnnualIncome
+}) => {
+  let postRetirementAnnualIncome;
+  let postRetirementTaxRate;
+  let postRetirementTaxRateAsDecimal;
+  if (
+    filingStatus &&
+    postRetirementAnnualWithdrawal &&
+    additionalPostRetirementAnnualIncome
+  ) {
+    postRetirementAnnualIncome =
+      parseInt(postRetirementAnnualWithdrawal, 10) +
+      parseInt(additionalPostRetirementAnnualIncome, 10);
+    postRetirementTaxRateAsDecimal = determineTaxRate({
+      filingStatus,
+      annualIncome: postRetirementAnnualIncome
+    });
+    const taxRateNonDecimal = postRetirementTaxRateAsDecimal * 100;
+    postRetirementTaxRate = taxRateNonDecimal.toString();
+  }
+  return {
+    postRetirementAnnualIncome,
+    postRetirementTaxRate,
+    postRetirementTaxRateAsDecimal
+  };
+};

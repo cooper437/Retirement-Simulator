@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import NumberFormat from 'react-number-format';
 import {
   Box,
   Button,
@@ -22,6 +23,15 @@ import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
 import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
+import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
+// eslint-disable-next-line arrow-body-style
+const constructFinalPayload = () => {
+  return {
+    adjustPortfolioBalanceForInflation: true,
+    adjustContributionsForIncomeGrowth: true,
+    adjustWithdrawalsForInflation: true
+  };
+};
 
 const BASE_INCOME_TYPES_ENUM = {
   percentage: {
@@ -110,6 +120,73 @@ const reorderNthArrayElementToLast = (anArray, elementToMove) => {
   return aCopy;
 };
 
+const calcTotalCurrentIncome = ({
+  annualHouseHoldIncome,
+  discretionaryIncome
+}) => parseInt(annualHouseHoldIncome, 10) + parseInt(discretionaryIncome, 10);
+
+const calculateIncome = ({
+  formValues,
+  discretionaryIncome,
+  annualHouseHoldIncome
+}) => {
+  const totalCurrentIncome = calcTotalCurrentIncome({
+    discretionaryIncome,
+    annualHouseHoldIncome
+  });
+  let desiredBaseIncomeFixedAmount;
+  if (
+    formValues.desiredBaseIncomeType ===
+    BASE_INCOME_TYPES_ENUM.fixedAmount.value
+  ) {
+    desiredBaseIncomeFixedAmount = formValues.desiredBaseIncomeFixedAmount;
+  }
+  if (
+    formValues.desiredBaseIncomeType ===
+      BASE_INCOME_TYPES_ENUM.percentage.value &&
+    formValues.desiredBaseIncomePercentage
+  ) {
+    const desiredBaseIncomeFixedAmountAsNumber = parseInt(
+      totalCurrentIncome * formValues.desiredBaseIncomePercentage,
+      10
+    );
+    desiredBaseIncomeFixedAmount =
+      desiredBaseIncomeFixedAmountAsNumber.toString();
+  }
+  let additionalPostRetirementAnnualIncome = '';
+  if (formValues.otherDiscretionaryIncome && formValues.socialSecurityIncome) {
+    if (formValues.isPlanningOnRentingRealEstate === false) {
+      const additionalPostRetirementAnnualIncomeAsNumber =
+        parseInt(formValues.otherDiscretionaryIncome, 10) +
+        parseInt(formValues.socialSecurityIncome, 10);
+      additionalPostRetirementAnnualIncome =
+        additionalPostRetirementAnnualIncomeAsNumber.toString();
+    }
+    if (
+      formValues.isPlanningOnRentingRealEstate &&
+      formValues.expectedRentalIncome &&
+      formValues.expectedRentalExpenses
+    ) {
+      const netRentalIncome =
+        parseInt(formValues.expectedRentalIncome, 10) -
+        parseInt(formValues.expectedRentalExpenses, 10);
+      const additionalPostRetirementAnnualIncomeAsNumber =
+        parseInt(formValues.otherDiscretionaryIncome, 10) +
+        parseInt(formValues.socialSecurityIncome, 10) +
+        netRentalIncome;
+      additionalPostRetirementAnnualIncome =
+        additionalPostRetirementAnnualIncomeAsNumber.toString();
+    }
+  }
+  const { postRetirementAnnualIncome, postRetirementTaxRate } =
+    calcPostRetirementAnnualIncomeAndTaxRate({
+      filingStatus: formValues.taxFilingStatus,
+      postRetirementAnnualWithdrawal: desiredBaseIncomeFixedAmount,
+      additionalPostRetirementAnnualIncome
+    });
+  return { postRetirementAnnualIncome, postRetirementTaxRate };
+};
+
 export default function QuestionnaireStepFour({
   // eslint-disable-next-line no-unused-vars
   currentStep,
@@ -117,7 +194,10 @@ export default function QuestionnaireStepFour({
   completedStepValues,
   setCompletedValuesForStep
 }) {
-  const completedStepFourValues = completedStepValues.stepFour;
+  const {
+    stepTwo: { annualHouseHoldIncome, discretionaryIncome },
+    stepFour: completedStepFourValues
+  } = completedStepValues;
   const stepInitialValues = _.isEmpty(completedStepFourValues)
     ? EMPTY_FORM_VALUES
     : completedStepFourValues;
@@ -198,6 +278,12 @@ export default function QuestionnaireStepFour({
             });
             setCurrentStep(QUESTIONNAIRE_STEPS.currentPortfolioAndIncome);
           };
+          const { postRetirementAnnualIncome, postRetirementTaxRate } =
+            calculateIncome({
+              formValues,
+              discretionaryIncome,
+              annualHouseHoldIncome
+            });
           return (
             <Box
               sx={{
@@ -633,6 +719,29 @@ export default function QuestionnaireStepFour({
                     </FormControl>
                   </Box>
                 </Stack>
+                {postRetirementAnnualIncome && postRetirementTaxRate && (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="center"
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography>
+                      Based on your expected annual income post retirement of{' '}
+                      <NumberFormat
+                        thousandsGroupStyle="thousand"
+                        value={postRetirementAnnualIncome.toString()}
+                        prefix="$"
+                        decimalSeparator="."
+                        displayType="text"
+                        type="text"
+                        thousandSeparator
+                        allowNegative
+                      />{' '}
+                      your assumed tax rate is {postRetirementTaxRate}%.
+                    </Typography>
+                  </Box>
+                )}
               </Stack>
               <Box
                 sx={{

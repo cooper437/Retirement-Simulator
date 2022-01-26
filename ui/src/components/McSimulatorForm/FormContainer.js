@@ -16,7 +16,7 @@ import IncomeFormContent from './FormSections/IncomeFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
-import { determineTaxRate } from '../../utils/generalUtils';
+import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
 import ResultsContainer from './FormResults/ResultsContainer';
 
 const commonFormStyles = {
@@ -111,41 +111,6 @@ const INITIAL_FORM_VALUES = {
 // };
 
 const numberToPercent = (aNumber) => aNumber / 100;
-
-/**
- * Determine the Total Post Retirement Annual Income Amount and effective tax rate
- * given the filing status, post retirement withdrawal amount amd addtiontional post retirement
- * annual income
- */
-const calcPostRetirementAnnualIncomeAndTaxRate = ({
-  filingStatus,
-  postRetirementAnnualWithdrawal,
-  additionalPostRetirementAnnualIncome
-}) => {
-  let postRetirementAnnualIncome;
-  let postRetirementTaxRate;
-  let postRetirementTaxRateAsDecimal;
-  if (
-    filingStatus &&
-    postRetirementAnnualWithdrawal &&
-    additionalPostRetirementAnnualIncome
-  ) {
-    postRetirementAnnualIncome =
-      parseInt(postRetirementAnnualWithdrawal, 10) +
-      parseInt(additionalPostRetirementAnnualIncome, 10);
-    postRetirementTaxRateAsDecimal = determineTaxRate({
-      filingStatus,
-      annualIncome: postRetirementAnnualIncome
-    });
-    const taxRateNonDecimal = postRetirementTaxRateAsDecimal * 100;
-    postRetirementTaxRate = taxRateNonDecimal.toString();
-  }
-  return {
-    postRetirementAnnualIncome,
-    postRetirementTaxRate,
-    postRetirementTaxRateAsDecimal
-  };
-};
 
 export default function FormContainer() {
   const [simulationResults, setSimulationResults] = useState(INITIAL_STATE);
