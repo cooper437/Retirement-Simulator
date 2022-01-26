@@ -12,14 +12,9 @@ export default function App() {
     if (locationPath && locationPath === '/mc-input-form') return 'white';
     return 'rgb(231, 235, 240)';
   };
+  document.body.style = `background: ${getBackgroundColor(location.pathname)};`;
   return (
-    <Box
-      sx={{
-        backgroundColor: getBackgroundColor(location.pathname),
-        height: '100%'
-      }}
-      className="App"
-    >
+    <Box className="App">
       <AppBar />
       <Container>
         <Routes>
