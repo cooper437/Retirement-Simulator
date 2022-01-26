@@ -184,7 +184,14 @@ const calculateIncomeForTaxes = ({
 };
 
 // eslint-disable-next-line arrow-body-style
-const constructFinalPayload = (allFormValues) => {
+const constructFinalPayload = (allFormValuesGroupedByStep) => {
+  // Consolidate them all into object so its easier to reference
+  const allFormValues = {
+    ...allFormValuesGroupedByStep.stepOne,
+    ...allFormValuesGroupedByStep.stepTwo,
+    ...allFormValuesGroupedByStep.stepThree,
+    ...allFormValuesGroupedByStep.stepFour
+  };
   const allAccountBalances = allFormValues.accounts.map((i) =>
     parseInt(i.portfolioBalance, 10)
   );
@@ -211,12 +218,33 @@ const constructFinalPayload = (allFormValues) => {
   const sumReducer = (previousValue, currentValue) =>
     previousValue + currentValue;
   const totalAccountBalance = allAccountBalances.reduce(sumReducer);
+  const { postRetirementAnnualIncome, postRetirementTaxRate } =
+    calculateIncomeForTaxes({
+      formValues: allFormValuesGroupedByStep.stepFour,
+      discretionaryIncome: allFormValues.discretionaryIncome,
+      annualHouseHoldIncome: allFormValues.annualHouseHoldIncome
+    });
+  let incomeGrowthMean = 0.027;
+  if (
+    allFormValues.contributionStyle === CONTRIBUTION_STYLES.fixedAmount.value &&
+    allFormValues.isFixedContributionTypicalGrowthExpected === false
+  ) {
+    incomeGrowthMean = 0.0;
+  }
   const payload = {
     adjustPortfolioBalanceForInflation: true,
     adjustContributionsForIncomeGrowth: true,
     adjustWithdrawalsForInflation: true,
     initialPortfolioAmount: totalAccountBalance,
-    preRetirementAnnualContribution: fixedAmountPreRetirementContribution
+    preRetirementAnnualContribution: fixedAmountPreRetirementContribution,
+    postRetirementAnnualWithdrawal: -postRetirementAnnualIncome,
+    currentAge: allFormValues.currentAge,
+    retirementAge: allFormValues.retirementAge,
+    lifeExpectancy: allFormValues.lifeExpectancy,
+    inflationMean: 0.024,
+    incomeGrowthMean,
+    postRetirementTaxRate,
+    additionalPostRetirementAnnualIncome: 0.0
   };
   return payload;
 };
@@ -283,12 +311,7 @@ export default function QuestionnaireStepFour({
         })}
         onSubmit={async (formValues) => {
           await setCompletedValuesForStep({ stepName: 'stepFour', formValues });
-          constructFinalPayload({
-            ...completedStepValues.stepOne,
-            ...completedStepValues.stepTwo,
-            ...completedStepValues.stepThree,
-            ...completedStepValues.stepFour
-          });
+          constructFinalPayload(completedStepValues);
           // eslint-disable-next-line no-console
           console.log('Submitting...');
         }}
