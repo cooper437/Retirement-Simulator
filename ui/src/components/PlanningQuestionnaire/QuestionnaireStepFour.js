@@ -323,7 +323,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      Other discretionary income?
+                      What is your discretionary income?
                     </Typography>
                     <Typography sx={{ ml: 4, mr: 2 }}>
                       (Pension, Part-Time Work, etc)
@@ -361,7 +361,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      Social Security Income?
+                      What is your social security income?
                     </Typography>
                     <Typography sx={{ ml: 4, mr: 2 }}>
                       <Link
@@ -453,80 +453,92 @@ export default function QuestionnaireStepFour({
                     </FormHelperText>
                   </FormControl>
                 </Stack>
-                <Stack direction="row" alignItems="center">
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ ml: 18, mr: 2 }}>
-                      Expected Rental Income?
-                    </Typography>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <TextField
-                      label="Rental Income"
-                      sx={commonFormStyles.shortFormInput}
-                      variant="outlined"
-                      value={formValues.expectedRentalIncome}
-                      onChange={handleChange}
-                      name="expectedRentalIncome"
-                      id="expected-rental-income-input"
-                      InputProps={{
-                        inputComponent: NumberFormatDollarAmount,
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">.00</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.expectedRentalIncome &&
-                        Boolean(errors.expectedRentalIncome)
-                      }
-                      helperText={
-                        touched.expectedRentalIncome &&
-                        errors.expectedRentalIncome
-                      }
-                    />
-                  </Box>
-                </Stack>
-                <Stack direction="row" alignItems="center">
-                  <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ ml: 18, mr: 2 }}>
-                      Expected Rental Expenses?
-                    </Typography>
-                  </Box>
-                  <Box sx={{ flex: 1 }}>
-                    <TextField
-                      label="Rental Expenses"
-                      sx={commonFormStyles.shortFormInput}
-                      variant="outlined"
-                      value={formValues.expectedRentalExpenses}
-                      onChange={handleChange}
-                      name="expectedRentalExpenses"
-                      id="expected-rental-income-input"
-                      InputProps={{
-                        inputComponent: NumberFormatDollarAmount,
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">.00</InputAdornment>
-                        )
-                      }}
-                      error={
-                        touched.expectedRentalExpenses &&
-                        Boolean(errors.expectedRentalExpenses)
-                      }
-                      helperText={
-                        touched.expectedRentalExpenses &&
-                        errors.expectedRentalExpenses
-                      }
-                    />
-                  </Box>
-                </Stack>
+                {formValues.isPlanningOnRentingRealEstate && (
+                  <>
+                    <Stack direction="row" alignItems="center">
+                      <Box sx={{ flex: 1 }}>
+                        <Typography sx={{ ml: 18, mr: 2 }}>
+                          Expected rental income
+                        </Typography>
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <TextField
+                          label="Rental Income"
+                          sx={commonFormStyles.shortFormInput}
+                          variant="outlined"
+                          value={formValues.expectedRentalIncome}
+                          onChange={handleChange}
+                          name="expectedRentalIncome"
+                          id="expected-rental-income-input"
+                          InputProps={{
+                            inputComponent: NumberFormatDollarAmount,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                .00
+                              </InputAdornment>
+                            )
+                          }}
+                          error={
+                            touched.expectedRentalIncome &&
+                            Boolean(errors.expectedRentalIncome)
+                          }
+                          helperText={
+                            touched.expectedRentalIncome &&
+                            errors.expectedRentalIncome
+                          }
+                        />
+                      </Box>
+                    </Stack>
+                    <Stack direction="row" alignItems="center">
+                      <Box sx={{ flex: 1 }}>
+                        <Typography sx={{ ml: 18, mr: 2 }}>
+                          Expected rental expenses
+                        </Typography>
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <TextField
+                          label="Rental Expenses"
+                          sx={commonFormStyles.shortFormInput}
+                          variant="outlined"
+                          value={formValues.expectedRentalExpenses}
+                          onChange={handleChange}
+                          name="expectedRentalExpenses"
+                          id="expected-rental-income-input"
+                          InputProps={{
+                            inputComponent: NumberFormatDollarAmount,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                .00
+                              </InputAdornment>
+                            )
+                          }}
+                          error={
+                            touched.expectedRentalExpenses &&
+                            Boolean(errors.expectedRentalExpenses)
+                          }
+                          helperText={
+                            touched.expectedRentalExpenses &&
+                            errors.expectedRentalExpenses
+                          }
+                        />
+                      </Box>
+                    </Stack>
+                  </>
+                )}
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      Tax Filing Status
+                      What is your tax filing status?
                     </Typography>
                   </Box>
                   <Box
