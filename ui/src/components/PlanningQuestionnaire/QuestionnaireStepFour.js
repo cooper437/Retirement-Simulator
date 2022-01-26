@@ -222,7 +222,7 @@ export default function QuestionnaireStepFour({
               <Stack sx={{ m: 4 }} spacing={6}>
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
-                    <Typography sx={{ ml: 6, mr: 2 }}>
+                    <Typography sx={{ ml: 4, mr: 2 }}>
                       How would you like to withdraw your annual base income?
                     </Typography>
                   </Box>
