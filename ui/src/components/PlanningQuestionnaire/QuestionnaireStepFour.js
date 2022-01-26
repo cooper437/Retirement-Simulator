@@ -303,7 +303,7 @@ export default function QuestionnaireStepFour({
                 Step 4: Retirement Income and Expenses
               </Typography>
               <Typography variant="h5" sx={{ m: 4 }}>
-                Tell us about your annual post-retiremnent income and expenses:
+                Tell us about your annual post-retirement income and expenses:
               </Typography>
               <Stack sx={{ m: 4 }} spacing={6}>
                 <Stack direction="row" alignItems="center">
