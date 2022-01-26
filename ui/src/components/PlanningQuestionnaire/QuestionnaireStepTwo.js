@@ -20,7 +20,7 @@ import {
 import { Formik } from 'formik';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
-import { QUESTIONNAIRE_STEPS } from '../../constants';
+import { QUESTIONNAIRE_STEPS, CONTRIBUTION_STYLES } from '../../constants';
 import NumberFormatPercentage from '../NumberFormatPercentage';
 
 const EMPTY_FORM_VALUES = {
@@ -30,17 +30,6 @@ const EMPTY_FORM_VALUES = {
   annualizedPercentIncomeContribution: '3.5',
   isFixedContributionTypicalGrowthExpected: null,
   annualizedFixedIncomeContribution: ''
-};
-
-const CONTRIBUTION_STYLES = {
-  percentage: {
-    label: 'Percentage of Income',
-    value: 'percentage'
-  },
-  fixedAmount: {
-    label: 'Fixed Amount',
-    value: 'fixed_amount'
-  }
 };
 
 const commonFormStyles = {

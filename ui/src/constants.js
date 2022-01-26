@@ -101,3 +101,14 @@ export const ACCOUNT_TYPES_ENUM = {
     value: 'brokerage'
   }
 };
+
+export const CONTRIBUTION_STYLES = {
+  percentage: {
+    label: 'Percentage of Income',
+    value: 'percentage'
+  },
+  fixedAmount: {
+    label: 'Fixed Amount',
+    value: 'fixed_amount'
+  }
+};

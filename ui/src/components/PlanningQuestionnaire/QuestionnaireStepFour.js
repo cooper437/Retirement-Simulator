@@ -21,17 +21,13 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import QuestionnaireStepScaffolding from './QuestionnaireStepScaffolding';
-import { QUESTIONNAIRE_STEPS, INVESTMENT_STYLE_ENUM } from '../../constants';
+import {
+  QUESTIONNAIRE_STEPS,
+  INVESTMENT_STYLE_ENUM,
+  CONTRIBUTION_STYLES
+} from '../../constants';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
-// eslint-disable-next-line arrow-body-style
-const constructFinalPayload = () => {
-  return {
-    adjustPortfolioBalanceForInflation: true,
-    adjustContributionsForIncomeGrowth: true,
-    adjustWithdrawalsForInflation: true
-  };
-};
 
 const BASE_INCOME_TYPES_ENUM = {
   percentage: {
@@ -187,6 +183,44 @@ const calculateIncomeForTaxes = ({
   return { postRetirementAnnualIncome, postRetirementTaxRate };
 };
 
+// eslint-disable-next-line arrow-body-style
+const constructFinalPayload = (allFormValues) => {
+  const allAccountBalances = allFormValues.accounts.map((i) =>
+    parseInt(i.portfolioBalance, 10)
+  );
+  let fixedAmountPreRetirementContribution;
+  if (
+    allFormValues.contributionStyle === CONTRIBUTION_STYLES.fixedAmount.value
+  ) {
+    fixedAmountPreRetirementContribution = parseInt(
+      allFormValues.annualizedFixedIncomeContribution,
+      10
+    );
+  }
+  if (
+    allFormValues.contributionStyle === CONTRIBUTION_STYLES.percentage.value
+  ) {
+    const percentIncome =
+      parseFloat(allFormValues.annualizedPercentIncomeContribution, 10) / 100;
+    const baseIncome = parseInt(allFormValues.annualHouseHoldIncome, 10);
+    fixedAmountPreRetirementContribution = parseInt(
+      baseIncome * percentIncome,
+      10
+    );
+  }
+  const sumReducer = (previousValue, currentValue) =>
+    previousValue + currentValue;
+  const totalAccountBalance = allAccountBalances.reduce(sumReducer);
+  const payload = {
+    adjustPortfolioBalanceForInflation: true,
+    adjustContributionsForIncomeGrowth: true,
+    adjustWithdrawalsForInflation: true,
+    initialPortfolioAmount: totalAccountBalance,
+    preRetirementAnnualContribution: fixedAmountPreRetirementContribution
+  };
+  return payload;
+};
+
 export default function QuestionnaireStepFour({
   // eslint-disable-next-line no-unused-vars
   currentStep,
@@ -247,8 +281,14 @@ export default function QuestionnaireStepFour({
           ),
           taxFilingStatus: Yup.string().required('Required')
         })}
-        onSubmit={(formValues) => {
-          setCompletedValuesForStep({ stepName: 'stepFour', formValues });
+        onSubmit={async (formValues) => {
+          await setCompletedValuesForStep({ stepName: 'stepFour', formValues });
+          constructFinalPayload({
+            ...completedStepValues.stepOne,
+            ...completedStepValues.stepTwo,
+            ...completedStepValues.stepThree,
+            ...completedStepValues.stepFour
+          });
           // eslint-disable-next-line no-console
           console.log('Submitting...');
         }}
