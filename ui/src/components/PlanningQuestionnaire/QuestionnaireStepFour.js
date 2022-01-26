@@ -114,6 +114,43 @@ export default function QuestionnaireStepFour({
     <QuestionnaireStepScaffolding>
       <Formik
         initialValues={stepInitialValues}
+        validationSchema={Yup.object({
+          desiredBaseIncomeType: Yup.string().required('Required'),
+          desiredBaseIncomePercentage: Yup.string().when(
+            'desiredBaseIncomeType',
+            {
+              is: BASE_INCOME_TYPES_ENUM.percentage.value,
+              then: Yup.string().required('Required')
+            }
+          ),
+          desiredBaseIncomeFixedAmount: Yup.string().when(
+            'desiredBaseIncomeType',
+            {
+              is: BASE_INCOME_TYPES_ENUM.fixedAmount.value,
+              then: Yup.string().required('Required')
+            }
+          ),
+          otherDiscretionaryIncome: Yup.string().required('Required'),
+          socialSecurityIncome: Yup.string().required('Required'),
+          isPlanningOnRentingRealEstate: Yup.boolean()
+            .required('Required')
+            .nullable(),
+          expectedRentalIncome: Yup.string().when(
+            'isPlanningOnRentingRealEstate',
+            {
+              is: true,
+              then: Yup.string().required('Required')
+            }
+          ),
+          expectedRentalExpenses: Yup.string().when(
+            'isPlanningOnRentingRealEstate',
+            {
+              is: true,
+              then: Yup.string().required('Required')
+            }
+          ),
+          taxFilingStatus: Yup.string().required('Required')
+        })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepFour', formValues });
           // eslint-disable-next-line no-console
