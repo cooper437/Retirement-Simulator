@@ -24,8 +24,8 @@ import { QUESTIONNAIRE_STEPS, CONTRIBUTION_STYLES } from '../../constants';
 import NumberFormatPercentage from '../NumberFormatPercentage';
 
 const EMPTY_FORM_VALUES = {
-  annualHouseHoldIncome: '',
-  discretionaryIncome: '',
+  currentAnnualHouseHoldIncome: '',
+  currentDiscretionaryIncome: '',
   contributionStyle: '',
   annualizedPercentIncomeContribution: '3.5',
   isFixedContributionTypicalGrowthExpected: null,
@@ -54,8 +54,8 @@ export default function QuestionnaireStepTwo({
       <Formik
         initialValues={stepInitialValues}
         validationSchema={Yup.object({
-          annualHouseHoldIncome: Yup.string().required('Required'),
-          discretionaryIncome: Yup.string().required('Required'),
+          currentAnnualHouseHoldIncome: Yup.string().required('Required'),
+          currentDiscretionaryIncome: Yup.string().required('Required'),
           contributionStyle: Yup.string().required('Required'),
           annualizedPercentIncomeContribution: Yup.string().when(
             'contributionStyle',
@@ -141,9 +141,9 @@ export default function QuestionnaireStepTwo({
                       label="Household Income"
                       sx={commonFormStyles.shortFormInput}
                       variant="outlined"
-                      value={formValues.annualHouseHoldIncome}
+                      value={formValues.currentAnnualHouseHoldIncome}
                       onChange={handleChange}
-                      name="annualHouseHoldIncome"
+                      name="currentAnnualHouseHoldIncome"
                       id="annual-household-income"
                       InputProps={{
                         inputComponent: NumberFormatDollarAmount,
@@ -155,12 +155,12 @@ export default function QuestionnaireStepTwo({
                         )
                       }}
                       error={
-                        touched.annualHouseHoldIncome &&
-                        Boolean(errors.annualHouseHoldIncome)
+                        touched.currentAnnualHouseHoldIncome &&
+                        Boolean(errors.currentAnnualHouseHoldIncome)
                       }
                       helperText={
-                        touched.annualHouseHoldIncome &&
-                        errors.annualHouseHoldIncome
+                        touched.currentAnnualHouseHoldIncome &&
+                        errors.currentAnnualHouseHoldIncome
                       }
                     />
                   </Box>
@@ -176,9 +176,9 @@ export default function QuestionnaireStepTwo({
                       label="Discretionary Income"
                       sx={commonFormStyles.shortFormInput}
                       variant="outlined"
-                      value={formValues.discretionaryIncome}
+                      value={formValues.currentDiscretionaryIncome}
                       onChange={handleChange}
-                      name="discretionaryIncome"
+                      name="currentDiscretionaryIncome"
                       id="discretionary-income"
                       InputProps={{
                         inputComponent: NumberFormatDollarAmount,
@@ -190,12 +190,12 @@ export default function QuestionnaireStepTwo({
                         )
                       }}
                       error={
-                        touched.discretionaryIncome &&
-                        Boolean(errors.discretionaryIncome)
+                        touched.currentDiscretionaryIncome &&
+                        Boolean(errors.currentDiscretionaryIncome)
                       }
                       helperText={
-                        touched.discretionaryIncome &&
-                        errors.discretionaryIncome
+                        touched.currentDiscretionaryIncome &&
+                        errors.currentDiscretionaryIncome
                       }
                     />
                   </Box>

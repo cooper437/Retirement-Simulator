@@ -38,7 +38,7 @@ const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
   desiredBaseIncomePercentage: '',
   desiredBaseIncomeFixedAmount: '',
-  otherDiscretionaryIncome: '',
+  otherDiscretionaryIncomePostRetirement: '',
   socialSecurityIncome: '',
   isPlanningOnRentingRealEstate: null,
   expectedRentalIncome: '',
@@ -60,7 +60,7 @@ export default function QuestionnaireStepFour({
   setCompletedValuesForStep
 }) {
   const {
-    stepTwo: { annualHouseHoldIncome, discretionaryIncome },
+    stepTwo: { currentAnnualHouseHoldIncome, currentDiscretionaryIncome },
     stepFour: completedStepFourValues
   } = completedStepValues;
   const stepInitialValues = _.isEmpty(completedStepFourValues)
@@ -91,7 +91,8 @@ export default function QuestionnaireStepFour({
               then: Yup.string().required('Required')
             }
           ),
-          otherDiscretionaryIncome: Yup.string().required('Required'),
+          otherDiscretionaryIncomePostRetirement:
+            Yup.string().required('Required'),
           socialSecurityIncome: Yup.string().required('Required'),
           isPlanningOnRentingRealEstate: Yup.boolean()
             .required('Required')
@@ -154,8 +155,8 @@ export default function QuestionnaireStepFour({
           const { postRetirementAnnualIncome, postRetirementTaxRate } =
             calculateIncomeForTaxes({
               formValues,
-              discretionaryIncome,
-              annualHouseHoldIncome
+              currentDiscretionaryIncome,
+              currentAnnualHouseHoldIncome
             });
           return (
             <Box
@@ -346,9 +347,9 @@ export default function QuestionnaireStepFour({
                       label="Other Discretionary Income"
                       sx={commonFormStyles.shortFormInput}
                       variant="outlined"
-                      value={formValues.otherDiscretionaryIncome}
+                      value={formValues.otherDiscretionaryIncomePostRetirement}
                       onChange={handleChange}
-                      name="otherDiscretionaryIncome"
+                      name="otherDiscretionaryIncomePostRetirement"
                       id="other-discretionary-income-input"
                       InputProps={{
                         inputComponent: NumberFormatDollarAmount,
@@ -360,12 +361,12 @@ export default function QuestionnaireStepFour({
                         )
                       }}
                       error={
-                        touched.otherDiscretionaryIncome &&
-                        Boolean(errors.otherDiscretionaryIncome)
+                        touched.otherDiscretionaryIncomePostRetirement &&
+                        Boolean(errors.otherDiscretionaryIncomePostRetirement)
                       }
                       helperText={
-                        touched.otherDiscretionaryIncome &&
-                        errors.otherDiscretionaryIncome
+                        touched.otherDiscretionaryIncomePostRetirement &&
+                        errors.otherDiscretionaryIncomePostRetirement
                       }
                     />
                   </Box>

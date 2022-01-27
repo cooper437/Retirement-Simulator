@@ -24,23 +24,26 @@ export const reorderNthArrayElementToLast = (anArray, elementToMove) => {
 };
 
 export const calcTotalCurrentIncome = ({
-  annualHouseHoldIncome,
-  discretionaryIncome
-}) => parseInt(annualHouseHoldIncome, 10) + parseInt(discretionaryIncome, 10);
+  currentAnnualHouseHoldIncome,
+  currentDiscretionaryIncome
+}) =>
+  parseInt(currentAnnualHouseHoldIncome, 10) +
+  parseInt(currentDiscretionaryIncome, 10);
 
 /**
- * Calculates the total postRetirementAnnualIncome and associated postRetirementTaxRate
- * Note that this postRetirementAnnualIncome is inclusive of all income and does not
- * split income between withrawals and other supplementary income.
+ * Calcualte the desired base income represented as a fixed dollar amount
+ * taking into account the users selections of either a percentage or fixed amount.
+ * @param {*} param0
+ * @returns
  */
-export const calculateIncomeForTaxes = ({
+export const calcDesiredBaseIncomeFixedAmount = ({
   formValues,
-  discretionaryIncome,
-  annualHouseHoldIncome
+  currentDiscretionaryIncome,
+  currentAnnualHouseHoldIncome
 }) => {
   const totalCurrentIncome = calcTotalCurrentIncome({
-    discretionaryIncome,
-    annualHouseHoldIncome
+    currentDiscretionaryIncome,
+    currentAnnualHouseHoldIncome
   });
   let desiredBaseIncomeFixedAmount;
   if (
@@ -61,11 +64,32 @@ export const calculateIncomeForTaxes = ({
     desiredBaseIncomeFixedAmount =
       desiredBaseIncomeFixedAmountAsNumber.toString();
   }
+  return desiredBaseIncomeFixedAmount;
+};
+
+/**
+ * Calculates the total postRetirementAnnualIncome and associated postRetirementTaxRate
+ * Note that this postRetirementAnnualIncome is inclusive of all income and does not
+ * split income between withrawals and other supplementary income.
+ */
+export const calculateIncomeForTaxes = ({
+  formValues,
+  currentDiscretionaryIncome,
+  currentAnnualHouseHoldIncome
+}) => {
   let additionalPostRetirementAnnualIncome = '';
-  if (formValues.otherDiscretionaryIncome && formValues.socialSecurityIncome) {
+  const desiredBaseIncomeFixedAmount = calcDesiredBaseIncomeFixedAmount({
+    formValues,
+    currentDiscretionaryIncome,
+    currentAnnualHouseHoldIncome
+  });
+  if (
+    formValues.otherDiscretionaryIncomePostRetirement &&
+    formValues.socialSecurityIncome
+  ) {
     if (formValues.isPlanningOnRentingRealEstate === false) {
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncome, 10) +
+        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10);
       additionalPostRetirementAnnualIncome =
         additionalPostRetirementAnnualIncomeAsNumber.toString();
@@ -79,7 +103,7 @@ export const calculateIncomeForTaxes = ({
         parseInt(formValues.expectedRentalIncome, 10) -
         parseInt(formValues.expectedRentalExpenses, 10);
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncome, 10) +
+        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10) +
         netRentalIncome;
       additionalPostRetirementAnnualIncome =
@@ -177,7 +201,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   ) {
     const percentIncome =
       parseFloat(allFormValues.annualizedPercentIncomeContribution, 10) / 100;
-    const baseIncome = parseInt(allFormValues.annualHouseHoldIncome, 10);
+    const baseIncome = parseInt(allFormValues.currentAnnualHouseHoldIncome, 10);
     fixedAmountPreRetirementContribution = parseInt(
       baseIncome * percentIncome,
       10
@@ -189,8 +213,8 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   const { postRetirementAnnualIncome, postRetirementTaxRate } =
     calculateIncomeForTaxes({
       formValues: allFormValuesGroupedByStep.stepFour,
-      discretionaryIncome: allFormValues.discretionaryIncome,
-      annualHouseHoldIncome: allFormValues.annualHouseHoldIncome
+      currentDiscretionaryIncome: allFormValues.currentDiscretionaryIncome,
+      currentAnnualHouseHoldIncome: allFormValues.currentAnnualHouseHoldIncome
     });
   let incomeGrowthMean = 0.027;
   if (
