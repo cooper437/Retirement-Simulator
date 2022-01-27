@@ -135,6 +135,15 @@ export const calculateIncomeForTaxes = ({
  * @returns
  */
 const getMeanRateOfReturnForAllAccounts = (accounts) => {
+  if (!accounts.length) {
+    // No retirement accounts added
+    return {
+      postRetirementMeanRateOfReturn: 0.0,
+      preRetirementMeanRateOfReturn: 0.0,
+      preRetirementRateOfReturnVolatility: 0.0,
+      postRetirementRateOfReturnVolatility: 0.0
+    };
+  }
   const allInvestingStyles = accounts.map((account) => account.investingStyle);
   const allPostRetirementRatesOfReturn = allInvestingStyles.map(
     (investingStyle) => {
@@ -218,7 +227,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   }
   const sumReducer = (previousValue, currentValue) =>
     previousValue + currentValue;
-  const totalAccountBalance = allAccountBalances.reduce(sumReducer);
+  const totalAccountBalance = allAccountBalances.reduce(sumReducer, 0);
   const { postRetirementTaxRate } = calculateIncomeForTaxes({
     formValues: allFormValuesGroupedByStep.stepFour,
     currentDiscretionaryIncome: allFormValues.currentDiscretionaryIncome,

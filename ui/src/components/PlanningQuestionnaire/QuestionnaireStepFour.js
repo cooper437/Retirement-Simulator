@@ -145,6 +145,7 @@ export default function QuestionnaireStepFour({
               }
             });
           } catch (err) {
+            console.error(err);
             setIsFetching(false);
           }
         }}
