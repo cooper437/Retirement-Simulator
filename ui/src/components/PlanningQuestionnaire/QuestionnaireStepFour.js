@@ -28,6 +28,7 @@ import {
 } from '../../constants';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
+import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 
 const BASE_INCOME_TYPES_ENUM = {
   percentage: {
@@ -371,10 +372,17 @@ export default function QuestionnaireStepFour({
           taxFilingStatus: Yup.string().required('Required')
         })}
         onSubmit={async (formValues) => {
-          await setCompletedValuesForStep({ stepName: 'stepFour', formValues });
-          constructFinalPayload(completedStepValues);
-          // eslint-disable-next-line no-console
-          console.log('Submitting...');
+          setCompletedValuesForStep({
+            stepName: 'stepFour',
+            formValues
+          });
+          const payload = constructFinalPayload({
+            ...completedStepValues,
+            stepFour: formValues
+          });
+          const results = await submitRetirementSimulationForm({
+            formParams: payload
+          });
         }}
       >
         {({

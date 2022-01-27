@@ -23,13 +23,11 @@ export default function QuestionnaireStateManager() {
     stepFour: {}
   });
 
-  const setCompletedValuesForStep = ({ stepName, formValues }) => {
+  const setCompletedValuesForStep = ({ stepName, formValues }) =>
     setCompletedStepValues({
       ...completedStepValues,
       [stepName]: formValues
     });
-  };
-
   const componentToRender = (theCurrentStep) => {
     switch (theCurrentStep.stepName) {
       case QUESTIONNAIRE_STEPS.lifestylePlanning.stepName:
