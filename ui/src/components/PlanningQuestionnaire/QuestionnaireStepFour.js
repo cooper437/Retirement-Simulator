@@ -656,7 +656,7 @@ export default function QuestionnaireStepFour({
                       size="medium"
                       type="submit"
                     >
-                      Finish
+                      Run Simulation
                     </Button>
                   </Stack>
                 </Stack>
