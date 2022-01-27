@@ -217,12 +217,18 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   const sumReducer = (previousValue, currentValue) =>
     previousValue + currentValue;
   const totalAccountBalance = allAccountBalances.reduce(sumReducer);
-  const { postRetirementAnnualIncome, postRetirementTaxRate } =
-    calculateIncomeForTaxes({
-      formValues: allFormValuesGroupedByStep.stepFour,
-      currentDiscretionaryIncome: allFormValues.currentDiscretionaryIncome,
-      currentAnnualHouseHoldIncome: allFormValues.currentAnnualHouseHoldIncome
-    });
+  const { postRetirementTaxRate } = calculateIncomeForTaxes({
+    formValues: allFormValuesGroupedByStep.stepFour,
+    currentDiscretionaryIncome: allFormValues.currentDiscretionaryIncome,
+    currentAnnualHouseHoldIncome: allFormValues.currentAnnualHouseHoldIncome
+  });
+  const postRetirementAnnualBaseIncome = calcDesiredBaseIncomeFixedAmount({
+    formValues: allFormValuesGroupedByStep.stepFour,
+    currentDiscretionaryIncome: allFormValues.currentDiscretionaryIncome,
+    currentAnnualHouseHoldIncome: allFormValues.currentAnnualHouseHoldIncome
+  });
+  const additionalPostRetirementAnnualIncome =
+    calcAdditionalPostRetirementAnnualIncome(allFormValues);
   let incomeGrowthMean = 0.027;
   if (
     allFormValues.contributionStyle === CONTRIBUTION_STYLES.fixedAmount.value &&
@@ -243,7 +249,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     adjustWithdrawalsForTaxation: true,
     initialPortfolioAmount: totalAccountBalance,
     preRetirementAnnualContribution: fixedAmountPreRetirementContribution,
-    postRetirementAnnualWithdrawal: -postRetirementAnnualIncome,
+    postRetirementAnnualWithdrawal: -postRetirementAnnualBaseIncome,
     currentAge: allFormValues.currentAge,
     retirementAge: allFormValues.retirementAge,
     lifeExpectancy: allFormValues.lifeExpectancy,
@@ -254,7 +260,10 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementMeanRateOfReturn,
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility,
-    additionalPostRetirementAnnualIncome: 0.0
+    additionalPostRetirementAnnualIncome: parseInt(
+      additionalPostRetirementAnnualIncome,
+      10
+    )
   };
   return payload;
 };
