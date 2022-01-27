@@ -2,7 +2,9 @@ import _ from 'lodash';
 import {
   BASE_INCOME_TYPES_ENUM,
   INVESTMENT_STYLE_ENUM,
-  CONTRIBUTION_STYLES
+  CONTRIBUTION_STYLES,
+  DEFAULT_INFLATION_MEAN,
+  DEFAULT_INCOME_GROWTH_MEAN
 } from '../constants';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from './generalUtils';
 
@@ -229,7 +231,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   });
   const additionalPostRetirementAnnualIncome =
     calcAdditionalPostRetirementAnnualIncome(allFormValues);
-  let incomeGrowthMean = 0.027;
+  let incomeGrowthMean = DEFAULT_INCOME_GROWTH_MEAN;
   if (
     allFormValues.contributionStyle === CONTRIBUTION_STYLES.fixedAmount.value &&
     allFormValues.isFixedContributionTypicalGrowthExpected === false
@@ -253,7 +255,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     currentAge: allFormValues.currentAge,
     retirementAge: allFormValues.retirementAge,
     lifeExpectancy: allFormValues.lifeExpectancy,
-    inflationMean: 0.024,
+    inflationMean: DEFAULT_INFLATION_MEAN,
     incomeGrowthMean,
     postRetirementTaxRate: parseFloat(postRetirementTaxRate) / 100,
     postRetirementMeanRateOfReturn,
@@ -300,23 +302,3 @@ export const convertPayloadValuesToFormValues = (payloadValues) => {
   };
   return formValues;
 };
-// let test = {
-//   adjustPortfolioBalanceForInflation: true,
-//   adjustContributionsForIncomeGrowth: true,
-//   adjustWithdrawalsForInflation: true,
-//   adjustWithdrawalsForTaxation: true,
-//   initialPortfolioAmount: 10000,
-//   preRetirementAnnualContribution: 1,
-//   postRetirementAnnualWithdrawal: -286,
-//   currentAge: 20,
-//   retirementAge: 60,
-//   lifeExpectancy: 90,
-//   inflationMean: 0.024,
-//   incomeGrowthMean: 0.027,
-//   postRetirementTaxRate: 0.1,
-//   postRetirementMeanRateOfReturn: 0.057999999999999996,
-//   preRetirementMeanRateOfReturn: 0.057999999999999996,
-//   preRetirementRateOfReturnVolatility: 0.0929,
-//   postRetirementRateOfReturnVolatility: 0.063,
-//   additionalPostRetirementAnnualIncome: 7000
-// };

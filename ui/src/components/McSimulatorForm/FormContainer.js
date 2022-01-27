@@ -18,6 +18,10 @@ import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import { INVESTMENT_STYLE_ENUM } from '../../constants';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
 import ResultsContainer from './FormResults/ResultsContainer';
+import {
+  DEFAULT_INFLATION_MEAN,
+  DEFAULT_INCOME_GROWTH_MEAN
+} from '../../constants';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -80,8 +84,8 @@ const EMPTY_FORM_VALUES = {
   currentAge: '',
   retirementAge: '',
   lifeExpectancy: '',
-  inflationMean: '2.40',
-  incomeGrowthMean: '2.79',
+  inflationMean: (DEFAULT_INFLATION_MEAN * 100).toString(),
+  incomeGrowthMean: (DEFAULT_INCOME_GROWTH_MEAN * 100).toString(),
   preRetirementMeanRateOfReturn: '',
   postRetirementMeanRateOfReturn: '',
   preRetirementInvestmentStyle: '',

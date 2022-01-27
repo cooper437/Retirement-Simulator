@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import NumberFormat from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,8 @@ import {
   Link,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  CircularProgress
 } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -62,6 +63,7 @@ export default function QuestionnaireStepFour({
   setCompletedValuesForStep
 }) {
   const navigate = useNavigate();
+  const [isFetching, setIsFetching] = useState(false);
   const {
     stepTwo: { currentAnnualHouseHoldIncome, currentDiscretionaryIncome },
     stepFour: completedStepFourValues
@@ -117,29 +119,34 @@ export default function QuestionnaireStepFour({
           taxFilingStatus: Yup.string().required('Required')
         })}
         onSubmit={async (formValues) => {
-          setCompletedValuesForStep({
-            stepName: 'stepFour',
-            formValues
-          });
-          const payload = constructFinalPayload({
-            ...completedStepValues,
-            stepFour: formValues
-          });
-          const results = await submitRetirementSimulationForm({
-            formParams: payload
-          });
-          const payloadAsFormValues = convertPayloadValuesToFormValues({
-            ...payload,
-            filingStatus: formValues.taxFilingStatus
-          });
-          navigate('/mc-input-form', {
-            state: {
-              questionnaire: {
-                stateAsFormValues: payloadAsFormValues,
-                simulationResults: results
+          setIsFetching(true);
+          try {
+            setCompletedValuesForStep({
+              stepName: 'stepFour',
+              formValues
+            });
+            const payload = constructFinalPayload({
+              ...completedStepValues,
+              stepFour: formValues
+            });
+            const results = await submitRetirementSimulationForm({
+              formParams: payload
+            });
+            const payloadAsFormValues = convertPayloadValuesToFormValues({
+              ...payload,
+              filingStatus: formValues.taxFilingStatus
+            });
+            navigate('/mc-input-form', {
+              state: {
+                questionnaire: {
+                  stateAsFormValues: payloadAsFormValues,
+                  simulationResults: results
+                }
               }
-            }
-          });
+            });
+          } catch (err) {
+            setIsFetching(false);
+          }
         }}
       >
         {({
@@ -665,14 +672,27 @@ export default function QuestionnaireStepFour({
                     >
                       Back
                     </Button>
-                    <Button
-                      sx={{ width: '12em', textAlign: 'center' }}
-                      variant="contained"
-                      size="medium"
-                      type="submit"
-                    >
-                      Run Simulation
-                    </Button>
+                    {isFetching && (
+                      <Button
+                        sx={{ width: '12em', textAlign: 'center' }}
+                        variant="contained"
+                        size="medium"
+                        disabled
+                        type="submit"
+                      >
+                        <CircularProgress />
+                      </Button>
+                    )}
+                    {!isFetching && (
+                      <Button
+                        sx={{ width: '12em', textAlign: 'center' }}
+                        variant="contained"
+                        size="medium"
+                        type="submit"
+                      >
+                        Run Simulation
+                      </Button>
+                    )}
                   </Stack>
                 </Stack>
               </Box>

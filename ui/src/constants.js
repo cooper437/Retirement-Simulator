@@ -170,3 +170,6 @@ export const PERCENTAGE_INCOME_ENUM = {
     value: 1.0
   }
 };
+
+export const DEFAULT_INFLATION_MEAN = 0.024;
+export const DEFAULT_INCOME_GROWTH_MEAN = 0.0279;
