@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
+import { Link, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import {
   Box,
@@ -8,13 +9,18 @@ import {
   Stack,
   CircularProgress
 } from '@mui/material';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import McSimulatorFormSection from './McSimulatorFormSection';
 import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import IncomeFormContent from './FormSections/IncomeFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
-import { INVESTMENT_STYLE_ENUM } from '../../constants';
-import { determineTaxRate } from '../../utils/generalUtils';
+import {
+  INVESTMENT_STYLE_ENUM,
+  DEFAULT_INFLATION_MEAN,
+  DEFAULT_INCOME_GROWTH_MEAN
+} from '../../constants';
+import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
 import ResultsContainer from './FormResults/ResultsContainer';
 
 const commonFormStyles = {
@@ -62,13 +68,13 @@ const PortfolioFormSection = withFormSection({
   sectionTitle: 'Portfolio'
 });
 
-const INITIAL_STATE = {
+const EMPTY_STATE = {
   simulationRunCompleted: false,
   isFetching: false
 };
 
 // The internal form state managed by formik
-const INITIAL_FORM_VALUES = {
+const EMPTY_FORM_VALUES = {
   adjustForInflation: true,
   adjustContributionsForIncomeGrowth: true,
   adjustWithdrawalsForTaxation: true,
@@ -78,8 +84,8 @@ const INITIAL_FORM_VALUES = {
   currentAge: '',
   retirementAge: '',
   lifeExpectancy: '',
-  inflationMean: '2.40',
-  incomeGrowthMean: '2.79',
+  inflationMean: (DEFAULT_INFLATION_MEAN * 100).toString(),
+  incomeGrowthMean: (DEFAULT_INCOME_GROWTH_MEAN * 100).toString(),
   preRetirementMeanRateOfReturn: '',
   postRetirementMeanRateOfReturn: '',
   preRetirementInvestmentStyle: '',
@@ -110,46 +116,26 @@ const INITIAL_FORM_VALUES = {
 
 const numberToPercent = (aNumber) => aNumber / 100;
 
-/**
- * Determine the Total Post Retirement Annual Income Amount and effective tax rate
- * given the filing status, post retirement withdrawal amount amd addtiontional post retirement
- * annual income
- */
-const calcPostRetirementAnnualIncomeAndTaxRate = ({
-  filingStatus,
-  postRetirementAnnualWithdrawal,
-  additionalPostRetirementAnnualIncome
-}) => {
-  let postRetirementAnnualIncome;
-  let postRetirementTaxRate;
-  let postRetirementTaxRateAsDecimal;
-  if (
-    filingStatus &&
-    postRetirementAnnualWithdrawal &&
-    additionalPostRetirementAnnualIncome
-  ) {
-    postRetirementAnnualIncome =
-      parseInt(postRetirementAnnualWithdrawal, 10) +
-      parseInt(additionalPostRetirementAnnualIncome, 10);
-    postRetirementTaxRateAsDecimal = determineTaxRate({
-      filingStatus,
-      annualIncome: postRetirementAnnualIncome
-    });
-    const taxRateNonDecimal = postRetirementTaxRateAsDecimal * 100;
-    postRetirementTaxRate = taxRateNonDecimal.toString();
-  }
-  return {
-    postRetirementAnnualIncome,
-    postRetirementTaxRate,
-    postRetirementTaxRateAsDecimal
-  };
-};
-
 export default function FormContainer() {
-  const [simulationResults, setSimulationResults] = useState(INITIAL_STATE);
+  const { state: routerState } = useLocation();
+  let initialFormState = EMPTY_FORM_VALUES;
+  let initialComponentState = EMPTY_STATE;
+  // Fork the state if we are coming from the questionairre
+  // to show a populated form and simulation results
+  if (routerState && routerState.questionnaire) {
+    initialFormState = routerState.questionnaire.stateAsFormValues;
+    initialComponentState = {
+      simulationRunCompleted: true,
+      isFetching: false,
+      ...routerState.questionnaire.simulationResults
+    };
+  }
+  const [simulationResults, setSimulationResults] = useState(
+    initialComponentState
+  );
   return (
     <Formik
-      initialValues={INITIAL_FORM_VALUES}
+      initialValues={initialFormState}
       validationSchema={Yup.object({
         currentAge: Yup.number()
           .integer()
@@ -158,14 +144,14 @@ export default function FormContainer() {
           .required('Required'),
         retirementAge: Yup.number()
           .integer()
-          .moreThan(Yup.ref('currentAge'), 'Must be greater than Current Age')
+          .moreThan(Yup.ref('currentAge'), 'Must be greater than current age')
           .max(150, 'Cannot exceed 150')
           .required('Required'),
         lifeExpectancy: Yup.number()
           .integer()
           .moreThan(
             Yup.ref('retirementAge'),
-            'Must be greater than Retirement Age'
+            'Must be greater than retirement age'
           )
           .max(150, 'Cannot exceed 150')
           .required('Required'),
@@ -266,8 +252,10 @@ export default function FormContainer() {
         resetForm
       }) => {
         const handleClickResetButton = () => {
-          resetForm(); // Reset the input form state in Formik
-          setSimulationResults(INITIAL_STATE); // Reset the output of the simulation on display
+          resetForm({
+            values: EMPTY_FORM_VALUES
+          }); // Reset the input form state in Formik
+          setSimulationResults(EMPTY_STATE); // Reset the output of the simulation on display
         };
         const { postRetirementAnnualIncome, postRetirementTaxRate } =
           calcPostRetirementAnnualIncomeAndTaxRate({
@@ -290,7 +278,18 @@ export default function FormContainer() {
                 }}
               >
                 <Box sx={{ pb: 4, borderBottom: '1px solid gray' }}>
-                  <Typography variant="h6">Monte Carlo Simulator</Typography>
+                  <Button
+                    component={Link}
+                    to="/home"
+                    variant="outlined"
+                    onClick={() => null}
+                    startIcon={<KeyboardBackspaceIcon />}
+                  >
+                    Back
+                  </Button>
+                  <Typography sx={{ mt: 2 }} variant="h6">
+                    Monte Carlo Simulator
+                  </Typography>
                   <Typography variant="p">
                     Input the information below and then run the simulation to
                     see the likelihood that you will meet your retirement goals

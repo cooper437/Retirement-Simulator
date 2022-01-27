@@ -3,6 +3,8 @@ from humps import camelize
 from pydantic import (BaseModel,
                       PositiveInt,
                       NegativeInt,
+                      NonNegativeFloat,
+                      NonNegativeInt,
                       condecimal
                       )
 
@@ -27,7 +29,7 @@ class RunSimulationIn(CamelModel):
     # Accounts for the post_retirement_tax_rate in the annual amount withdrawn post-retirement
     adjust_withdrawals_for_taxation: bool
     # Portfolio Parameters
-    initial_portfolio_amount: PositiveInt
+    initial_portfolio_amount: NonNegativeInt
     pre_retirement_annual_contribution: decimal_positive
     post_retirement_annual_withdrawal: decimal_negative
     # Lifestyle Parameters
