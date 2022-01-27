@@ -15,13 +15,13 @@ import LifestyleFormContent from './FormSections/LifestyleFormContent';
 import IncomeFormContent from './FormSections/IncomeFormContent';
 import PortfolioFormContent from './FormSections/PortfolioFormContent';
 import { submitRetirementSimulationForm } from '../../api/formSubmissions';
-import { INVESTMENT_STYLE_ENUM } from '../../constants';
-import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
-import ResultsContainer from './FormResults/ResultsContainer';
 import {
+  INVESTMENT_STYLE_ENUM,
   DEFAULT_INFLATION_MEAN,
   DEFAULT_INCOME_GROWTH_MEAN
 } from '../../constants';
+import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
+import ResultsContainer from './FormResults/ResultsContainer';
 
 const commonFormStyles = {
   shortFormInput: {
