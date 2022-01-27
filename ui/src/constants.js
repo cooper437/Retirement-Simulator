@@ -112,3 +112,61 @@ export const CONTRIBUTION_STYLES = {
     value: 'fixed_amount'
   }
 };
+
+export const BASE_INCOME_TYPES_ENUM = {
+  percentage: {
+    label: 'As % of Current Income',
+    value: 'percentage'
+  },
+  fixedAmount: {
+    label: 'As Fixed Amount',
+    value: 'fixed_amount'
+  }
+};
+
+export const PERCENTAGE_INCOME_ENUM = {
+  0.0: {
+    label: '0%',
+    value: 0.0
+  },
+  0.1: {
+    label: '10%',
+    value: 0.1
+  },
+  0.2: {
+    label: '20%',
+    value: 0.2
+  },
+  0.3: {
+    label: '30%',
+    value: 0.3
+  },
+  0.4: {
+    label: '40%',
+    value: 0.4
+  },
+  0.5: {
+    label: '50%',
+    value: 0.5
+  },
+  0.6: {
+    label: '60%',
+    value: 0.6
+  },
+  0.7: {
+    label: '70%',
+    value: 0.7
+  },
+  0.8: {
+    label: '80%',
+    value: 0.8
+  },
+  0.9: {
+    label: '90%',
+    value: 0.9
+  },
+  1.0: {
+    label: '100%',
+    value: 1.0
+  }
+};
