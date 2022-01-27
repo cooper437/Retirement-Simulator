@@ -336,7 +336,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      What is your discretionary income?
+                      What is your annual post-retirement discretionary income?
                     </Typography>
                     <Typography sx={{ ml: 4, mr: 2 }}>
                       (Pension, Part-Time Work, etc)
@@ -374,7 +374,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      What is your social security income?
+                      What is your annual social security income?
                     </Typography>
                     <Typography sx={{ ml: 4, mr: 2 }}>
                       <Link
@@ -633,7 +633,7 @@ export default function QuestionnaireStepFour({
                 >
                   <Box>
                     <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
+                      sx={{ width: '12em', textAlign: 'center' }}
                       variant="outlined"
                       size="medium"
                       onClick={handleClickResetButton}
@@ -643,7 +643,7 @@ export default function QuestionnaireStepFour({
                   </Box>
                   <Stack direction="row" spacing={2}>
                     <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
+                      sx={{ width: '12em', textAlign: 'center' }}
                       variant="outlined"
                       size="medium"
                       onClick={handleClickBack}
@@ -651,7 +651,7 @@ export default function QuestionnaireStepFour({
                       Back
                     </Button>
                     <Button
-                      sx={{ width: '10em', textAlign: 'center' }}
+                      sx={{ width: '12em', textAlign: 'center' }}
                       variant="contained"
                       size="medium"
                       type="submit"
