@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import NumberFormat from 'react-number-format';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -31,7 +32,8 @@ import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import {
   reorderNthArrayElementToLast,
   constructFinalPayload,
-  calculateIncomeForTaxes
+  calculateIncomeForTaxes,
+  convertPayloadValuesToFormValues
 } from '../../utils/questionnaireUtils';
 
 const EMPTY_FORM_VALUES = {
@@ -59,6 +61,7 @@ export default function QuestionnaireStepFour({
   completedStepValues,
   setCompletedValuesForStep
 }) {
+  const navigate = useNavigate();
   const {
     stepTwo: { currentAnnualHouseHoldIncome, currentDiscretionaryIncome },
     stepFour: completedStepFourValues
@@ -124,6 +127,18 @@ export default function QuestionnaireStepFour({
           });
           const results = await submitRetirementSimulationForm({
             formParams: payload
+          });
+          const payloadAsFormValues = convertPayloadValuesToFormValues({
+            ...payload,
+            filingStatus: formValues.taxFilingStatus
+          });
+          navigate('/mc-input-form', {
+            state: {
+              questionnaire: {
+                stateAsFormValues: payloadAsFormValues,
+                simulationResults: results
+              }
+            }
           });
         }}
       >
@@ -249,7 +264,7 @@ export default function QuestionnaireStepFour({
                   BASE_INCOME_TYPES_ENUM.percentage.value && (
                   <Stack direction="row" alignItems="center">
                     <Box sx={{ flex: 1 }}>
-                      <Typography sx={{ ml: 18, mr: 2 }}>
+                      <Typography sx={{ ml: 12, mr: 2 }}>
                         What percentage?
                       </Typography>
                     </Box>
@@ -470,8 +485,8 @@ export default function QuestionnaireStepFour({
                   <>
                     <Stack direction="row" alignItems="center">
                       <Box sx={{ flex: 1 }}>
-                        <Typography sx={{ ml: 18, mr: 2 }}>
-                          Expected rental income
+                        <Typography sx={{ ml: 12, mr: 2 }}>
+                          Expected annual rental income
                         </Typography>
                       </Box>
                       <Box sx={{ flex: 1 }}>
@@ -509,8 +524,8 @@ export default function QuestionnaireStepFour({
                     </Stack>
                     <Stack direction="row" alignItems="center">
                       <Box sx={{ flex: 1 }}>
-                        <Typography sx={{ ml: 18, mr: 2 }}>
-                          Expected rental expenses
+                        <Typography sx={{ ml: 12, mr: 2 }}>
+                          Expected annual rental expenses
                         </Typography>
                       </Box>
                       <Box sx={{ flex: 1 }}>

@@ -267,3 +267,56 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   };
   return payload;
 };
+
+// The form needs values to be certain types that are different from the API
+export const convertPayloadValuesToFormValues = (payloadValues) => {
+  const formValues = {
+    adjustForInflation: true,
+    adjustContributionsForIncomeGrowth:
+      payloadValues.adjustContributionsForIncomeGrowth,
+    adjustWithdrawalsForTaxation: payloadValues.adjustWithdrawalsForTaxation,
+    initialPortfolioAmount: payloadValues.initialPortfolioAmount.toString(),
+    preRetirementAnnualContribution:
+      payloadValues.preRetirementAnnualContribution.toString(),
+    postRetirementAnnualWithdrawal: (
+      payloadValues.postRetirementAnnualWithdrawal * -1
+    ).toString(),
+    currentAge: payloadValues.currentAge,
+    retirementAge: payloadValues.retirementAge,
+    lifeExpectancy: payloadValues.lifeExpectancy,
+    inflationMean: (payloadValues.inflationMean * 100).toString(),
+    incomeGrowthMean: (payloadValues.incomeGrowthMean * 100).toString(),
+    preRetirementMeanRateOfReturn: (
+      payloadValues.preRetirementMeanRateOfReturn * 100
+    ).toString(),
+    postRetirementMeanRateOfReturn: (
+      payloadValues.postRetirementMeanRateOfReturn * 100
+    ).toString(),
+    preRetirementInvestmentStyle: '',
+    postRetirementInvestmentStyle: '',
+    filingStatus: payloadValues.filingStatus,
+    additionalPostRetirementAnnualIncome:
+      payloadValues.additionalPostRetirementAnnualIncome.toString()
+  };
+  return formValues;
+};
+// let test = {
+//   adjustPortfolioBalanceForInflation: true,
+//   adjustContributionsForIncomeGrowth: true,
+//   adjustWithdrawalsForInflation: true,
+//   adjustWithdrawalsForTaxation: true,
+//   initialPortfolioAmount: 10000,
+//   preRetirementAnnualContribution: 1,
+//   postRetirementAnnualWithdrawal: -286,
+//   currentAge: 20,
+//   retirementAge: 60,
+//   lifeExpectancy: 90,
+//   inflationMean: 0.024,
+//   incomeGrowthMean: 0.027,
+//   postRetirementTaxRate: 0.1,
+//   postRetirementMeanRateOfReturn: 0.057999999999999996,
+//   preRetirementMeanRateOfReturn: 0.057999999999999996,
+//   preRetirementRateOfReturnVolatility: 0.0929,
+//   postRetirementRateOfReturnVolatility: 0.063,
+//   additionalPostRetirementAnnualIncome: 7000
+// };

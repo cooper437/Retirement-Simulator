@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import {
   Box,
@@ -64,13 +64,13 @@ const PortfolioFormSection = withFormSection({
   sectionTitle: 'Portfolio'
 });
 
-const INITIAL_STATE = {
+const EMPTY_STATE = {
   simulationRunCompleted: false,
   isFetching: false
 };
 
 // The internal form state managed by formik
-const INITIAL_FORM_VALUES = {
+const EMPTY_FORM_VALUES = {
   adjustForInflation: true,
   adjustContributionsForIncomeGrowth: true,
   adjustWithdrawalsForTaxation: true,
@@ -113,10 +113,25 @@ const INITIAL_FORM_VALUES = {
 const numberToPercent = (aNumber) => aNumber / 100;
 
 export default function FormContainer() {
-  const [simulationResults, setSimulationResults] = useState(INITIAL_STATE);
+  const { state: routerState } = useLocation();
+  let initialFormState = EMPTY_FORM_VALUES;
+  let initialComponentState = EMPTY_STATE;
+  // Fork the state if we are coming from the questionairre
+  // to show a populated form and simulation results
+  if (routerState && routerState.questionnaire) {
+    initialFormState = routerState.questionnaire.stateAsFormValues;
+    initialComponentState = {
+      simulationRunCompleted: true,
+      isFetching: false,
+      ...routerState.questionnaire.simulationResults
+    };
+  }
+  const [simulationResults, setSimulationResults] = useState(
+    initialComponentState
+  );
   return (
     <Formik
-      initialValues={INITIAL_FORM_VALUES}
+      initialValues={initialFormState}
       validationSchema={Yup.object({
         currentAge: Yup.number()
           .integer()
@@ -233,8 +248,10 @@ export default function FormContainer() {
         resetForm
       }) => {
         const handleClickResetButton = () => {
-          resetForm(); // Reset the input form state in Formik
-          setSimulationResults(INITIAL_STATE); // Reset the output of the simulation on display
+          resetForm({
+            values: EMPTY_FORM_VALUES
+          }); // Reset the input form state in Formik
+          setSimulationResults(EMPTY_STATE); // Reset the output of the simulation on display
         };
         const { postRetirementAnnualIncome, postRetirementTaxRate } =
           calcPostRetirementAnnualIncomeAndTaxRate({
