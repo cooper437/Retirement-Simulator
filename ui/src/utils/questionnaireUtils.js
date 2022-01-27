@@ -67,22 +67,8 @@ export const calcDesiredBaseIncomeFixedAmount = ({
   return desiredBaseIncomeFixedAmount;
 };
 
-/**
- * Calculates the total postRetirementAnnualIncome and associated postRetirementTaxRate
- * Note that this postRetirementAnnualIncome is inclusive of all income and does not
- * split income between withrawals and other supplementary income.
- */
-export const calculateIncomeForTaxes = ({
-  formValues,
-  currentDiscretionaryIncome,
-  currentAnnualHouseHoldIncome
-}) => {
+const calcAdditionalPostRetirementAnnualIncome = (formValues) => {
   let additionalPostRetirementAnnualIncome = '';
-  const desiredBaseIncomeFixedAmount = calcDesiredBaseIncomeFixedAmount({
-    formValues,
-    currentDiscretionaryIncome,
-    currentAnnualHouseHoldIncome
-  });
   if (
     formValues.otherDiscretionaryIncomePostRetirement &&
     formValues.socialSecurityIncome
@@ -110,6 +96,27 @@ export const calculateIncomeForTaxes = ({
         additionalPostRetirementAnnualIncomeAsNumber.toString();
     }
   }
+  return additionalPostRetirementAnnualIncome;
+};
+
+/**
+ * Calculates the total postRetirementAnnualIncome and associated postRetirementTaxRate
+ * Note that this postRetirementAnnualIncome is inclusive of all income and does not
+ * split income between withrawals and other supplementary income.
+ */
+export const calculateIncomeForTaxes = ({
+  formValues,
+  currentDiscretionaryIncome,
+  currentAnnualHouseHoldIncome
+}) => {
+  const desiredBaseIncomeFixedAmount = calcDesiredBaseIncomeFixedAmount({
+    formValues,
+    currentDiscretionaryIncome,
+    currentAnnualHouseHoldIncome
+  });
+  const additionalPostRetirementAnnualIncome =
+    calcAdditionalPostRetirementAnnualIncome(formValues);
+
   const { postRetirementAnnualIncome, postRetirementTaxRate } =
     calcPostRetirementAnnualIncomeAndTaxRate({
       filingStatus: formValues.taxFilingStatus,
