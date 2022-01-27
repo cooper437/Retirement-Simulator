@@ -183,6 +183,56 @@ const calculateIncomeForTaxes = ({
   return { postRetirementAnnualIncome, postRetirementTaxRate };
 };
 
+const getMeanRateOfReturnForAllAccounts = (accounts) => {
+  const allInvestingStyles = accounts.map((account) => account.investingStyle);
+  const allPostRetirementRatesOfReturn = allInvestingStyles.map(
+    (investingStyle) => {
+      const asString = Object.values(INVESTMENT_STYLE_ENUM).find(
+        (i) => i.value === investingStyle
+      ).postRetirementMeanRateOfReturn;
+      return parseFloat(asString) / 100;
+    }
+  );
+  const allPreRetirementRatesOfReturn = allInvestingStyles.map(
+    (investingStyle) => {
+      const asString = Object.values(INVESTMENT_STYLE_ENUM).find(
+        (i) => i.value === investingStyle
+      ).preRetirementMeanRateOfReturn;
+      return parseFloat(asString) / 100;
+    }
+  );
+  const allPreRetirementRateOfReturnVolatility = allInvestingStyles.map(
+    (investingStyle) => {
+      const asString = Object.values(INVESTMENT_STYLE_ENUM).find(
+        (i) => i.value === investingStyle
+      ).preRetirementRateOfReturnVolatility;
+      return parseFloat(asString) / 100;
+    }
+  );
+  const allPostRetirementRateOfReturnVolatility = allInvestingStyles.map(
+    (investingStyle) => {
+      const asString = Object.values(INVESTMENT_STYLE_ENUM).find(
+        (i) => i.value === investingStyle
+      ).postRetirementRateOfReturnVolatility;
+      return parseFloat(asString) / 100;
+    }
+  );
+  const postRetirementMeanRateOfReturn = _.mean(allPostRetirementRatesOfReturn);
+  const preRetirementMeanRateOfReturn = _.mean(allPreRetirementRatesOfReturn);
+  const preRetirementRateOfReturnVolatility = _.mean(
+    allPreRetirementRateOfReturnVolatility
+  );
+  const postRetirementRateOfReturnVolatility = _.mean(
+    allPostRetirementRateOfReturnVolatility
+  );
+  return {
+    postRetirementMeanRateOfReturn,
+    preRetirementMeanRateOfReturn,
+    preRetirementRateOfReturnVolatility,
+    postRetirementRateOfReturnVolatility
+  };
+};
+
 // eslint-disable-next-line arrow-body-style
 const constructFinalPayload = (allFormValuesGroupedByStep) => {
   // Consolidate them all into object so its easier to reference
@@ -231,10 +281,17 @@ const constructFinalPayload = (allFormValuesGroupedByStep) => {
   ) {
     incomeGrowthMean = 0.0;
   }
+  const {
+    postRetirementMeanRateOfReturn,
+    preRetirementMeanRateOfReturn,
+    preRetirementRateOfReturnVolatility,
+    postRetirementRateOfReturnVolatility
+  } = getMeanRateOfReturnForAllAccounts(allFormValues.accounts);
   const payload = {
     adjustPortfolioBalanceForInflation: true,
     adjustContributionsForIncomeGrowth: true,
     adjustWithdrawalsForInflation: true,
+    adjustWithdrawalsForTaxation: true,
     initialPortfolioAmount: totalAccountBalance,
     preRetirementAnnualContribution: fixedAmountPreRetirementContribution,
     postRetirementAnnualWithdrawal: -postRetirementAnnualIncome,
@@ -243,7 +300,11 @@ const constructFinalPayload = (allFormValuesGroupedByStep) => {
     lifeExpectancy: allFormValues.lifeExpectancy,
     inflationMean: 0.024,
     incomeGrowthMean,
-    postRetirementTaxRate,
+    postRetirementTaxRate: parseFloat(postRetirementTaxRate) / 100,
+    postRetirementMeanRateOfReturn,
+    preRetirementMeanRateOfReturn,
+    preRetirementRateOfReturnVolatility,
+    postRetirementRateOfReturnVolatility,
     additionalPostRetirementAnnualIncome: 0.0
   };
   return payload;
