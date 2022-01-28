@@ -92,7 +92,22 @@ export default function QuestionaireStepThree({
           currentHomeValue: Yup.string().when('isPlanningOnSellingHome', {
             is: true,
             then: Yup.string().required('Required')
-          })
+          }),
+          isPlanningToBuyNewHome: Yup.boolean()
+            .nullable()
+            .when('isPlanningOnSellingHome', {
+              is: true,
+              then: Yup.boolean().nullable().required('Required')
+            }),
+          newHomePurchaseAmount: Yup.string().when(
+            ['isPlanningOnSellingHome', 'isPlanningToBuyNewHome'],
+            {
+              is: (isPlanningOnSellingHome, isPlanningToBuyNewHome) =>
+                isPlanningOnSellingHome === true &&
+                isPlanningToBuyNewHome === true,
+              then: Yup.string().required('Required')
+            }
+          )
         })}
         onSubmit={(formValues) => {
           setCompletedValuesForStep({ stepName: 'stepThree', formValues });
