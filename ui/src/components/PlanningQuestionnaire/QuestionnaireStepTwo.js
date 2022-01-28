@@ -27,7 +27,7 @@ const EMPTY_FORM_VALUES = {
   currentAnnualHouseHoldIncome: '',
   currentDiscretionaryIncome: '',
   contributionStyle: '',
-  annualizedPercentIncomeContribution: '3.5',
+  annualizedPercentIncomeContribution: '',
   isFixedContributionTypicalGrowthExpected: null,
   annualizedFixedIncomeContribution: ''
 };

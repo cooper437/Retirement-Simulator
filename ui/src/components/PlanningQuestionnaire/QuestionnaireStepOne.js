@@ -9,7 +9,7 @@ import { QUESTIONNAIRE_STEPS } from '../../constants';
 
 const EMPTY_FORM_VALUES = {
   currentAge: '',
-  retirementAge: '',
+  retirementAge: '65',
   lifeExpectancy: ''
 };
 

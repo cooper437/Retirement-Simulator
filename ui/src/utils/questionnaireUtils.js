@@ -72,12 +72,12 @@ export const calcDesiredBaseIncomeFixedAmount = ({
 const calcAdditionalPostRetirementAnnualIncome = (formValues) => {
   let additionalPostRetirementAnnualIncome = '';
   if (
-    formValues.otherDiscretionaryIncomePostRetirement &&
+    formValues.supplementalIncomePostRetirement &&
     formValues.socialSecurityIncome
   ) {
     if (formValues.isPlanningOnRentingRealEstate === false) {
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
+        parseInt(formValues.supplementalIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10);
       additionalPostRetirementAnnualIncome =
         additionalPostRetirementAnnualIncomeAsNumber.toString();
@@ -91,7 +91,7 @@ const calcAdditionalPostRetirementAnnualIncome = (formValues) => {
         parseInt(formValues.expectedRentalIncome, 10) -
         parseInt(formValues.expectedRentalExpenses, 10);
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
+        parseInt(formValues.supplementalIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10) +
         netRentalIncome;
       additionalPostRetirementAnnualIncome =

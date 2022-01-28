@@ -41,7 +41,7 @@ const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
   desiredBaseIncomePercentage: '',
   desiredBaseIncomeFixedAmount: '',
-  otherDiscretionaryIncomePostRetirement: '',
+  supplementalIncomePostRetirement: '',
   socialSecurityIncome: '',
   isPlanningOnRentingRealEstate: null,
   expectedRentalIncome: '',
@@ -96,8 +96,7 @@ export default function QuestionnaireStepFour({
               then: Yup.string().required('Required')
             }
           ),
-          otherDiscretionaryIncomePostRetirement:
-            Yup.string().required('Required'),
+          supplementalIncomePostRetirement: Yup.string().required('Required'),
           socialSecurityIncome: Yup.string().required('Required'),
           isPlanningOnRentingRealEstate: Yup.boolean()
             .required('Required')
@@ -367,12 +366,12 @@ export default function QuestionnaireStepFour({
                   </Box>
                   <Box sx={{ flex: 1 }}>
                     <TextField
-                      label="Other Discretionary Income"
+                      label="Supplemental Income"
                       sx={commonFormStyles.shortFormInput}
                       variant="outlined"
-                      value={formValues.otherDiscretionaryIncomePostRetirement}
+                      value={formValues.supplementalIncomePostRetirement}
                       onChange={handleChange}
-                      name="otherDiscretionaryIncomePostRetirement"
+                      name="supplementalIncomePostRetirement"
                       id="other-discretionary-income-input"
                       InputProps={{
                         inputComponent: NumberFormatDollarAmount,
@@ -384,12 +383,12 @@ export default function QuestionnaireStepFour({
                         )
                       }}
                       error={
-                        touched.otherDiscretionaryIncomePostRetirement &&
-                        Boolean(errors.otherDiscretionaryIncomePostRetirement)
+                        touched.supplementalIncomePostRetirement &&
+                        Boolean(errors.supplementalIncomePostRetirement)
                       }
                       helperText={
-                        touched.otherDiscretionaryIncomePostRetirement &&
-                        errors.otherDiscretionaryIncomePostRetirement
+                        touched.supplementalIncomePostRetirement &&
+                        errors.supplementalIncomePostRetirement
                       }
                     />
                   </Box>
