@@ -62,3 +62,6 @@ export const calcPostRetirementAnnualIncomeAndTaxRate = ({
     postRetirementTaxRateAsDecimal
   };
 };
+
+export const calcYearsUntilRetirement = ({ currentAge, retirementAge }) =>
+  retirementAge - currentAge;

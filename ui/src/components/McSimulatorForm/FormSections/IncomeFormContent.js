@@ -33,7 +33,8 @@ export default function IncomeFormContent({
   filingStatus,
   postRetirementAnnualIncome,
   postRetirementTaxRate,
-  adjustWithdrawalsForTaxation
+  adjustWithdrawalsForTaxation,
+  homeSaleNetProceeds
 }) {
   return (
     <>
@@ -82,7 +83,7 @@ export default function IncomeFormContent({
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
           <FormControl sx={commonFormStyles.shortFormInput}>
             <TextField
-              label="Post-Retirement Additional Annual Income"
+              label="Post-Retirement Supplemental Income"
               variant="outlined"
               value={additionalPostRetirementAnnualIncome}
               onChange={handleChange}
@@ -190,6 +191,38 @@ export default function IncomeFormContent({
           </FormControl>
         </Box>
         <Box sx={{ flex: 1 }} />
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        flexWrap="wrap"
+      >
+        <Box sx={{ flex: 1 }}>
+          <TextField
+            sx={commonFormStyles.shortFormInput}
+            label="Home Sale Net Proceeds (At Retirement)"
+            variant="outlined"
+            value={homeSaleNetProceeds}
+            onChange={handleChange}
+            name="homeSaleNetProceeds"
+            id="home-sale-net-proceeds-input"
+            InputProps={{
+              inputComponent: NumberFormatDollarAmount,
+              startAdornment: (
+                <InputAdornment position="start">$</InputAdornment>
+              ),
+              endAdornment: <InputAdornment position="end">.00</InputAdornment>
+            }}
+            error={
+              touched.homeSaleNetProceeds && Boolean(errors.homeSaleNetProceeds)
+            }
+            helperText={
+              touched.homeSaleNetProceeds && errors.homeSaleNetProceeds
+            }
+          />
+        </Box>
       </Box>
       <Box sx={{ display: 'flex' }}>
         <Box

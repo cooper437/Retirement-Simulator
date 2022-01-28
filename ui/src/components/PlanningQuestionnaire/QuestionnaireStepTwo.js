@@ -27,7 +27,7 @@ const EMPTY_FORM_VALUES = {
   currentAnnualHouseHoldIncome: '',
   currentDiscretionaryIncome: '',
   contributionStyle: '',
-  annualizedPercentIncomeContribution: '3.5',
+  annualizedPercentIncomeContribution: '',
   isFixedContributionTypicalGrowthExpected: null,
   annualizedFixedIncomeContribution: ''
 };
@@ -261,7 +261,7 @@ export default function QuestionnaireStepTwo({
                           sx={{
                             width: commonFormStyles.shortFormInput.width
                           }}
-                          label="Annual Percentage Contribution"
+                          label="Annual % Contribution"
                           variant="outlined"
                           value={formValues.annualizedPercentIncomeContribution}
                           name="annualizedPercentIncomeContribution"

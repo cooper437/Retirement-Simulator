@@ -1,9 +1,11 @@
 from decimal import Decimal
 from typing import List
+from numpy import isin
 from tqdm import tqdm
 from loguru import logger
 from sympy.solvers import solve
 from sympy import Symbol, Float
+from sympy.core import Add
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
@@ -105,7 +107,9 @@ def calc_balances_from_current_age_to_retirement(
         a_inflation_mean: Decimal,
         a_income_growth_mean: Decimal,
         should_adjust_contributions_for_income_growth: bool,
-        should_adjust_portfolio_balance_for_inflation: bool) -> Decimal:
+        should_adjust_portfolio_balance_for_inflation: bool,
+        home_sale_net_proceeds: Decimal,
+        years_in_future_of_home_purchase: int) -> Decimal:
     '''Calculate balance at retirement age'''
     balances_by_year = []
     pre_retirement_simulation_year = 1
@@ -123,15 +127,26 @@ def calc_balances_from_current_age_to_retirement(
         # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_contribution = annual_contribution / 2
         compounded_balance += half_of_annual_contribution
-        compounded_balance = calc_compound_interest(
-            principal_amount=compounded_balance,
-            interest_rate=a_pre_retirement_annual_rate_of_return,
-            num_time_periods_elapsed=1)
+        # only compound positive balances
+        if isinstance(compounded_balance, Add):
+            if compounded_balance.args[0].is_positive:
+                compounded_balance = calc_compound_interest(
+                    principal_amount=compounded_balance,
+                    interest_rate=a_pre_retirement_annual_rate_of_return,
+                    num_time_periods_elapsed=1)
+        else:
+            if compounded_balance > 0:
+                compounded_balance = calc_compound_interest(
+                    principal_amount=compounded_balance,
+                    interest_rate=a_pre_retirement_annual_rate_of_return,
+                    num_time_periods_elapsed=1)
         compounded_balance += half_of_annual_contribution
         if should_adjust_portfolio_balance_for_inflation:
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance,
                 a_mean_inflation_rate=a_inflation_mean)
+        if (pre_retirement_simulation_year == years_in_future_of_home_purchase + 1):
+            compounded_balance += home_sale_net_proceeds
         balances_by_year.append(compounded_balance)
         pre_retirement_simulation_year += 1
     return compounded_balance, balances_by_year
@@ -149,7 +164,9 @@ def calc_balance_from_retirement_to_eol(
         should_adjust_withdrawals_for_inflation: bool,
         should_adjust_withdrawals_for_taxation: bool,
         should_adjust_portfolio_balance_for_inflation: bool,
-        allow_negative_balances: bool) -> Decimal:
+        allow_negative_balances: bool,
+        home_sale_net_proceeds: Decimal,
+        years_in_future_of_home_purchase: int) -> Decimal:
     '''
     Calculate balance at end of life expectancy given that
     the balance at retirement has already been calculated.
@@ -166,9 +183,9 @@ def calc_balance_from_retirement_to_eol(
     while post_retirement_simulation_year <= num_years_between_retirement_and_eol:
         annual_withdrawal = a_post_retirement_annual_withdrawal \
             + a_post_retirement_annual_additional_income
+        years_since_simulation_began = num_years_until_retirement \
+            + post_retirement_simulation_year
         if should_adjust_withdrawals_for_inflation:
-            years_since_simulation_began = num_years_until_retirement \
-                + post_retirement_simulation_year
             annual_withdrawal = adjust_post_retirement_withdrawal_amount_for_inflation(
                 retirement_withdrawal_amount=annual_withdrawal,
                 a_inflation_mean=a_inflation_mean,
@@ -183,15 +200,26 @@ def calc_balance_from_retirement_to_eol(
         # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
-        compounded_balance = calc_compound_interest(
-            principal_amount=compounded_balance,
-            interest_rate=a_post_retirement_annual_rate_of_return,
-            num_time_periods_elapsed=1)
+        # only compound positive balances
+        if isinstance(compounded_balance, Add):  # it might be a sympy object
+            if compounded_balance.args[0].is_positive:
+                compounded_balance = calc_compound_interest(
+                    principal_amount=compounded_balance,
+                    interest_rate=a_post_retirement_annual_rate_of_return,
+                    num_time_periods_elapsed=1)
+        else:
+            if compounded_balance > 0:
+                compounded_balance = calc_compound_interest(
+                    principal_amount=compounded_balance,
+                    interest_rate=a_post_retirement_annual_rate_of_return,
+                    num_time_periods_elapsed=1)
         compounded_balance += half_of_annual_withdrawal
         if should_adjust_portfolio_balance_for_inflation:
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance,
                 a_mean_inflation_rate=a_inflation_mean)
+        if (years_since_simulation_began == years_in_future_of_home_purchase + 1):
+            compounded_balance += home_sale_net_proceeds
         # We have depleted our entire portfolio balance
         if allow_negative_balances is False and compounded_balance <= 0:
             compounded_balance = Decimal(0.0)
@@ -230,7 +258,9 @@ def calculate_retirement_balance(
         should_adjust_portfolio_balance_for_inflation: bool,
         should_adjust_withdrawals_for_inflation: bool,
         should_adjust_withdrawals_for_taxation: bool,
-        is_solving_for_safe_withdrawal: bool
+        is_solving_for_safe_withdrawal: bool,
+        home_sale_net_proceeds: Decimal,
+        years_in_future_of_home_purchase: int
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = \
         calc_balances_from_current_age_to_retirement(
@@ -241,7 +271,9 @@ def calculate_retirement_balance(
             a_inflation_mean=a_inflation_mean,
             a_income_growth_mean=a_income_growth_mean,
             should_adjust_contributions_for_income_growth=should_adjust_contributions_for_income_growth,
-            should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation)
+            should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation,
+            home_sale_net_proceeds=home_sale_net_proceeds,
+            years_in_future_of_home_purchase=years_in_future_of_home_purchase)
     balance_at_end_of_life_expectancy, balances_by_year_after_retirement = \
         calc_balance_from_retirement_to_eol(
             a_balance_at_retirement=balance_at_retirement,
@@ -255,7 +287,9 @@ def calculate_retirement_balance(
             should_adjust_withdrawals_for_inflation=should_adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=should_adjust_withdrawals_for_taxation,
             should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation,
-            allow_negative_balances=is_solving_for_safe_withdrawal)
+            allow_negative_balances=is_solving_for_safe_withdrawal,
+            home_sale_net_proceeds=home_sale_net_proceeds,
+            years_in_future_of_home_purchase=years_in_future_of_home_purchase)
     # We check if there are missing years
     # from the list where the balance was zero and pad out if needed
     if num_years_between_retirement_and_eol != len(
@@ -348,7 +382,9 @@ def calc_safe_withdrawal_amount_for_simulation(
     post_retirement_ror: Decimal,
     years_until_retirement: int,
     years_from_retirement_until_life_expectancy: int,
-    a_post_retirement_annual_withdrawal: Decimal
+    a_post_retirement_annual_withdrawal: Decimal,
+    home_sale_net_proceeds: Decimal,
+    years_in_future_of_home_purchase: int
 ):
     simulation_output = calculate_retirement_balance(
         a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
@@ -366,7 +402,10 @@ def calc_safe_withdrawal_amount_for_simulation(
         should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
         should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
         should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
-        is_solving_for_safe_withdrawal=True)
+        home_sale_net_proceeds=home_sale_net_proceeds,
+        years_in_future_of_home_purchase=years_in_future_of_home_purchase,
+        is_solving_for_safe_withdrawal=True
+    )
     return simulation_output
 
 
@@ -374,7 +413,9 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
         simulation_set_params_in: schemas.RunSimulationIn,
         years_until_retirement: int,
         years_from_retirement_until_life_expectancy: int,
-        all_simulations: List):
+        all_simulations: List,
+        home_sale_net_proceeds: Decimal,
+        years_in_future_of_home_purchase: int):
     num_simulations_total = len(all_simulations)
     index_positions_of_simulation_outcome = [
         round(num_simulations_total * x) for x in KEY_QUANTILE_VALUES]
@@ -389,6 +430,8 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
             post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
             years_until_retirement=years_until_retirement,
             years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+            home_sale_net_proceeds=home_sale_net_proceeds,
+            years_in_future_of_home_purchase=years_in_future_of_home_purchase,
             a_post_retirement_annual_withdrawal=x
         ))
         safe_withdrawal_amount_as_positive_decimal = abs(round(
@@ -445,6 +488,8 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
             should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
+            home_sale_net_proceeds=simulation_set_params_in.home_sale_net_proceeds,
+            years_in_future_of_home_purchase=simulation_set_params_in.years_in_future_of_home_purchase,
             is_solving_for_safe_withdrawal=False)
         single_simulation_result = {
             'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
@@ -463,6 +508,8 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         simulation_set_params_in=simulation_set_params_in,
         years_until_retirement=years_until_retirement,
         years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+        home_sale_net_proceeds=simulation_set_params_in.home_sale_net_proceeds,
+        years_in_future_of_home_purchase=simulation_set_params_in.years_in_future_of_home_purchase,
         all_simulations=all_simulation_results_sorted)
     meta_simulation_statistics = calc_meta_simulation_stats(
         all_simulations=all_simulation_results_sorted,

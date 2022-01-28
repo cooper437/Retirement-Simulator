@@ -1,7 +1,9 @@
 from typing import Dict, List
+from decimal import Decimal
 from humps import camelize
 from pydantic import (BaseModel,
                       PositiveInt,
+                      NonNegativeInt,
                       NegativeInt,
                       NonNegativeFloat,
                       NonNegativeInt,
@@ -46,13 +48,15 @@ class RunSimulationIn(CamelModel):
     # Taxation
     post_retirement_tax_rate: decimal_positive
     additional_post_retirement_annual_income: decimal_positive
+    home_sale_net_proceeds: int
+    years_in_future_of_home_purchase: NonNegativeInt
 
 
 class QuantileStatistic(CamelModel):
     pre_retirement_rate_of_return: decimal_positive
     post_retirement_rate_of_return: decimal_positive
     balance_at_eol: decimal_positive
-    balances: List[decimal_positive]
+    balances: List[Decimal]
     safe_withdrawal_amount: decimal_positive
 
 

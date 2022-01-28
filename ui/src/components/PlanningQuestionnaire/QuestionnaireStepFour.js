@@ -34,14 +34,15 @@ import {
   reorderNthArrayElementToLast,
   constructFinalPayload,
   calculateIncomeForTaxes,
-  convertPayloadValuesToFormValues
+  convertPayloadValuesToFormValues,
+  calcNonAdjustedNetProceedsOnHomeSale
 } from '../../utils/questionnaireUtils';
 
 const EMPTY_FORM_VALUES = {
   desiredBaseIncomeType: '',
   desiredBaseIncomePercentage: '',
   desiredBaseIncomeFixedAmount: '',
-  otherDiscretionaryIncomePostRetirement: '',
+  supplementalIncomePostRetirement: '',
   socialSecurityIncome: '',
   isPlanningOnRentingRealEstate: null,
   expectedRentalIncome: '',
@@ -96,8 +97,7 @@ export default function QuestionnaireStepFour({
               then: Yup.string().required('Required')
             }
           ),
-          otherDiscretionaryIncomePostRetirement:
-            Yup.string().required('Required'),
+          supplementalIncomePostRetirement: Yup.string().required('Required'),
           socialSecurityIncome: Yup.string().required('Required'),
           isPlanningOnRentingRealEstate: Yup.boolean()
             .required('Required')
@@ -134,7 +134,15 @@ export default function QuestionnaireStepFour({
             });
             const payloadAsFormValues = convertPayloadValuesToFormValues({
               ...payload,
-              filingStatus: formValues.taxFilingStatus
+              filingStatus: formValues.taxFilingStatus,
+              homeSaleNetProceeds: calcNonAdjustedNetProceedsOnHomeSale({
+                isPlanningOnSellingHome:
+                  completedStepValues.stepThree.isPlanningOnSellingHome,
+                currentHomeValue:
+                  completedStepValues.stepThree.currentHomeValue,
+                newHomePurchaseAmount:
+                  completedStepValues.stepThree.newHomePurchaseAmount
+              })
             });
             navigate('/mc-input-form', {
               state: {
@@ -359,7 +367,7 @@ export default function QuestionnaireStepFour({
                 <Stack direction="row" alignItems="center">
                   <Box sx={{ flex: 1 }}>
                     <Typography sx={{ ml: 4, mr: 2 }}>
-                      What is your annual post-retirement discretionary income?
+                      What is your annual post-retirement supplemental income?
                     </Typography>
                     <Typography sx={{ ml: 4, mr: 2 }}>
                       (Pension, Part-Time Work, etc)
@@ -367,12 +375,12 @@ export default function QuestionnaireStepFour({
                   </Box>
                   <Box sx={{ flex: 1 }}>
                     <TextField
-                      label="Other Discretionary Income"
+                      label="Supplemental Income"
                       sx={commonFormStyles.shortFormInput}
                       variant="outlined"
-                      value={formValues.otherDiscretionaryIncomePostRetirement}
+                      value={formValues.supplementalIncomePostRetirement}
                       onChange={handleChange}
-                      name="otherDiscretionaryIncomePostRetirement"
+                      name="supplementalIncomePostRetirement"
                       id="other-discretionary-income-input"
                       InputProps={{
                         inputComponent: NumberFormatDollarAmount,
@@ -384,12 +392,12 @@ export default function QuestionnaireStepFour({
                         )
                       }}
                       error={
-                        touched.otherDiscretionaryIncomePostRetirement &&
-                        Boolean(errors.otherDiscretionaryIncomePostRetirement)
+                        touched.supplementalIncomePostRetirement &&
+                        Boolean(errors.supplementalIncomePostRetirement)
                       }
                       helperText={
-                        touched.otherDiscretionaryIncomePostRetirement &&
-                        errors.otherDiscretionaryIncomePostRetirement
+                        touched.supplementalIncomePostRetirement &&
+                        errors.supplementalIncomePostRetirement
                       }
                     />
                   </Box>

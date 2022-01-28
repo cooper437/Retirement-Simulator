@@ -4,9 +4,23 @@ import {
   INVESTMENT_STYLE_ENUM,
   CONTRIBUTION_STYLES,
   DEFAULT_INFLATION_MEAN,
-  DEFAULT_INCOME_GROWTH_MEAN
+  DEFAULT_INCOME_GROWTH_MEAN,
+  REAL_ESTATE_NATIONAL_AVG_HOME_APPRECIATION_PCT
 } from '../constants';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from './generalUtils';
+
+export const calcCompoundedInterestAmount = ({
+  principal,
+  time,
+  annualInterestRate,
+  numTimesCompoundedPerPeriod
+}) => {
+  const amount =
+    principal *
+    (1 + annualInterestRate / numTimesCompoundedPerPeriod) **
+      (numTimesCompoundedPerPeriod * time);
+  return amount;
+};
 
 /**
  * Return a copy of an array with one of the elements bumped to the last position
@@ -72,12 +86,12 @@ export const calcDesiredBaseIncomeFixedAmount = ({
 const calcAdditionalPostRetirementAnnualIncome = (formValues) => {
   let additionalPostRetirementAnnualIncome = '';
   if (
-    formValues.otherDiscretionaryIncomePostRetirement &&
+    formValues.supplementalIncomePostRetirement &&
     formValues.socialSecurityIncome
   ) {
     if (formValues.isPlanningOnRentingRealEstate === false) {
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
+        parseInt(formValues.supplementalIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10);
       additionalPostRetirementAnnualIncome =
         additionalPostRetirementAnnualIncomeAsNumber.toString();
@@ -91,7 +105,7 @@ const calcAdditionalPostRetirementAnnualIncome = (formValues) => {
         parseInt(formValues.expectedRentalIncome, 10) -
         parseInt(formValues.expectedRentalExpenses, 10);
       const additionalPostRetirementAnnualIncomeAsNumber =
-        parseInt(formValues.otherDiscretionaryIncomePostRetirement, 10) +
+        parseInt(formValues.supplementalIncomePostRetirement, 10) +
         parseInt(formValues.socialSecurityIncome, 10) +
         netRentalIncome;
       additionalPostRetirementAnnualIncome =
@@ -193,6 +207,48 @@ const getMeanRateOfReturnForAllAccounts = (accounts) => {
   };
 };
 
+export const calcNonAdjustedNetProceedsOnHomeSale = ({
+  isPlanningOnSellingHome,
+  currentHomeValue,
+  newHomePurchaseAmount
+}) => {
+  if (!isPlanningOnSellingHome) return 0;
+  const homeSale = parseInt(currentHomeValue, 10);
+  const homePurchase = parseInt(newHomePurchaseAmount, 10);
+  const netProceeds = homeSale - homePurchase;
+  return netProceeds;
+};
+
+export const calcAdjustedNetProceedsOnHomeSale = ({ allFormValues }) => {
+  if (!allFormValues.isPlanningOnSellingHome)
+    return { netProceeds: 0, yearsInFuture: 0 };
+  const currentYear = new Date().getFullYear();
+  const currentHomeValue = parseInt(allFormValues.currentHomeValue, 10);
+  const newHomePurchaseAmount = parseInt(
+    allFormValues.newHomePurchaseAmount,
+    10
+  );
+  const homeSaleYear = parseInt(allFormValues.expectToSellDate, 10);
+  const yearsInFuture = homeSaleYear - currentYear;
+  const adjustedFutureHomeSellPrice = calcCompoundedInterestAmount({
+    principal: currentHomeValue,
+    annualInterestRate: REAL_ESTATE_NATIONAL_AVG_HOME_APPRECIATION_PCT,
+    time: yearsInFuture,
+    numTimesCompoundedPerPeriod: 1
+  });
+  const adjustedFutureHomeBuyPrice = calcCompoundedInterestAmount({
+    principal: newHomePurchaseAmount,
+    annualInterestRate: REAL_ESTATE_NATIONAL_AVG_HOME_APPRECIATION_PCT,
+    time: yearsInFuture,
+    numTimesCompoundedPerPeriod: 1
+  });
+  const netProceeds = parseInt(
+    adjustedFutureHomeSellPrice - adjustedFutureHomeBuyPrice,
+    10
+  );
+  return { netProceeds, yearsInFuture };
+};
+
 // eslint-disable-next-line arrow-body-style
 export const constructFinalPayload = (allFormValuesGroupedByStep) => {
   // Consolidate them all into object so its easier to reference
@@ -253,6 +309,9 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility
   } = getMeanRateOfReturnForAllAccounts(allFormValues.accounts);
+  const { netProceeds, yearsInFuture } = calcAdjustedNetProceedsOnHomeSale({
+    allFormValues
+  });
   const payload = {
     adjustPortfolioBalanceForInflation: true,
     adjustContributionsForIncomeGrowth: true,
@@ -271,6 +330,8 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementMeanRateOfReturn,
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility,
+    homeSaleNetProceeds: netProceeds,
+    yearsInFutureOfHomePurchase: yearsInFuture,
     additionalPostRetirementAnnualIncome: parseInt(
       additionalPostRetirementAnnualIncome,
       10
@@ -307,7 +368,8 @@ export const convertPayloadValuesToFormValues = (payloadValues) => {
     postRetirementInvestmentStyle: '',
     filingStatus: payloadValues.filingStatus,
     additionalPostRetirementAnnualIncome:
-      payloadValues.additionalPostRetirementAnnualIncome.toString()
+      payloadValues.additionalPostRetirementAnnualIncome.toString(),
+    homeSaleNetProceeds: payloadValues.homeSaleNetProceeds.toString()
   };
   return formValues;
 };

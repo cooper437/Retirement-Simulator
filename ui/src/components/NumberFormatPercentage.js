@@ -1,6 +1,12 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 
+const MAX_VAL = 100;
+const withValueLimit = ({ floatValue }) => {
+  if (typeof floatValue === 'undefined') return true;
+  return floatValue <= MAX_VAL;
+};
+
 export default React.forwardRef((props, ref) => {
   const { onChange, ...other } = props;
 
@@ -8,6 +14,7 @@ export default React.forwardRef((props, ref) => {
     <NumberFormat
       {...other}
       getInputRef={ref}
+      isAllowed={withValueLimit}
       allowNegative={false}
       decimalScale={2}
       fixedDecimalScale
