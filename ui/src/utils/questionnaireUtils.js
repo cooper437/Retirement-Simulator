@@ -9,7 +9,7 @@ import {
 } from '../constants';
 import { calcPostRetirementAnnualIncomeAndTaxRate } from './generalUtils';
 
-const calcCompoundedInterestAmount = ({
+export const calcCompoundedInterestAmount = ({
   principal,
   time,
   annualInterestRate,
@@ -207,7 +207,19 @@ const getMeanRateOfReturnForAllAccounts = (accounts) => {
   };
 };
 
-const calcNetProceedsOnHomeSale = (allFormValues) => {
+export const calcNonAdjustedNetProceedsOnHomeSale = ({
+  isPlanningOnSellingHome,
+  currentHomeValue,
+  newHomePurchaseAmount
+}) => {
+  if (!isPlanningOnSellingHome) return 0;
+  const homeSale = parseInt(currentHomeValue, 10);
+  const homePurchase = parseInt(newHomePurchaseAmount, 10);
+  const netProceeds = homeSale - homePurchase;
+  return netProceeds;
+};
+
+export const calcAdjustedNetProceedsOnHomeSale = ({ allFormValues }) => {
   if (!allFormValues.isPlanningOnSellingHome)
     return { netProceeds: 0, yearsInFuture: 0 };
   const currentYear = new Date().getFullYear();
@@ -297,8 +309,9 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility
   } = getMeanRateOfReturnForAllAccounts(allFormValues.accounts);
-  const { netProceeds, yearsInFuture } =
-    calcNetProceedsOnHomeSale(allFormValues);
+  const { netProceeds, yearsInFuture } = calcAdjustedNetProceedsOnHomeSale({
+    allFormValues
+  });
   const payload = {
     adjustPortfolioBalanceForInflation: true,
     adjustContributionsForIncomeGrowth: true,
@@ -317,7 +330,7 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementMeanRateOfReturn,
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility,
-    homePurchaseNetProceeds: netProceeds,
+    homeSaleNetProceeds: netProceeds,
     yearsInFutureOfHomePurchase: yearsInFuture,
     additionalPostRetirementAnnualIncome: parseInt(
       additionalPostRetirementAnnualIncome,
@@ -355,7 +368,8 @@ export const convertPayloadValuesToFormValues = (payloadValues) => {
     postRetirementInvestmentStyle: '',
     filingStatus: payloadValues.filingStatus,
     additionalPostRetirementAnnualIncome:
-      payloadValues.additionalPostRetirementAnnualIncome.toString()
+      payloadValues.additionalPostRetirementAnnualIncome.toString(),
+    homeSaleNetProceeds: payloadValues.homeSaleNetProceeds.toString()
   };
   return formValues;
 };

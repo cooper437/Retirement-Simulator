@@ -18,10 +18,15 @@ import { submitRetirementSimulationForm } from '../../api/formSubmissions';
 import {
   INVESTMENT_STYLE_ENUM,
   DEFAULT_INFLATION_MEAN,
-  DEFAULT_INCOME_GROWTH_MEAN
+  DEFAULT_INCOME_GROWTH_MEAN,
+  REAL_ESTATE_NATIONAL_AVG_HOME_APPRECIATION_PCT
 } from '../../constants';
-import { calcPostRetirementAnnualIncomeAndTaxRate } from '../../utils/generalUtils';
+import {
+  calcPostRetirementAnnualIncomeAndTaxRate,
+  calcYearsUntilRetirement
+} from '../../utils/generalUtils';
 import ResultsContainer from './FormResults/ResultsContainer';
+import { calcCompoundedInterestAmount } from '../../utils/questionnaireUtils';
 
 const commonFormStyles = {
   shortFormInput: {
@@ -91,7 +96,8 @@ const EMPTY_FORM_VALUES = {
   preRetirementInvestmentStyle: '',
   postRetirementInvestmentStyle: '',
   filingStatus: '',
-  additionalPostRetirementAnnualIncome: '0'
+  additionalPostRetirementAnnualIncome: '0',
+  homeSaleNetProceeds: ''
 };
 
 // const INITIAL_FORM_VALUES = {
@@ -111,7 +117,8 @@ const EMPTY_FORM_VALUES = {
 //   preRetirementInvestmentStyle: 'Aggressive',
 //   postRetirementInvestmentStyle: 'Conservative',
 //   filingStatus: 'singleFiler',
-//   additionalPostRetirementAnnualIncome: '20000'
+//   additionalPostRetirementAnnualIncome: '20000',
+//    homeSaleNetProceeds: '100000'
 // };
 
 const numberToPercent = (aNumber) => aNumber / 100;
@@ -158,6 +165,7 @@ export default function FormContainer() {
         initialPortfolioAmount: Yup.string().required('Required'),
         preRetirementAnnualContribution: Yup.string().required('Required'),
         postRetirementAnnualWithdrawal: Yup.string().required('Required'),
+        homeSaleNetProceeds: Yup.string().required('Required'),
         preRetirementInvestmentStyle: Yup.string().required('Required'),
         postRetirementInvestmentStyle: Yup.string().required('Required'),
         inflationMean: Yup.string().when('adjustForInflation', {
@@ -196,6 +204,20 @@ export default function FormContainer() {
             additionalPostRetirementAnnualIncome:
               formValues.additionalPostRetirementAnnualIncome
           });
+        const yearsInFutureOfHomePurchase = calcYearsUntilRetirement({
+          currentAge: formValues.currentAge,
+          retirementAge: formValues.retirementAge
+        });
+        const homeSaleNetProceedsNonAdjusted = parseInt(
+          formValues.homeSaleNetProceeds,
+          10
+        );
+        const adjustedFutureHomeSellPrice = calcCompoundedInterestAmount({
+          principal: homeSaleNetProceedsNonAdjusted,
+          annualInterestRate: REAL_ESTATE_NATIONAL_AVG_HOME_APPRECIATION_PCT,
+          time: yearsInFutureOfHomePurchase,
+          numTimesCompoundedPerPeriod: 1
+        });
         setSimulationResults({ isFetching: true });
         const results = await submitRetirementSimulationForm({
           formParams: {
@@ -230,7 +252,9 @@ export default function FormContainer() {
             postRetirementRateOfReturnVolatility: numberToPercent(
               parseFloat(postRetirementRateOfReturnVolatility, 10)
             ),
-            postRetirementTaxRate: postRetirementTaxRateAsDecimal
+            postRetirementTaxRate: postRetirementTaxRateAsDecimal,
+            homeSaleNetProceeds: parseInt(adjustedFutureHomeSellPrice, 10),
+            yearsInFutureOfHomePurchase
           }
         });
         setSimulationResults({
@@ -371,6 +395,7 @@ export default function FormContainer() {
                     postRetirementInvestmentStyle={
                       formValues.postRetirementInvestmentStyle
                     }
+                    homeSaleNetProceeds={formValues.homeSaleNetProceeds}
                     inflationMean={formValues.inflationMean}
                     setFieldValue={setFieldValue}
                     adjustForInflation={formValues.adjustForInflation}

@@ -48,7 +48,7 @@ class RunSimulationIn(CamelModel):
     # Taxation
     post_retirement_tax_rate: decimal_positive
     additional_post_retirement_annual_income: decimal_positive
-    home_purchase_net_proceeds: int
+    home_sale_net_proceeds: int
     years_in_future_of_home_purchase: NonNegativeInt
 
 

@@ -34,7 +34,8 @@ import {
   reorderNthArrayElementToLast,
   constructFinalPayload,
   calculateIncomeForTaxes,
-  convertPayloadValuesToFormValues
+  convertPayloadValuesToFormValues,
+  calcNonAdjustedNetProceedsOnHomeSale
 } from '../../utils/questionnaireUtils';
 
 const EMPTY_FORM_VALUES = {
@@ -133,7 +134,15 @@ export default function QuestionnaireStepFour({
             });
             const payloadAsFormValues = convertPayloadValuesToFormValues({
               ...payload,
-              filingStatus: formValues.taxFilingStatus
+              filingStatus: formValues.taxFilingStatus,
+              homeSaleNetProceeds: calcNonAdjustedNetProceedsOnHomeSale({
+                isPlanningOnSellingHome:
+                  completedStepValues.stepThree.isPlanningOnSellingHome,
+                currentHomeValue:
+                  completedStepValues.stepThree.currentHomeValue,
+                newHomePurchaseAmount:
+                  completedStepValues.stepThree.newHomePurchaseAmount
+              })
             });
             navigate('/mc-input-form', {
               state: {

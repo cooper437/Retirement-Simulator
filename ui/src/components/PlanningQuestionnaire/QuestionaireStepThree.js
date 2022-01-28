@@ -24,6 +24,7 @@ import RetirementAccountTable from './RetirementAccountTable';
 import { SECTION_BORDER_COLOR } from '../../colors';
 import AddAccountForm from './AddAccountForm';
 import NumberFormatDollarAmount from '../NumberFormatDollarAmount';
+import { calcYearsUntilRetirement } from '../../utils/generalUtils';
 
 const EMPTY_FORM_VALUES = {
   accounts: [],
@@ -47,7 +48,10 @@ const getExpectToSellDropdownOptions = ({
   retirementAge
 }) => {
   const yearsUntilLifeExpectancy = lifeExpectancy - currentAge;
-  const yearsUntilRetirement = retirementAge - currentAge;
+  const yearsUntilRetirement = calcYearsUntilRetirement({
+    currentAge,
+    retirementAge
+  });
   const currentYear = new Date().getFullYear();
   const yearOfRetirement = currentYear + yearsUntilRetirement;
   const selectionOptions = Array.from(
