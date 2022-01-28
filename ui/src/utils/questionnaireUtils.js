@@ -208,7 +208,8 @@ const getMeanRateOfReturnForAllAccounts = (accounts) => {
 };
 
 const calcNetProceedsOnHomeSale = (allFormValues) => {
-  if (!allFormValues.isPlanningOnSellingHome) return 0;
+  if (!allFormValues.isPlanningOnSellingHome)
+    return { netProceeds: 0, yearsInFuture: 0 };
   const currentYear = new Date().getFullYear();
   const currentHomeValue = parseInt(allFormValues.currentHomeValue, 10);
   const newHomePurchaseAmount = parseInt(
@@ -229,8 +230,11 @@ const calcNetProceedsOnHomeSale = (allFormValues) => {
     time: yearsInFuture,
     numTimesCompoundedPerPeriod: 1
   });
-  const netProceeds = adjustedFutureHomeSellPrice - adjustedFutureHomeBuyPrice;
-  return parseInt(netProceeds, 10);
+  const netProceeds = parseInt(
+    adjustedFutureHomeSellPrice - adjustedFutureHomeBuyPrice,
+    10
+  );
+  return { netProceeds, yearsInFuture };
 };
 
 // eslint-disable-next-line arrow-body-style
@@ -293,7 +297,8 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility
   } = getMeanRateOfReturnForAllAccounts(allFormValues.accounts);
-  const oneTimeBalanceModifier = calcNetProceedsOnHomeSale(allFormValues);
+  const { netProceeds, yearsInFuture } =
+    calcNetProceedsOnHomeSale(allFormValues);
   const payload = {
     adjustPortfolioBalanceForInflation: true,
     adjustContributionsForIncomeGrowth: true,
@@ -312,6 +317,8 @@ export const constructFinalPayload = (allFormValuesGroupedByStep) => {
     preRetirementMeanRateOfReturn,
     preRetirementRateOfReturnVolatility,
     postRetirementRateOfReturnVolatility,
+    homePurchaseNetProceeds: netProceeds,
+    yearsInFutureOfHomePurchase: yearsInFuture,
     additionalPostRetirementAnnualIncome: parseInt(
       additionalPostRetirementAnnualIncome,
       10

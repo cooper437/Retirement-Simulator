@@ -2,6 +2,7 @@ from typing import Dict, List
 from humps import camelize
 from pydantic import (BaseModel,
                       PositiveInt,
+                      NonNegativeInt,
                       NegativeInt,
                       NonNegativeFloat,
                       NonNegativeInt,
@@ -46,6 +47,8 @@ class RunSimulationIn(CamelModel):
     # Taxation
     post_retirement_tax_rate: decimal_positive
     additional_post_retirement_annual_income: decimal_positive
+    home_purchase_net_proceeds: int
+    years_in_future_of_home_purchase: NonNegativeInt
 
 
 class QuantileStatistic(CamelModel):
