@@ -29,7 +29,9 @@ const EMPTY_FORM_VALUES = {
   accounts: [],
   isPlanningOnSellingHome: null,
   expectToSellDate: '',
-  currentHomeValue: ''
+  currentHomeValue: '',
+  isPlanningToBuyNewHome: null,
+  newHomePurchaseAmount: ''
 };
 
 const commonFormStyles = {
@@ -317,6 +319,121 @@ export default function QuestionaireStepThree({
                           />
                         </Box>
                       </Stack>
+                      <Stack sx={{ mt: 4 }} direction="row" alignItems="center">
+                        <Box
+                          sx={{
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              ml: 4,
+                              mr: 4
+                            }}
+                          >
+                            Do you plan on buying a new home?
+                          </Box>
+                        </Box>
+                        <FormControl
+                          error={
+                            touched.isPlanningToBuyNewHome &&
+                            Boolean(errors.isPlanningToBuyNewHome)
+                          }
+                          component="fieldset"
+                          sx={{ flex: 1 }}
+                        >
+                          <RadioGroup
+                            row
+                            aria-label="is-planning-on-buying-home-btn-group"
+                            name="isPlanningToBuyNewHome"
+                            value={formValues.isPlanningToBuyNewHome}
+                            onChange={async (e) => {
+                              if (e.target.value === 'true') {
+                                await setFieldValue(
+                                  'isPlanningToBuyNewHome',
+                                  true
+                                );
+                                await setFieldValue(
+                                  'newHomePurchaseAmount',
+                                  ''
+                                );
+                              }
+                              if (e.target.value === 'false') {
+                                await setFieldValue(
+                                  'isPlanningToBuyNewHome',
+                                  false
+                                );
+                                await setFieldValue(
+                                  'newHomePurchaseAmount',
+                                  '0'
+                                );
+                              }
+                            }}
+                          >
+                            <FormControlLabel
+                              value={Boolean(true)}
+                              control={<Radio />}
+                              label="Yes"
+                            />
+                            <FormControlLabel
+                              value={Boolean(false)}
+                              control={<Radio />}
+                              label="No"
+                            />
+                          </RadioGroup>
+                          <FormHelperText>
+                            {touched.isPlanningToBuyNewHome &&
+                              errors.isPlanningToBuyNewHome}
+                          </FormHelperText>
+                        </FormControl>
+                      </Stack>
+                      {formValues.isPlanningToBuyNewHome === true &&
+                        formValues.isPlanningOnSellingHome === true && (
+                          <Stack
+                            sx={{ mt: 4 }}
+                            direction="row"
+                            alignItems="center"
+                          >
+                            <Typography component="div" sx={{ flex: 1 }}>
+                              <Box sx={{ ml: 4 }}>
+                                What is the expected cost of your new home?
+                              </Box>
+                            </Typography>
+                            <Box sx={{ flex: 1 }}>
+                              <TextField
+                                sx={commonFormStyles.shortFormInput}
+                                variant="outlined"
+                                value={formValues.newHomePurchaseAmount}
+                                onChange={handleChange}
+                                name="newHomePurchaseAmount"
+                                id="new-home-purchase-amount-input"
+                                InputProps={{
+                                  inputComponent: NumberFormatDollarAmount,
+                                  startAdornment: (
+                                    <InputAdornment position="start">
+                                      $
+                                    </InputAdornment>
+                                  ),
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      .00
+                                    </InputAdornment>
+                                  )
+                                }}
+                                error={
+                                  touched.newHomePurchaseAmount &&
+                                  Boolean(errors.newHomePurchaseAmount)
+                                }
+                                helperText={
+                                  touched.newHomePurchaseAmount &&
+                                  errors.newHomePurchaseAmount
+                                }
+                              />
+                            </Box>
+                          </Stack>
+                        )}
                     </>
                   )}
                 </Box>
