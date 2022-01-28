@@ -118,7 +118,7 @@ export default function QuestionnaireStepFour({
           taxFilingStatus: Yup.string().required('Required')
         })}
         onSubmit={async (formValues) => {
-          // setIsFetching(true);
+          setIsFetching(true);
           try {
             setCompletedValuesForStep({
               stepName: 'stepFour',
@@ -135,14 +135,14 @@ export default function QuestionnaireStepFour({
               ...payload,
               filingStatus: formValues.taxFilingStatus
             });
-            // navigate('/mc-input-form', {
-            //   state: {
-            //     questionnaire: {
-            //       stateAsFormValues: payloadAsFormValues,
-            //       simulationResults: results
-            //     }
-            //   }
-            // });
+            navigate('/mc-input-form', {
+              state: {
+                questionnaire: {
+                  stateAsFormValues: payloadAsFormValues,
+                  simulationResults: results
+                }
+              }
+            });
           } catch (err) {
             console.error(err);
             setIsFetching(false);
