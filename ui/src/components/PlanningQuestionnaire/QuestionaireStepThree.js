@@ -47,7 +47,9 @@ const getExpectToSellDropdownOptions = ({
   retirementAge
 }) => {
   const yearsUntilLifeExpectancy = lifeExpectancy - currentAge;
+  const yearsUntilRetirement = retirementAge - currentAge;
   const currentYear = new Date().getFullYear();
+  const yearOfRetirement = currentYear + yearsUntilRetirement;
   const selectionOptions = Array.from(
     { length: yearsUntilLifeExpectancy },
     (item, index) => {
@@ -55,7 +57,15 @@ const getExpectToSellDropdownOptions = ({
       return { label: `In ${aFutureYear}`, value: aFutureYear.toString() };
     }
   );
-  selectionOptions.unshift({ label: 'At Retirement', value: 'at_retirement' });
+  _.pullAllBy(
+    selectionOptions,
+    [{ value: yearOfRetirement.toString() }],
+    'value'
+  );
+  selectionOptions.unshift({
+    label: `At Retirement (${yearOfRetirement})`,
+    value: yearOfRetirement.toString()
+  });
   return selectionOptions;
 };
 
