@@ -261,7 +261,7 @@ export default function QuestionnaireStepTwo({
                           sx={{
                             width: commonFormStyles.shortFormInput.width
                           }}
-                          label="Annual Percentage Contribution"
+                          label="Annual % Contribution"
                           variant="outlined"
                           value={formValues.annualizedPercentIncomeContribution}
                           name="annualizedPercentIncomeContribution"
