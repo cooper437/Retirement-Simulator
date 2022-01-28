@@ -201,7 +201,7 @@ def calc_balance_from_retirement_to_eol(
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
         # only compound positive balances
-        if isinstance(compounded_balance, Add):
+        if isinstance(compounded_balance, Add): # it might be a sympy object
             if compounded_balance.args[0].is_positive:
                 compounded_balance = calc_compound_interest(
                     principal_amount=compounded_balance,
