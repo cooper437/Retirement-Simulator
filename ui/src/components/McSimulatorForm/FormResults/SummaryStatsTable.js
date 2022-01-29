@@ -68,6 +68,12 @@ export default function SummaryStatsTable({
       label:
         'Post-Retirement Annual Safe Withdrawal Amount (Pre-Inflation Dollars)',
       formatAs: 'dollar'
+    },
+    {
+      key: 'safeContributionAmount',
+      label:
+        'Post-Retirement Annual Safe Contribution Amount (Pre-Inflation Dollars)',
+      formatAs: 'dollar'
     }
   ];
   return (
