@@ -22,4 +22,4 @@ RUN npm install -g serve
 
 
 # Finally runs the application
-CMD [ "serve", "-s", "build" ]
+CMD [ "serve", "-s", "build", "-l", "3000" ]
