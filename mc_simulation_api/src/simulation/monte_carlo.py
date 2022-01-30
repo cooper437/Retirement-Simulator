@@ -306,11 +306,13 @@ def calculate_retirement_balance(
     else:
         return {
             'ran_out_of_money_before_eol':
-                True if balance_at_end_of_life_expectancy <= Decimal(0) else False,
+                True if balance_at_end_of_life_expectancy <= Decimal(
+                    0) else False,
             'balances': all_balances,
             'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
             'balance_at_eol':
-                round(balance_at_end_of_life_expectancy, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
+                round(balance_at_end_of_life_expectancy,
+                      DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
         }
 
 
@@ -490,10 +492,14 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
             Decimal(float(safe_withdrawal_amount[0])),
             DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
         ))
-        safe_contribution_amount_as_positive_decimal = abs(round(
+        real_safe_contribution_amount_as_decimal = round(
             Decimal(float(safe_contribution_amount[0])),
             DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
-        ))
+        )
+        if real_safe_contribution_amount_as_decimal < 0:
+            safe_contribution_amount_as_positive_decimal = Decimal(0.0)
+        else:
+            safe_contribution_amount_as_positive_decimal = real_safe_contribution_amount_as_decimal
         quantile_statistics[KEY_QUANTILE_VALUES[idx]] = {
             'safe_withdrawal_amount': safe_withdrawal_amount_as_positive_decimal,
             'safe_contribution_amount': safe_contribution_amount_as_positive_decimal
