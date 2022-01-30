@@ -15,16 +15,20 @@ const generatePortfolioSurvivalPlugins = (roundedSurvivalRate) => {
         const { ctx } = chart;
         ctx.restore();
         const fontSize = (height / 360).toFixed(2);
-        ctx.font = `${fontSize}em sans-serif`;
+        ctx.font = `bold ${fontSize}em sans-serif`;
         ctx.textBaseline = 'middle';
-        const text1 = `${roundedSurvivalRate}% Portfolio`;
-        const text2 = 'Survival Rate';
+        const text1 = 'Portfolio Survival';
+        const text2 = 'Rate:';
+        const text3 = `${roundedSurvivalRate}%`;
         const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
         const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-        const text1Y = height / 2 - 10;
-        const text2Y = height / 2 + 10;
+        const text3X = Math.round((width - ctx.measureText(text3).width) / 2);
+        const text1Y = height / 2 - 15;
+        const text2Y = height / 2 + 5;
+        const text3Y = height / 2 + 25;
         ctx.fillText(text1, text1X, text1Y);
         ctx.fillText(text2, text2X, text2Y);
+        ctx.fillText(text3, text3X, text3Y);
         ctx.save();
       }
     }
@@ -78,16 +82,20 @@ const generateSafeWithdrawalPlugins = (safeWithdrawalAmount) => {
         const { ctx } = chart;
         ctx.restore();
         const fontSize = (height / 360).toFixed(2);
-        ctx.font = `${fontSize}em sans-serif`;
+        ctx.font = `bold ${fontSize}em sans-serif`;
         ctx.textBaseline = 'middle';
-        const text1 = 'Portfolio Survival';
-        const text2 = `on $${formattedSafeWithdrawalAmount}k / year`;
+        const text1 = 'Safe Withdrawal';
+        const text2 = 'Amount:';
+        const text3 = `$${formattedSafeWithdrawalAmount}k / year`;
         const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
         const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
-        const text1Y = height / 2 - 10;
-        const text2Y = height / 2 + 10;
+        const text3X = Math.round((width - ctx.measureText(text3).width) / 2);
+        const text1Y = height / 2 - 15;
+        const text2Y = height / 2 + 5;
+        const text3Y = height / 2 + 25;
         ctx.fillText(text1, text1X, text1Y);
         ctx.fillText(text2, text2X, text2Y);
+        ctx.fillText(text3, text3X, text3Y);
         ctx.save();
       }
     }
