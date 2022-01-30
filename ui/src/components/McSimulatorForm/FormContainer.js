@@ -411,7 +411,11 @@ export default function FormContainer() {
                 <Box sx={{ mt: 4, ml: 4, mr: 4 }}>
                   <Stack direction="row" justifyContent="space-between">
                     <Stack direction="row" spacing={2}>
-                      <Button variant="contained" type="submit">
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        disabled={simulationResults.isFetching}
+                      >
                         {simulationResults.simulationRunCompleted
                           ? 'Re-run Simulation'
                           : 'Run Simulation'}
