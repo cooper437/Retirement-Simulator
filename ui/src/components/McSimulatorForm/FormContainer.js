@@ -79,47 +79,48 @@ const EMPTY_STATE = {
 };
 
 // The internal form state managed by formik
-// const EMPTY_FORM_VALUES = {
-//   adjustForInflation: true,
-//   adjustContributionsForIncomeGrowth: true,
-//   adjustWithdrawalsForTaxation: true,
-//   initialPortfolioAmount: '',
-//   preRetirementAnnualContribution: '',
-//   postRetirementAnnualWithdrawal: '',
-//   currentAge: '',
-//   retirementAge: '',
-//   lifeExpectancy: '',
-//   inflationMean: (DEFAULT_INFLATION_MEAN * 100).toString(),
-//   incomeGrowthMean: (DEFAULT_INCOME_GROWTH_MEAN * 100).toString(),
-//   preRetirementMeanRateOfReturn: '',
-//   postRetirementMeanRateOfReturn: '',
-//   preRetirementInvestmentStyle: '',
-//   postRetirementInvestmentStyle: '',
-//   filingStatus: '',
-//   additionalPostRetirementAnnualIncome: '0',
-//   homeSaleNetProceeds: ''
-// };
-
 const EMPTY_FORM_VALUES = {
   adjustForInflation: true,
   adjustContributionsForIncomeGrowth: true,
   adjustWithdrawalsForTaxation: true,
-  initialPortfolioAmount: '100000',
-  preRetirementAnnualContribution: '20000',
-  postRetirementAnnualWithdrawal: '100000',
-  currentAge: '20',
-  retirementAge: '65',
-  lifeExpectancy: '90',
-  inflationMean: '2.40',
-  incomeGrowthMean: '2.79',
-  preRetirementMeanRateOfReturn: '9.50',
-  postRetirementMeanRateOfReturn: '4.00',
-  preRetirementInvestmentStyle: 'Aggressive',
-  postRetirementInvestmentStyle: 'Conservative',
-  filingStatus: 'singleFiler',
-  additionalPostRetirementAnnualIncome: '20000',
-  homeSaleNetProceeds: '100000'
+  initialPortfolioAmount: '',
+  preRetirementAnnualContribution: '',
+  postRetirementAnnualWithdrawal: '',
+  currentAge: '',
+  retirementAge: '',
+  lifeExpectancy: '',
+  inflationMean: (DEFAULT_INFLATION_MEAN * 100).toString(),
+  incomeGrowthMean: (DEFAULT_INCOME_GROWTH_MEAN * 100).toString(),
+  preRetirementMeanRateOfReturn: '',
+  postRetirementMeanRateOfReturn: '',
+  preRetirementInvestmentStyle: '',
+  postRetirementInvestmentStyle: '',
+  filingStatus: '',
+  additionalPostRetirementAnnualIncome: '0',
+  homeSaleNetProceeds: ''
 };
+
+// Sample form values to make it easier to test
+// const EMPTY_FORM_VALUES = {
+//   adjustForInflation: true,
+//   adjustContributionsForIncomeGrowth: true,
+//   adjustWithdrawalsForTaxation: true,
+//   initialPortfolioAmount: '100000',
+//   preRetirementAnnualContribution: '20000',
+//   postRetirementAnnualWithdrawal: '100000',
+//   currentAge: '20',
+//   retirementAge: '65',
+//   lifeExpectancy: '90',
+//   inflationMean: '2.40',
+//   incomeGrowthMean: '2.79',
+//   preRetirementMeanRateOfReturn: '9.50',
+//   postRetirementMeanRateOfReturn: '4.00',
+//   preRetirementInvestmentStyle: 'Aggressive',
+//   postRetirementInvestmentStyle: 'Conservative',
+//   filingStatus: 'singleFiler',
+//   additionalPostRetirementAnnualIncome: '20000',
+//   homeSaleNetProceeds: '100000'
+// };
 
 const numberToPercent = (aNumber) => aNumber / 100;
 

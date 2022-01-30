@@ -64,15 +64,15 @@ export default function SummaryStatsTable({
       formatAs: 'dollar'
     },
     {
-      key: 'safeWithdrawalAmount',
+      key: 'safeContributionAmount',
       label:
-        'Post-Retirement Annual Safe Withdrawal Amount (Pre-Inflation Dollars)',
+        'Pre-Retirement Annual Safe Contribution Amount (Pre-Inflation Dollars)',
       formatAs: 'dollar'
     },
     {
-      key: 'safeContributionAmount',
+      key: 'safeWithdrawalAmount',
       label:
-        'Post-Retirement Annual Safe Contribution Amount (Pre-Inflation Dollars)',
+        'Post-Retirement Annual Safe Withdrawal Amount (Pre-Inflation Dollars)',
       formatAs: 'dollar'
     }
   ];
@@ -81,7 +81,7 @@ export default function SummaryStatsTable({
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <StyledTableCell />
+            <StyledTableCell align="left">Portfolio Outcomes</StyledTableCell>
             <StyledTableCell align="center">5th Percentile</StyledTableCell>
             <StyledTableCell align="center">25th Percentile</StyledTableCell>
             <StyledTableCell align="center">50th Percentile</StyledTableCell>

@@ -129,11 +129,11 @@ def calc_balances_from_current_age_to_retirement(
         compounded_balance += half_of_annual_contribution
         # only compound positive balances
         if isinstance(compounded_balance, Add):
-            if compounded_balance.args[0].is_positive:
-                compounded_balance = calc_compound_interest(
-                    principal_amount=compounded_balance,
-                    interest_rate=a_pre_retirement_annual_rate_of_return,
-                    num_time_periods_elapsed=1)
+            # if compounded_balance.args[0].is_positive:
+            compounded_balance = calc_compound_interest(
+                principal_amount=compounded_balance,
+                interest_rate=a_pre_retirement_annual_rate_of_return,
+                num_time_periods_elapsed=1)
         else:
             if compounded_balance > 0:
                 compounded_balance = calc_compound_interest(
@@ -203,11 +203,11 @@ def calc_balance_from_retirement_to_eol(
         # only compound positive balances
         if isinstance(compounded_balance, Add):
             # it might be a sympy object if we are solving for an unknown value
-            if compounded_balance.args[0].is_positive:
-                compounded_balance = calc_compound_interest(
-                    principal_amount=compounded_balance,
-                    interest_rate=a_post_retirement_annual_rate_of_return,
-                    num_time_periods_elapsed=1)
+            # if compounded_balance.args[0].is_positive:
+            compounded_balance = calc_compound_interest(
+                principal_amount=compounded_balance,
+                interest_rate=a_post_retirement_annual_rate_of_return,
+                num_time_periods_elapsed=1)
         else:  # Its just a standard simulation not solving for anything
             if compounded_balance > 0:
                 compounded_balance = calc_compound_interest(

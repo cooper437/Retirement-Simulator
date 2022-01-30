@@ -29,6 +29,9 @@ export default function ResultsContainer({
           safeWithdrawalAmount={
             simulationResults.quantileStatistics['0.05'].safeWithdrawalAmount
           }
+          safeContributionAmount={
+            simulationResults.quantileStatistics['0.5'].safeContributionAmount
+          }
         />
         <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
           Key Insights
@@ -39,6 +42,9 @@ export default function ResultsContainer({
           roundedDepletionRate={roundedDepletionRate}
           safeWithdrawalAmount={
             simulationResults.quantileStatistics['0.05'].safeWithdrawalAmount
+          }
+          safeContributionAmount={
+            simulationResults.quantileStatistics['0.5'].safeContributionAmount
           }
         />
         <Typography sx={{ mb: 2, mt: 8 }} variant="h6">
