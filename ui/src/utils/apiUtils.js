@@ -10,8 +10,8 @@ export const initializeAxiosApiConfigurations = () => {
   const portNumber =
     process.env.REACT_APP_API_SERVER_PORT || window.location.port;
   if (portNumber) {
-    axios.defaults.baseURL = `${window.location.protocol}//${hostName}:${portNumber}`;
+    axios.defaults.baseURL = `${window.location.protocol}//${hostName}:${portNumber}/api`;
   } else {
-    axios.defaults.baseURL = `${window.location.protocol}//${hostName}`;
+    axios.defaults.baseURL = `${window.location.protocol}//${hostName}/api`;
   }
 };
