@@ -129,11 +129,11 @@ def calc_balances_from_current_age_to_retirement(
         compounded_balance += half_of_annual_contribution
         # only compound positive balances
         if isinstance(compounded_balance, Add):
-            if compounded_balance.args[0].is_positive:
-                compounded_balance = calc_compound_interest(
-                    principal_amount=compounded_balance,
-                    interest_rate=a_pre_retirement_annual_rate_of_return,
-                    num_time_periods_elapsed=1)
+            # if compounded_balance.args[0].is_positive:
+            compounded_balance = calc_compound_interest(
+                principal_amount=compounded_balance,
+                interest_rate=a_pre_retirement_annual_rate_of_return,
+                num_time_periods_elapsed=1)
         else:
             if compounded_balance > 0:
                 compounded_balance = calc_compound_interest(
@@ -201,13 +201,14 @@ def calc_balance_from_retirement_to_eol(
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
         # only compound positive balances
-        if isinstance(compounded_balance, Add):  # it might be a sympy object
-            if compounded_balance.args[0].is_positive:
-                compounded_balance = calc_compound_interest(
-                    principal_amount=compounded_balance,
-                    interest_rate=a_post_retirement_annual_rate_of_return,
-                    num_time_periods_elapsed=1)
-        else:
+        if isinstance(compounded_balance, Add):
+            # it might be a sympy object if we are solving for an unknown value
+            # if compounded_balance.args[0].is_positive:
+            compounded_balance = calc_compound_interest(
+                principal_amount=compounded_balance,
+                interest_rate=a_post_retirement_annual_rate_of_return,
+                num_time_periods_elapsed=1)
+        else:  # Its just a standard simulation not solving for anything
             if compounded_balance > 0:
                 compounded_balance = calc_compound_interest(
                     principal_amount=compounded_balance,
@@ -259,6 +260,7 @@ def calculate_retirement_balance(
         should_adjust_withdrawals_for_inflation: bool,
         should_adjust_withdrawals_for_taxation: bool,
         is_solving_for_safe_withdrawal: bool,
+        is_solving_for_safe_contribution: bool,
         home_sale_net_proceeds: Decimal,
         years_in_future_of_home_purchase: int
 ) -> dict:
@@ -287,7 +289,7 @@ def calculate_retirement_balance(
             should_adjust_withdrawals_for_inflation=should_adjust_withdrawals_for_inflation,
             should_adjust_withdrawals_for_taxation=should_adjust_withdrawals_for_taxation,
             should_adjust_portfolio_balance_for_inflation=should_adjust_portfolio_balance_for_inflation,
-            allow_negative_balances=is_solving_for_safe_withdrawal,
+            allow_negative_balances=is_solving_for_safe_withdrawal or is_solving_for_safe_contribution,
             home_sale_net_proceeds=home_sale_net_proceeds,
             years_in_future_of_home_purchase=years_in_future_of_home_purchase)
     # We check if there are missing years
@@ -299,7 +301,7 @@ def calculate_retirement_balance(
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
     all_balances = balances_by_year_until_retirement + balances_by_year_after_retirement
-    if is_solving_for_safe_withdrawal is True:
+    if (is_solving_for_safe_withdrawal is True) or (is_solving_for_safe_contribution is True):
         return balance_at_end_of_life_expectancy
     else:
         return {
@@ -337,7 +339,8 @@ def get_simulation_value_at_outcome_quantile(
     return value_at_simulation_quantile
 
 
-def calc_meta_simulation_stats(all_simulations: List, safe_withdrawal_amounts_by_quantile: dict) -> dict:
+def calc_meta_simulation_stats(
+        all_simulations: List, safe_amounts_by_quantile: dict) -> dict:
     num_ran_out_of_money = sum(
         map(lambda i: i['ran_out_of_money_before_eol'] is True, all_simulations))
     num_survived = sum(
@@ -366,8 +369,11 @@ def calc_meta_simulation_stats(all_simulations: List, safe_withdrawal_amounts_by
             'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
             'balance_at_eol': balance_at_eol_for_quantile, 'balances': balances,
             'safe_withdrawal_amount':
-                safe_withdrawal_amounts_by_quantile[quantile_value]
-                ['safe_withdrawal_amount']
+                safe_amounts_by_quantile[quantile_value]
+                ['safe_withdrawal_amount'],
+            'safe_contribution_amount':
+                safe_amounts_by_quantile[quantile_value]
+                ['safe_contribution_amount']
         }
     return {
         'survival_rate': survival_ratio,
@@ -404,7 +410,42 @@ def calc_safe_withdrawal_amount_for_simulation(
         should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
         home_sale_net_proceeds=home_sale_net_proceeds,
         years_in_future_of_home_purchase=years_in_future_of_home_purchase,
-        is_solving_for_safe_withdrawal=True
+        is_solving_for_safe_withdrawal=True,
+        is_solving_for_safe_contribution=False
+    )
+    return simulation_output
+
+
+def calc_safe_contribution_amount_for_simulation(
+    simulation_set_params_in: schemas.RunSimulationIn,
+    pre_retirement_ror: Decimal,
+    post_retirement_ror: Decimal,
+    years_until_retirement: int,
+    years_from_retirement_until_life_expectancy: int,
+    a_pre_retirement_annual_contribution: Decimal,
+    home_sale_net_proceeds: Decimal,
+    years_in_future_of_home_purchase: int
+):
+    simulation_output = calculate_retirement_balance(
+        a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
+        a_pre_retirement_annual_rate_of_return=pre_retirement_ror,
+        a_post_retirement_annual_rate_of_return=post_retirement_ror,
+        num_years_until_retirement=years_until_retirement,
+        num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
+        a_pre_retirement_annual_contribution=a_pre_retirement_annual_contribution,
+        a_post_retirement_annual_withdrawal=simulation_set_params_in.post_retirement_annual_withdrawal,
+        a_post_retirement_annual_additional_income=simulation_set_params_in.additional_post_retirement_annual_income,
+        a_inflation_mean=simulation_set_params_in.inflation_mean,
+        a_income_growth_mean=simulation_set_params_in.income_growth_mean,
+        a_post_retirement_tax_rate=simulation_set_params_in.post_retirement_tax_rate,
+        should_adjust_contributions_for_income_growth=simulation_set_params_in.adjust_contributions_for_income_growth,
+        should_adjust_portfolio_balance_for_inflation=simulation_set_params_in.adjust_portfolio_balance_for_inflation,
+        should_adjust_withdrawals_for_inflation=simulation_set_params_in.adjust_withdrawals_for_inflation,
+        should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
+        home_sale_net_proceeds=home_sale_net_proceeds,
+        years_in_future_of_home_purchase=years_in_future_of_home_purchase,
+        is_solving_for_safe_withdrawal=False,
+        is_solving_for_safe_contribution=True
     )
     return simulation_output
 
@@ -423,7 +464,8 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
     for idx, outcome_position in enumerate(
             index_positions_of_simulation_outcome):
         simulation_at_position = all_simulations[outcome_position]
-        x = Symbol('x')
+        safe_withdrawal_solver = Symbol('x')
+        safe_contribution_solver = Symbol('y')
         safe_withdrawal_amount = solve(calc_safe_withdrawal_amount_for_simulation(
             simulation_set_params_in=simulation_set_params_in,
             pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
@@ -432,14 +474,30 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
             years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
             home_sale_net_proceeds=home_sale_net_proceeds,
             years_in_future_of_home_purchase=years_in_future_of_home_purchase,
-            a_post_retirement_annual_withdrawal=x
+            a_post_retirement_annual_withdrawal=safe_withdrawal_solver
+        ))
+        safe_contribution_amount = solve(calc_safe_contribution_amount_for_simulation(
+            simulation_set_params_in=simulation_set_params_in,
+            pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
+            post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
+            years_until_retirement=years_until_retirement,
+            years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+            home_sale_net_proceeds=home_sale_net_proceeds,
+            years_in_future_of_home_purchase=years_in_future_of_home_purchase,
+            a_pre_retirement_annual_contribution=safe_contribution_solver
         ))
         safe_withdrawal_amount_as_positive_decimal = abs(round(
             Decimal(float(safe_withdrawal_amount[0])),
             DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
         ))
+        safe_contribution_amount_as_positive_decimal = abs(round(
+            Decimal(float(safe_contribution_amount[0])),
+            DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
+        ))
         quantile_statistics[KEY_QUANTILE_VALUES[idx]] = {
-            'safe_withdrawal_amount': safe_withdrawal_amount_as_positive_decimal}
+            'safe_withdrawal_amount': safe_withdrawal_amount_as_positive_decimal,
+            'safe_contribution_amount': safe_contribution_amount_as_positive_decimal
+        }
     return quantile_statistics
 
 
@@ -490,7 +548,8 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             should_adjust_withdrawals_for_taxation=simulation_set_params_in.adjust_withdrawals_for_taxation,
             home_sale_net_proceeds=simulation_set_params_in.home_sale_net_proceeds,
             years_in_future_of_home_purchase=simulation_set_params_in.years_in_future_of_home_purchase,
-            is_solving_for_safe_withdrawal=False)
+            is_solving_for_safe_withdrawal=False,
+            is_solving_for_safe_contribution=False)
         single_simulation_result = {
             'ran_out_of_money_before_eol': simulation_output['ran_out_of_money_before_eol'],
             'balance_at_eol': simulation_output['balance_at_eol'],
@@ -504,7 +563,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         all_simulation_results,
         key=lambda i: (i['balance_at_eol'],
                        i['balance_at_retirement']))
-    safe_withdrawal_amounts_by_quantile = calc_safe_withdrawal_amounts_for_simulation_set(
+    safe_amounts_by_quantile = calc_safe_withdrawal_amounts_for_simulation_set(
         simulation_set_params_in=simulation_set_params_in,
         years_until_retirement=years_until_retirement,
         years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
@@ -513,7 +572,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         all_simulations=all_simulation_results_sorted)
     meta_simulation_statistics = calc_meta_simulation_stats(
         all_simulations=all_simulation_results_sorted,
-        safe_withdrawal_amounts_by_quantile=safe_withdrawal_amounts_by_quantile
+        safe_amounts_by_quantile=safe_amounts_by_quantile
     )
     logger.info(
         f"Number of simulations run: {meta_simulation_statistics['number_of_simulations']}")

@@ -13,7 +13,8 @@ export default function KeyFactsList({
   simulationResults,
   roundedSurvivalRate,
   roundedDepletionRate,
-  safeWithdrawalAmount
+  safeWithdrawalAmount,
+  safeContributionAmount
 }) {
   return (
     <List>
@@ -58,6 +59,31 @@ export default function KeyFactsList({
                 did
               </Typography>{' '}
               run out of money prior to life expectancy.
+            </Typography>
+          }
+        />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckIcon />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <Typography>
+              Pre-retirement if you contribute at least{' '}
+              <NumberFormat
+                thousandsGroupStyle="thousand"
+                value={safeContributionAmount}
+                prefix="$"
+                decimalSeparator="."
+                decimalScale={0}
+                displayType="text"
+                type="text"
+                thousandSeparator
+                allowNegative
+              />{' '}
+              / year (in pre-inflation dollars) there is a 50% probability of
+              not running out of money.
             </Typography>
           }
         />

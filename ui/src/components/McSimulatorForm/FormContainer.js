@@ -100,7 +100,8 @@ const EMPTY_FORM_VALUES = {
   homeSaleNetProceeds: ''
 };
 
-// const INITIAL_FORM_VALUES = {
+// Sample form values to make it easier to test
+// const EMPTY_FORM_VALUES = {
 //   adjustForInflation: true,
 //   adjustContributionsForIncomeGrowth: true,
 //   adjustWithdrawalsForTaxation: true,
@@ -118,7 +119,7 @@ const EMPTY_FORM_VALUES = {
 //   postRetirementInvestmentStyle: 'Conservative',
 //   filingStatus: 'singleFiler',
 //   additionalPostRetirementAnnualIncome: '20000',
-//    homeSaleNetProceeds: '100000'
+//   homeSaleNetProceeds: '100000'
 // };
 
 const numberToPercent = (aNumber) => aNumber / 100;

@@ -58,6 +58,7 @@ class QuantileStatistic(CamelModel):
     balance_at_eol: decimal_positive
     balances: List[Decimal]
     safe_withdrawal_amount: decimal_positive
+    safe_contribution_amount: decimal_positive
 
 
 class RunSimulationOut(CamelModel):
