@@ -22,7 +22,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,7 +35,7 @@ async def is_alive():
     return "OK"
 
 
-@app.post("/simulate", response_model=schemas.RunSimulationOut, status_code=200)
+@app.post("/api/simulate", response_model=schemas.RunSimulationOut, status_code=200)
 def simulate(simulation_params_in: schemas.RunSimulationIn):
     meta_simulation_statistics = run_simulations(simulation_params_in)
     return meta_simulation_statistics
