@@ -53,8 +53,8 @@ class RunSimulationIn(CamelModel):
 
 
 class QuantileStatistic(CamelModel):
-    pre_retirement_rate_of_return: decimal_positive
-    post_retirement_rate_of_return: decimal_positive
+    pre_retirement_rate_of_return: Decimal
+    post_retirement_rate_of_return: Decimal
     balance_at_eol: decimal_positive
     balances: List[Decimal]
     safe_withdrawal_amount: decimal_positive

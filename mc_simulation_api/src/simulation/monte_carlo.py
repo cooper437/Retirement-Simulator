@@ -350,19 +350,19 @@ def calc_meta_simulation_stats(
     survival_ratio = num_survived / (num_ran_out_of_money + num_survived)
     quantile_statistics = {}
     for quantile_value in KEY_QUANTILE_VALUES:
-        pre_retirement_ror_for_quantile = get_value_of_simulation_param_at_quantile(
+        pre_retirement_ror_for_quantile = get_simulation_value_at_outcome_quantile(
             all_simulations=all_simulations,
             field_name='pre_retirement_rate_of_return',
             quantile=quantile_value)
-        post_retirement_ror_for_quantile = get_value_of_simulation_param_at_quantile(
+        post_retirement_ror_for_quantile = get_simulation_value_at_outcome_quantile(
             all_simulations=all_simulations,
             field_name='post_retirement_rate_of_return',
             quantile=quantile_value)
-        balance_at_eol_for_quantile = get_value_of_simulation_param_at_quantile(
+        balance_at_eol_for_quantile = get_simulation_value_at_outcome_quantile(
             all_simulations=all_simulations,
             field_name='balance_at_eol',
             quantile=quantile_value)
-        balances = get_value_of_simulation_param_at_quantile(
+        balances = get_simulation_value_at_outcome_quantile(
             all_simulations=all_simulations,
             field_name='balances',
             quantile=quantile_value)
