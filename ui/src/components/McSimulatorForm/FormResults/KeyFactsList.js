@@ -82,8 +82,8 @@ export default function KeyFactsList({
                 thousandSeparator
                 allowNegative
               />{' '}
-              / year (in pre-inflation dollars) there is a 50% probability of
-              not running out of money.
+              / year (in pre-inflation dollars) there is at least a 50%
+              probability of not running out of money.
             </Typography>
           }
         />
@@ -107,8 +107,8 @@ export default function KeyFactsList({
                 thousandSeparator
                 allowNegative
               />{' '}
-              / year (in pre-inflation dollars) there is a 95% probability of
-              not running out of money.
+              / year (in pre-inflation dollars) there is at least a 95%
+              probability of not running out of money.
             </Typography>
           }
         />

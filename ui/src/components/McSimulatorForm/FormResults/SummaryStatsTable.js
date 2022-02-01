@@ -47,13 +47,8 @@ export default function SummaryStatsTable({
 }) {
   const rows = [
     {
-      key: 'preRetirementRateOfReturn',
-      label: 'Pre-Retirement Annual Mean Rate Of Return',
-      formatAs: 'percent'
-    },
-    {
-      key: 'postRetirementRateOfReturn',
-      label: 'Post-Retirement Annual Mean Rate Of Return',
+      key: 'weightedAvgRateOfReturn',
+      label: 'Annual Mean Rate Of Return',
       formatAs: 'percent'
     },
     {

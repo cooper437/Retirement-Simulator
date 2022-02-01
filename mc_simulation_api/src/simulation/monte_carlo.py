@@ -8,7 +8,7 @@ from sympy import Symbol, Basic
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
 from src.simulation import schemas
-from src.simulation.distribution_sampling import get_random_sample_pairs
+from src.simulation.distribution_sampling import get_random_sample_pairs, calc_weighted_average_ror
 
 KEY_QUANTILE_VALUES = (0.05, 0.25, 0.5, 0.75, 0.95)
 
@@ -356,6 +356,10 @@ def calc_meta_simulation_stats(
             all_simulations=all_simulations,
             field_name='post_retirement_rate_of_return',
             quantile=quantile_value)
+        weighted_avg_ror_for_quantile = get_simulation_value_at_outcome_quantile(
+            all_simulations=all_simulations,
+            field_name='weighted_avg_rate_of_return',
+            quantile=quantile_value)
         balance_at_eol_for_quantile = get_simulation_value_at_outcome_quantile(
             all_simulations=all_simulations,
             field_name='balance_at_eol',
@@ -367,6 +371,7 @@ def calc_meta_simulation_stats(
         quantile_statistics[quantile_value] = {
             'pre_retirement_rate_of_return': pre_retirement_ror_for_quantile,
             'post_retirement_rate_of_return': post_retirement_ror_for_quantile,
+            'weighted_avg_rate_of_return': weighted_avg_ror_for_quantile,
             'balance_at_eol': balance_at_eol_for_quantile, 'balances': balances,
             'safe_withdrawal_amount':
                 safe_amounts_by_quantile[quantile_value]
@@ -468,8 +473,8 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
         safe_contribution_solver = Symbol('y')
         safe_withdrawal_amount = solve(calc_safe_withdrawal_amount_for_simulation(
             simulation_set_params_in=simulation_set_params_in,
-            pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
-            post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
+            pre_retirement_ror=simulation_at_position['weighted_avg_rate_of_return'],
+            post_retirement_ror=simulation_at_position['weighted_avg_rate_of_return'],
             years_until_retirement=years_until_retirement,
             years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
             home_sale_net_proceeds=home_sale_net_proceeds,
@@ -478,8 +483,8 @@ def calc_safe_withdrawal_amounts_for_simulation_set(
         ))
         safe_contribution_amount = solve(calc_safe_contribution_amount_for_simulation(
             simulation_set_params_in=simulation_set_params_in,
-            pre_retirement_ror=simulation_at_position['pre_retirement_rate_of_return'],
-            post_retirement_ror=simulation_at_position['post_retirement_rate_of_return'],
+            pre_retirement_ror=simulation_at_position['weighted_avg_rate_of_return'],
+            post_retirement_ror=simulation_at_position['weighted_avg_rate_of_return'],
             years_until_retirement=years_until_retirement,
             years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
             home_sale_net_proceeds=home_sale_net_proceeds,
@@ -534,10 +539,16 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
     all_simulation_results = []
     for (pre_retirement_ror, post_retirement_ror) in \
             tqdm(sample_pairs, desc=f"Running {NUMBER_OF_SIMULATIONS} simulations"):
+        weighted_avg_ror = calc_weighted_average_ror(
+            years_until_retirement=years_until_retirement,
+            years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
+            simulation_duration=simulation_duration,
+            pre_retirement_mean_rate_of_return=pre_retirement_ror,
+            post_retirement_mean_rate_of_return=post_retirement_ror)
         simulation_output = calculate_retirement_balance(
             a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
-            a_pre_retirement_annual_rate_of_return=pre_retirement_ror,
-            a_post_retirement_annual_rate_of_return=post_retirement_ror,
+            a_pre_retirement_annual_rate_of_return=weighted_avg_ror,
+            a_post_retirement_annual_rate_of_return=weighted_avg_ror,
             num_years_until_retirement=years_until_retirement,
             num_years_between_retirement_and_eol=years_from_retirement_until_life_expectancy,
             a_pre_retirement_annual_contribution=simulation_set_params_in.pre_retirement_annual_contribution,
@@ -560,6 +571,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             'balance_at_retirement': simulation_output['balance_at_retirement'],
             'pre_retirement_rate_of_return': pre_retirement_ror,
             'post_retirement_rate_of_return': post_retirement_ror,
+            'weighted_avg_rate_of_return': weighted_avg_ror,
             'balances': simulation_output['balances']
         }
         all_simulation_results.append(single_simulation_result)

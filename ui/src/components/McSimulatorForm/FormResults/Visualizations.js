@@ -131,7 +131,10 @@ const generateSafeContributionPlugins = (safeContributionAmount) => {
         ctx.textBaseline = 'middle';
         const text1 = 'Safe Contribution';
         const text2 = 'Amount:';
-        const text3 = `$${formattedSafeContribtionAmount}k / year`;
+        const text3 =
+          formattedSafeContribtionAmount === 0
+            ? '$0 / year'
+            : `$${formattedSafeContribtionAmount}k / year`;
         const text1X = Math.round((width - ctx.measureText(text1).width) / 2);
         const text2X = Math.round((width - ctx.measureText(text2).width) / 2);
         const text3X = Math.round((width - ctx.measureText(text3).width) / 2);
