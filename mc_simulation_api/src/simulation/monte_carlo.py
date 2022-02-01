@@ -125,9 +125,8 @@ def calc_balances_from_current_age_to_retirement(
         # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_contribution = annual_contribution / 2
         compounded_balance += half_of_annual_contribution
-        # only compound positive balances
+        # Performing boolean logic checks on sympy objects results in an error
         if issubclass(type(compounded_balance), Basic):
-            # if compounded_balance.args[0].is_positive:
             compounded_balance = calc_compound_interest(
                 principal_amount=compounded_balance,
                 interest_rate=a_pre_retirement_annual_rate_of_return,
@@ -198,7 +197,7 @@ def calc_balance_from_retirement_to_eol(
         # a simplification and should really be refactored to use a monthly compounding model
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
-        # only compound positive balances
+        # Performing boolean logic checks on sympy objects results in an error
         if issubclass(type(compounded_balance), Basic):
             # it might be a sympy object if we are solving for an unknown value
             compounded_balance = calc_compound_interest(
