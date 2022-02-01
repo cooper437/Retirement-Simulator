@@ -4,8 +4,8 @@ from numpy import isin
 from tqdm import tqdm
 from loguru import logger
 from sympy.solvers import solve
-from sympy import Symbol, Float
-from sympy.core import Add
+from sympy import Symbol, Float, Basic
+from sympy.core import Expr
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
@@ -128,7 +128,7 @@ def calc_balances_from_current_age_to_retirement(
         half_of_annual_contribution = annual_contribution / 2
         compounded_balance += half_of_annual_contribution
         # only compound positive balances
-        if isinstance(compounded_balance, Add):
+        if issubclass(type(compounded_balance), Basic):
             # if compounded_balance.args[0].is_positive:
             compounded_balance = calc_compound_interest(
                 principal_amount=compounded_balance,
@@ -201,9 +201,8 @@ def calc_balance_from_retirement_to_eol(
         half_of_annual_withdrawal = annual_withdrawal / 2
         compounded_balance += half_of_annual_withdrawal
         # only compound positive balances
-        if isinstance(compounded_balance, Add):
+        if issubclass(type(compounded_balance), Basic):
             # it might be a sympy object if we are solving for an unknown value
-            # if compounded_balance.args[0].is_positive:
             compounded_balance = calc_compound_interest(
                 principal_amount=compounded_balance,
                 interest_rate=a_post_retirement_annual_rate_of_return,
@@ -263,6 +262,8 @@ def calculate_retirement_balance(
         is_solving_for_safe_contribution: bool,
         home_sale_net_proceeds: Decimal,
         years_in_future_of_home_purchase: int
+
+
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = \
         calc_balances_from_current_age_to_retirement(
