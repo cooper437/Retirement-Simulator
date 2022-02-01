@@ -1,11 +1,9 @@
 from decimal import Decimal
 from typing import List
-from numpy import isin
 from tqdm import tqdm
 from loguru import logger
 from sympy.solvers import solve
-from sympy import Symbol, Float, Basic
-from sympy.core import Expr
+from sympy import Symbol, Basic
 
 from src.constants import (DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS,
                            NUMBER_OF_SIMULATIONS)
