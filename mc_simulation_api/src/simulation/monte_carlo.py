@@ -90,8 +90,10 @@ def adjust_post_retirement_withdrawal_amount_for_taxes(
     amount each year after-taxes as s/he would if there were not taxes applied
     '''
     post_retirement_tax_multiplier = 1 + a_post_retirement_tax_rate
-    after_taxes_withdrawal_amount = retirement_withdrawal_amount * post_retirement_tax_multiplier
-    additional_amount_to_cover_taxes = after_taxes_withdrawal_amount - retirement_withdrawal_amount
+    after_taxes_withdrawal_amount = retirement_withdrawal_amount * \
+        post_retirement_tax_multiplier
+    additional_amount_to_cover_taxes = after_taxes_withdrawal_amount - \
+        retirement_withdrawal_amount
     withdrawal_amount_adjusted_for_taxes = retirement_withdrawal_amount \
         + additional_amount_to_cover_taxes
     return withdrawal_amount_adjusted_for_taxes
@@ -142,7 +144,7 @@ def calc_balances_from_current_age_to_retirement(
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance,
                 a_mean_inflation_rate=a_inflation_mean)
-        if (pre_retirement_simulation_year == years_in_future_of_home_purchase + 1):
+        if pre_retirement_simulation_year == years_in_future_of_home_purchase + 1:
             compounded_balance += home_sale_net_proceeds
         balances_by_year.append(compounded_balance)
         pre_retirement_simulation_year += 1
@@ -168,7 +170,11 @@ def calc_balance_from_retirement_to_eol(
     Calculate balance at end of life expectancy given that
     the balance at retirement has already been calculated.
     '''
-    if (isinstance(a_post_retirement_annual_withdrawal, Decimal)) and (a_post_retirement_annual_withdrawal >= 0):
+    if (
+        isinstance(a_post_retirement_annual_withdrawal, Decimal)
+    ) and (
+        a_post_retirement_annual_withdrawal >= 0
+    ):
         raise ValueError(
             "a_post_retirement_annual_contribution was a positive "
             "value but it must be a negative value")
@@ -215,7 +221,7 @@ def calc_balance_from_retirement_to_eol(
             compounded_balance = adjust_balance_by_mean_inflation(
                 a_portfolio_balance=compounded_balance,
                 a_mean_inflation_rate=a_inflation_mean)
-        if (years_since_simulation_began == years_in_future_of_home_purchase + 1):
+        if years_since_simulation_began == years_in_future_of_home_purchase + 1:
             compounded_balance += home_sale_net_proceeds
         # We have depleted our entire portfolio balance
         if allow_negative_balances is False and compounded_balance <= 0:
@@ -264,6 +270,7 @@ def calculate_retirement_balance(
 ) -> dict:
     balance_at_retirement, balances_by_year_until_retirement = \
         calc_balances_from_current_age_to_retirement(
+            # pylint: disable=line-too-long
             a_initial_portfolio_amount=a_initial_portfolio_amount,
             a_pre_retirement_annual_rate_of_return=a_pre_retirement_annual_rate_of_return,
             num_years_until_retirement=num_years_until_retirement,
@@ -276,6 +283,7 @@ def calculate_retirement_balance(
             years_in_future_of_home_purchase=years_in_future_of_home_purchase)
     balance_at_end_of_life_expectancy, balances_by_year_after_retirement = \
         calc_balance_from_retirement_to_eol(
+            # pylint: disable=line-too-long
             a_balance_at_retirement=balance_at_retirement,
             a_post_retirement_annual_rate_of_return=a_post_retirement_annual_rate_of_return,
             num_years_until_retirement=num_years_until_retirement,
@@ -298,7 +306,8 @@ def calculate_retirement_balance(
             len(balances_by_year_after_retirement)
         balances_by_year_after_retirement = pad_with_zeroes(
             balances_by_year_after_retirement, num_years_missing)
-    all_balances = balances_by_year_until_retirement + balances_by_year_after_retirement
+    all_balances = balances_by_year_until_retirement + \
+        balances_by_year_after_retirement
     if (is_solving_for_safe_withdrawal is True) or (is_solving_for_safe_contribution is True):
         return balance_at_end_of_life_expectancy
     else:
@@ -307,7 +316,9 @@ def calculate_retirement_balance(
                 True if balance_at_end_of_life_expectancy <= Decimal(
                     0) else False,
             'balances': all_balances,
-            'balance_at_retirement': round(balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS),
+            'balance_at_retirement': round(
+                balance_at_retirement, DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS
+                    ),
             'balance_at_eol':
                 round(balance_at_end_of_life_expectancy,
                       DECIMAL_PRECISION_FOR_DOLLAR_AMOUNTS)
@@ -398,6 +409,7 @@ def calc_safe_withdrawal_amount_for_simulation(
     years_in_future_of_home_purchase: int
 ):
     simulation_output = calculate_retirement_balance(
+        # pylint: disable=line-too-long
         a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
         a_pre_retirement_annual_rate_of_return=pre_retirement_ror,
         a_post_retirement_annual_rate_of_return=post_retirement_ror,
@@ -432,6 +444,7 @@ def calc_safe_contribution_amount_for_simulation(
     years_in_future_of_home_purchase: int
 ):
     simulation_output = calculate_retirement_balance(
+        # pylint: disable=line-too-long
         a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
         a_pre_retirement_annual_rate_of_return=pre_retirement_ror,
         a_post_retirement_annual_rate_of_return=post_retirement_ror,
@@ -523,6 +536,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
         num_years_until_retirement=years_until_retirement,
         num_years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy)
     sample_pairs = get_random_sample_pairs(
+        # pylint: disable=line-too-long
         years_until_retirement=years_until_retirement,
         years_from_retirement_until_life_expectancy=years_from_retirement_until_life_expectancy,
         pre_retirement_mean_rate_of_return=simulation_set_params_in.pre_retirement_mean_rate_of_return,
@@ -546,6 +560,7 @@ def run_simulations(simulation_set_params_in: schemas.RunSimulationIn):
             pre_retirement_mean_rate_of_return=pre_retirement_ror,
             post_retirement_mean_rate_of_return=post_retirement_ror)
         simulation_output = calculate_retirement_balance(
+            # pylint: disable=line-too-long
             a_initial_portfolio_amount=simulation_set_params_in.initial_portfolio_amount,
             a_pre_retirement_annual_rate_of_return=weighted_avg_ror,
             a_post_retirement_annual_rate_of_return=weighted_avg_ror,
