@@ -21,7 +21,7 @@ export default function TopNavBar() {
             <MenuIcon />
           </ImageOutlinedIcon>
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-            TruWealth Retirement Planning
+            Retirement Planning Simulator
           </Typography>
         </Toolbar>
       </AppBar>
